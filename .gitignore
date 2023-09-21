@@ -1,0 +1,9 @@
+.idea
+vendor
+logs
+*.exe
+*.pprof
+cache
+log
+dist
+*.log

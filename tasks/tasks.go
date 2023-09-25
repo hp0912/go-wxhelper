@@ -14,6 +14,7 @@ func InitTasks() {
 
 	// 每天早上九点半发送前一天的水群排行
 	_, _ = s.Every(1).Day().At("09:30").Do(yesterday)
+	//_, _ = s.Every(5).Minute().Do(yesterday)
 
 	// 每小时更新一次好友列表
 	//_, _ = s.Every(5).Minute().Do(syncFriends)

@@ -5,6 +5,7 @@ COPY . .
 ENV GO111MODULE=on
 ENV GOPROXY=https://goproxy.cn,direct
 
+RUN go version
 RUN go mod download && go build -o app
 RUN ls -lh && chmod +x ./app
 

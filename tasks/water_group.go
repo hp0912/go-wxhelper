@@ -1,9 +1,13 @@
 package tasks
 
 import (
+	"fmt"
 	"go-wechat/client"
 	"go-wechat/entity"
+	"go-wechat/utils"
 	"log"
+	"os"
+	"strings"
 )
 
 // 水群排行榜
@@ -11,10 +15,23 @@ import (
 // yesterday
 // @description: 昨日排行榜
 func yesterday() {
+	// 从环境变量读取需要处理的群Id
+	gid := strings.Split(os.Getenv("GROUP_ID"), ",")
+	for _, id := range gid {
+		dealYesterday(id)
+	}
+}
+
+// dealYesterday
+// @description: 处理请求
+// @param gid
+func dealYesterday(gid string) {
+	notifyMsgs := []string{"#昨日水群排行榜"}
+
 	// 获取昨日消息总数
 	var yesterdayMsgCount int64
 	err := client.MySQL.Model(&entity.Message{}).
-		Where("from_user = ?", "18958257758@chatroom").
+		Where("from_user = ?", gid).
 		Where("DATEDIFF(create_at,NOW()) = -1").
 		Count(&yesterdayMsgCount).Error
 	if err != nil {
@@ -22,25 +39,40 @@ func yesterday() {
 		return
 	}
 	log.Printf("昨日消息总数: %d", yesterdayMsgCount)
+	if yesterdayMsgCount == 0 {
+		return
+	}
+
+	notifyMsgs = append(notifyMsgs, " ")
+	notifyMsgs = append(notifyMsgs, fmt.Sprintf("昨日消息总数: %d", yesterdayMsgCount))
 
 	// 返回数据
 	type record struct {
 		GroupUser string
+		Nickname  string
 		Count     int64
 	}
 
 	var records []record
-	err = client.MySQL.Model(&entity.Message{}).
-		Select("group_user", "count( 1 ) AS `count`").
-		Where("from_user = ?", "18958257758@chatroom").
-		Where("DATEDIFF(create_at,NOW()) = -1").
-		Group("group_user").Order("`count` DESC").
+	err = client.MySQL.Table("t_message AS tm").
+		Joins("LEFT JOIN t_group_user AS tgu ON tgu.wxid = tm.group_user").
+		Select("tm.group_user", "tgu.nickname", "count( 1 ) AS `count`").
+		Where("tm.from_user = ?", gid).
+		Where("DATEDIFF(tm.create_at,NOW()) = -1").
+		Group("tm.group_user, tgu.nickname").Order("`count` DESC").
 		Limit(5).Find(&records).Error
 	if err != nil {
 		log.Printf("获取昨日消息失败, 错误信息: %v", err)
 		return
 	}
-	for _, r := range records {
-		log.Printf("账号: %s -> %d", r.GroupUser, r.Count)
+	notifyMsgs = append(notifyMsgs, " ")
+	for i, r := range records {
+		log.Printf("账号: %s[%s] -> %d", r.Nickname, r.GroupUser, r.Count)
+		notifyMsgs = append(notifyMsgs, fmt.Sprintf("#%d: %s -> %d条", i+1, r.Nickname, r.Count))
 	}
+
+	notifyMsgs = append(notifyMsgs, " \n请未上榜的群友多多反思。")
+
+	log.Printf("排行榜: \n%s", strings.Join(notifyMsgs, "\n"))
+	go utils.SendMessage(gid, "", strings.Join(notifyMsgs, "\n"))
 }

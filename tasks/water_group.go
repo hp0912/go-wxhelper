@@ -74,5 +74,5 @@ func dealYesterday(gid string) {
 	notifyMsgs = append(notifyMsgs, " \n请未上榜的群友多多反思。")
 
 	log.Printf("排行榜: \n%s", strings.Join(notifyMsgs, "\n"))
-	go utils.SendMessage(gid, "", strings.Join(notifyMsgs, "\n"))
+	go utils.SendMessage(gid, "", strings.Join(notifyMsgs, "\n"), 0)
 }

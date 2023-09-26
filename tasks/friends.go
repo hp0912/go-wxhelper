@@ -15,13 +15,15 @@ import (
 
 // 同步群成员
 
+// http客户端
+var hc = resty.New()
+
 // syncFriends
 // @description: 同步好友列表
 func syncFriends() {
 	var base model.Response[[]model.FriendItem]
 
-	res := resty.New()
-	resp, err := res.R().
+	resp, err := hc.R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&base).
 		Post("http://10.0.0.73:19088/api/getContactList")
@@ -98,8 +100,7 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 	}
 	pbs, _ := json.Marshal(param)
 
-	res := resty.New()
-	_, err := res.R().
+	_, err := hc.R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(string(pbs)).
 		SetResult(&baseResp).
@@ -114,7 +115,7 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 	log.Printf("      群成员数: %d", len(wxIds))
 
 	// 修改不在数组的群成员状态为不在
-	err = tx.Model(&entity.GroupUser{}).Where("wxid NOT IN (?)", wxIds).Update("is_member", false).Error
+	err = tx.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Where("wxid NOT IN (?)", wxIds).Update("is_member", false).Error
 	if err != nil {
 		log.Printf("修改群成员状态失败: %s", err.Error())
 		return
@@ -177,8 +178,7 @@ func getContactProfile(wxid string) (ent model.ContactProfile, err error) {
 	}
 	pbs, _ := json.Marshal(param)
 
-	client := resty.New()
-	_, err = client.R().
+	_, err = hc.R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(string(pbs)).
 		SetResult(&baseResp).

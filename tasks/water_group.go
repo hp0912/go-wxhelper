@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"go-wechat/client"
 	"go-wechat/entity"
-	"go-wechat/utils"
 	"log"
 	"os"
 	"strings"
@@ -55,7 +54,7 @@ func dealYesterday(gid string) {
 
 	var records []record
 	err = client.MySQL.Table("t_message AS tm").
-		Joins("LEFT JOIN t_group_user AS tgu ON tgu.wxid = tm.group_user").
+		Joins("LEFT JOIN t_group_user AS tgu ON tgu.wxid = tm.group_user AND tm.from_user = tgu.group_id").
 		Select("tm.group_user", "tgu.nickname", "count( 1 ) AS `count`").
 		Where("tm.from_user = ?", gid).
 		Where("DATEDIFF(tm.create_at,NOW()) = -1").
@@ -74,5 +73,5 @@ func dealYesterday(gid string) {
 	notifyMsgs = append(notifyMsgs, " \n请未上榜的群友多多反思。")
 
 	log.Printf("排行榜: \n%s", strings.Join(notifyMsgs, "\n"))
-	go utils.SendMessage(gid, "", strings.Join(notifyMsgs, "\n"))
+	//go utils.SendMessage(gid, "", strings.Join(notifyMsgs, "\n"))
 }

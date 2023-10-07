@@ -58,6 +58,7 @@ func dealYesterday(gid string) {
 		Joins("LEFT JOIN t_group_user AS tgu ON tgu.wxid = tm.group_user AND tm.from_user = tgu.group_id").
 		Select("tm.group_user", "tgu.nickname", "count( 1 ) AS `count`").
 		Where("tm.from_user = ?", gid).
+		Where("tm.type < 10000").
 		Where("DATEDIFF(tm.create_at,NOW()) = -1").
 		Group("tm.group_user, tgu.nickname").Order("`count` DESC").
 		Limit(5).Find(&records).Error

@@ -7,3 +7,4 @@ cache
 log
 dist
 *.log
+blacklist.txt

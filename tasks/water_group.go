@@ -5,6 +5,7 @@ import (
 	"go-wechat/client"
 	"go-wechat/entity"
 	"go-wechat/utils"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -28,9 +29,24 @@ func yesterday() {
 func dealYesterday(gid string) {
 	notifyMsgs := []string{"#昨日水群排行榜"}
 
+	// 读取黑名单文件，名单内的Id不上榜
+	var blacklist []string
+	file, err := os.Open("blacklist.txt")
+	if err != nil {
+		log.Printf("读取黑名单失败: %v", err)
+	} else {
+		defer file.Close()
+		var content []byte
+		if content, err = io.ReadAll(file); err != nil {
+			log.Printf("读取黑名单失败: %v", err)
+		} else {
+			blacklist = strings.Split(string(content), "\n")
+		}
+	}
+
 	// 获取昨日消息总数
 	var yesterdayMsgCount int64
-	err := client.MySQL.Model(&entity.Message{}).
+	err = client.MySQL.Model(&entity.Message{}).
 		Where("from_user = ?", gid).
 		Where("DATEDIFF(create_at,NOW()) = -1").
 		Count(&yesterdayMsgCount).Error
@@ -54,14 +70,22 @@ func dealYesterday(gid string) {
 	}
 
 	var records []record
-	err = client.MySQL.Table("t_message AS tm").
+	tx := client.MySQL.Table("t_message AS tm").
 		Joins("LEFT JOIN t_group_user AS tgu ON tgu.wxid = tm.group_user AND tm.from_user = tgu.group_id").
 		Select("tm.group_user", "tgu.nickname", "count( 1 ) AS `count`").
 		Where("tm.from_user = ?", gid).
 		Where("tm.type < 10000").
 		Where("DATEDIFF(tm.create_at,NOW()) = -1").
 		Group("tm.group_user, tgu.nickname").Order("`count` DESC").
-		Limit(5).Find(&records).Error
+		Limit(10)
+
+	// 如果有黑名单，过滤掉
+	if len(blacklist) > 0 {
+		tx.Where("tm.group_user NOT IN (?)", blacklist)
+	}
+
+	err = tx.Find(&records).Error
+
 	if err != nil {
 		log.Printf("获取昨日消息失败, 错误信息: %v", err)
 		return

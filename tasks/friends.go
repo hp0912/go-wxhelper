@@ -11,6 +11,7 @@ import (
 	"log"
 	"slices"
 	"strings"
+	"time"
 )
 
 // 同步群成员
@@ -115,7 +116,11 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 	log.Printf("      群成员数: %d", len(wxIds))
 
 	// 修改不在数组的群成员状态为不在
-	err = tx.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Where("wxid NOT IN (?)", wxIds).Update("is_member", false).Error
+	pm := map[string]any{
+		"is_member":  false,
+		"leave_time": time.Now().Local(),
+	}
+	err = tx.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Where("wxid NOT IN (?)", wxIds).Updates(pm).Error
 	if err != nil {
 		log.Printf("修改群成员状态失败: %s", err.Error())
 		return

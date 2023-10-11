@@ -1,0 +1,13 @@
+task:
+  enable: true
+  syncFriends:
+      enable: true
+      cron: '0 * * * *'
+  waterGroup:
+      enable: true
+      cron: '30 9 * * *'
+      groups:
+        - '18958257758@chatroom'
+        - '49448748645@chatroom'
+      blacklist:
+        - 'wxid_7788687886912'

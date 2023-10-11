@@ -3,11 +3,9 @@ package tasks
 import (
 	"fmt"
 	"go-wechat/client"
+	"go-wechat/config"
 	"go-wechat/entity"
-	"go-wechat/utils"
-	"io"
 	"log"
-	"os"
 	"strings"
 )
 
@@ -16,9 +14,7 @@ import (
 // yesterday
 // @description: 昨日排行榜
 func yesterday() {
-	// 从环境变量读取需要处理的群Id
-	gid := strings.Split(os.Getenv("GROUP_ID"), ",")
-	for _, id := range gid {
+	for _, id := range config.Conf.Task.WaterGroup.Groups {
 		dealYesterday(id)
 	}
 }
@@ -29,24 +25,9 @@ func yesterday() {
 func dealYesterday(gid string) {
 	notifyMsgs := []string{"#昨日水群排行榜"}
 
-	// 读取黑名单文件，名单内的Id不上榜
-	var blacklist []string
-	file, err := os.Open("blacklist.txt")
-	if err != nil {
-		log.Printf("读取黑名单失败: %v", err)
-	} else {
-		defer file.Close()
-		var content []byte
-		if content, err = io.ReadAll(file); err != nil {
-			log.Printf("读取黑名单失败: %v", err)
-		} else {
-			blacklist = strings.Split(string(content), "\n")
-		}
-	}
-
 	// 获取昨日消息总数
 	var yesterdayMsgCount int64
-	err = client.MySQL.Model(&entity.Message{}).
+	err := client.MySQL.Model(&entity.Message{}).
 		Where("from_user = ?", gid).
 		Where("DATEDIFF(create_at,NOW()) = -1").
 		Count(&yesterdayMsgCount).Error
@@ -79,6 +60,8 @@ func dealYesterday(gid string) {
 		Group("tm.group_user, tgu.nickname").Order("`count` DESC").
 		Limit(10)
 
+	// 黑名单
+	blacklist := config.Conf.Task.WaterGroup.Blacklist
 	// 如果有黑名单，过滤掉
 	if len(blacklist) > 0 {
 		tx.Where("tm.group_user NOT IN (?)", blacklist)
@@ -99,5 +82,5 @@ func dealYesterday(gid string) {
 	notifyMsgs = append(notifyMsgs, " \n请未上榜的群友多多反思。")
 
 	log.Printf("排行榜: \n%s", strings.Join(notifyMsgs, "\n"))
-	go utils.SendMessage(gid, "", strings.Join(notifyMsgs, "\n"), 0)
+	//go utils.SendMessage(gid, "", strings.Join(notifyMsgs, "\n"), 0)
 }

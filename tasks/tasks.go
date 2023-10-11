@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"github.com/go-co-op/gocron"
+	"go-wechat/config"
 	"log"
 	"time"
 )
@@ -9,16 +10,25 @@ import (
 // InitTasks
 // @description: 初始化定时任务
 func InitTasks() {
+	// 没启用直接返回
+	if !config.Conf.Task.Enable {
+		log.Println("未启用定时任务")
+		return
+	}
 	// 定时任务发送消息
 	s := gocron.NewScheduler(time.Local)
 
-	// 每天早上九点半发送前一天的水群排行
-	_, _ = s.Every(1).Day().At("09:30").Do(yesterday)
-	//_, _ = s.Every(5).Minute().Do(yesterday)
+	// 水群排行
+	if config.Conf.Task.WaterGroup.Enable {
+		log.Printf("水群排行任务已启用，执行表达式: %s", config.Conf.Task.WaterGroup.Cron)
+		_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron).Do(yesterday)
+	}
 
-	// 每小时更新一次好友列表
-	//_, _ = s.Every(5).Minute().Do(syncFriends)
-	_, _ = s.Every(1).Hour().Do(syncFriends)
+	// 更新好友列表
+	if config.Conf.Task.SyncFriends.Enable {
+		log.Printf("更新好友列表任务已启用，执行表达式: %s", config.Conf.Task.SyncFriends.Cron)
+		_, _ = s.Cron(config.Conf.Task.SyncFriends.Cron).Do(syncFriends)
+	}
 
 	// 开启定时任务
 	s.StartAsync()

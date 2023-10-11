@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"go-wechat/client"
+	"go-wechat/config"
 	"go-wechat/handler"
 	"go-wechat/tasks"
 	"io"
@@ -11,6 +12,7 @@ import (
 )
 
 func init() {
+	config.InitConfig()
 	client.InitMySQLClient()
 	tasks.InitTasks()
 }

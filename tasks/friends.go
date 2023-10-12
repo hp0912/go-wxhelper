@@ -120,7 +120,7 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 		"is_member":  false,
 		"leave_time": time.Now().Local(),
 	}
-	err = tx.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Where("wxid NOT IN (?)", wxIds).Updates(pm).Error
+	err = tx.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Where("is_member IS TRUE").Where("wxid NOT IN (?)", wxIds).Updates(pm).Error
 	if err != nil {
 		log.Printf("修改群成员状态失败: %s", err.Error())
 		return

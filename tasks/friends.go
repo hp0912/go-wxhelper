@@ -158,6 +158,8 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 					"account":    cp.Account,
 					"head_image": cp.HeadImage,
 					"nickname":   cp.Nickname,
+					"is_member":  true,
+					"leave_time": nil,
 				}
 				err = tx.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Where("wxid = ?", wxid).Updates(pm).Error
 				if err != nil {

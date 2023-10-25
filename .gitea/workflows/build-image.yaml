@@ -36,9 +36,9 @@ jobs:
 
       - name: Print Tags
         run: |
-          echo ${{ steps.gen_tags.outputs.tags }}
+          echo "${{ steps.gen_tags.outputs.tags }}"
           echo "----------------- labels -----------------"
-          echo ${{ steps.meta.outputs.labels }}
+          echo "${{ steps.meta.outputs.labels }}"
 
 #      - name: Login to Repository
 #        uses: docker/login-action@v2

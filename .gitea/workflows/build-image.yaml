@@ -1,0 +1,29 @@
+name: BuildImage
+
+on:
+  push:
+    branches:
+      - main
+#      - '*'
+#      - '!main'
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Golang
+        uses: actions/setup-go@v3
+        with:
+          go-version: '>=1.21.0'
+          cache: false
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            gitee.ltd/lxh/go-wxhelper:latest
+            gitee.ltd/lxh/go-wxhelper:v${{ github.run_number }}

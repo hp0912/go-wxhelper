@@ -10,6 +10,10 @@ on:
 jobs:
   build-image:
     runs-on: ubuntu-latest
+    container:
+      # 使用这个镜像，不然Docker无法打包镜像
+      image: catthehacker/ubuntu:act-latest
+
     steps:
       - name: Setup Golang
         uses: actions/setup-go@v3

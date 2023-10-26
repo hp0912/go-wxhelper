@@ -3,6 +3,7 @@ module go-wechat
 go 1.21
 
 require (
+	github.com/duke-git/lancet/v2 v2.2.7
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-co-op/gocron v1.34.1
 	github.com/go-resty/resty/v2 v2.8.0

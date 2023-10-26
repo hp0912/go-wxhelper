@@ -1,13 +1,32 @@
+# 微信HOOK配置
+wechat:
+  # 微信HOOK接口地址
+  host: 10.0.0.73:19088
+  # 是否在启动的时候自动设置hook服务的回调
+  autoSetCallback: true
+  # 回调IP，如果是Docker运行，本参数必填，如果Docker修改了映射，格式为 ip:port
+  callback: 10.0.0.51
+
+# 数据库
+mysql:
+  host: 10.0.0.31
+  port: 3307
+  user: wechat
+  password: wechat123
+  db: wechat
+
 task:
-  enable: true
+  enable: false
   syncFriends:
       enable: true
       cron: '0 * * * *'
   waterGroup:
       enable: true
       cron: '30 9 * * *'
+      # 需要发送水群排行榜的群Id
       groups:
         - '18958257758@chatroom'
         - '49448748645@chatroom'
+      # 不计入统计范围的用户Id
       blacklist:
-        - 'wxid_778868788691exit2'
+        - 'wxid_7788687886912'

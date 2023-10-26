@@ -2,18 +2,19 @@ package main
 
 import (
 	"bytes"
-	"go-wechat/client"
 	"go-wechat/config"
 	"go-wechat/handler"
+	"go-wechat/initialization"
 	"go-wechat/tasks"
+	"go-wechat/utils"
 	"io"
 	"log"
 	"net"
+	"time"
 )
 
 func init() {
-	config.InitConfig()
-	client.InitMySQLClient()
+	initialization.InitConfig()
 	tasks.InitTasks()
 }
 
@@ -37,6 +38,13 @@ func process(conn net.Conn) {
 }
 
 func main() {
+	// 如果启用了自动配置回调，就设置一下
+	if config.Conf.Wechat.AutoSetCallback {
+		utils.ClearCallback()
+		time.Sleep(500 * time.Millisecond) // 休眠五百毫秒再设置
+		utils.SetCallback(config.Conf.Wechat.Callback)
+	}
+
 	// 建立 tcp 服务
 	listen, err := net.Listen("tcp", "0.0.0.0:19099")
 	if err != nil {

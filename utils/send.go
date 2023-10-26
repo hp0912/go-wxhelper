@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"github.com/go-resty/resty/v2"
+	"go-wechat/config"
 	"log"
 	"time"
 )
@@ -28,7 +29,7 @@ func SendMessage(toId, atId, msg string, retryCount int) {
 	resp, err := res.R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(string(pbs)).
-		Post("http://10.0.0.73:19088/api/sendTextMsg")
+		Post(config.Conf.Wechat.GetURL("/api/sendTextMsg"))
 	if err != nil {
 		log.Printf("发送文本消息失败: %s", err.Error())
 		// 休眠五秒后重新发送

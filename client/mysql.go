@@ -1,6 +1,7 @@
 package client
 
 import (
+	"go-wechat/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -10,11 +11,9 @@ import (
 var MySQL *gorm.DB
 
 func InitMySQLClient() {
-	dsn := "wechat:wechat123@tcp(10.0.0.31:3307)/wechat?charset=utf8mb4&parseTime=True&loc=Local"
-
 	// 创建连接对象
 	mysqlConfig := mysql.Config{
-		DSN:                     dsn,
+		DSN:                     config.Conf.MySQL.GetDSN(),
 		DontSupportRenameIndex:  true, // 重命名索引时采用删除并新建的方式
 		DontSupportRenameColumn: true, // 用 `change` 重命名列
 	}

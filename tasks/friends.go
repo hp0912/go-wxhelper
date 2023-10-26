@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-resty/resty/v2"
 	"go-wechat/client"
+	"go-wechat/config"
 	"go-wechat/constant"
 	"go-wechat/entity"
 	"go-wechat/model"
@@ -27,7 +28,7 @@ func syncFriends() {
 	resp, err := hc.R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetResult(&base).
-		Post("http://10.0.0.73:19088/api/getContactList")
+		Post(config.Conf.Wechat.GetURL("/api/getContactList"))
 	if err != nil {
 		log.Printf("获取好友列表失败: %s", err.Error())
 		return
@@ -105,7 +106,7 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(string(pbs)).
 		SetResult(&baseResp).
-		Post("http://10.0.0.73:19088/api/getMemberFromChatRoom")
+		Post(config.Conf.Wechat.GetURL("/api/getMemberFromChatRoom"))
 	if err != nil {
 		log.Printf("获取群成员信息失败: %s", err.Error())
 		return
@@ -189,7 +190,7 @@ func getContactProfile(wxid string) (ent model.ContactProfile, err error) {
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(string(pbs)).
 		SetResult(&baseResp).
-		Post("http://10.0.0.73:19088/api/getContactProfile")
+		Post(config.Conf.Wechat.GetURL("/api/getContactProfile"))
 	if err != nil {
 		log.Printf("获取成员详情失败: %s", err.Error())
 		return

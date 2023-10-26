@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  wxhelper:
+    container_name: wxhelper
+    image: gitee.ltd/lxh/go-wxhelper:latest
+    restart: unless-stopped
+    volumes:
+      # 配置文件请参阅项目根目录的config.yaml文件
+      - ./config/config.yaml:/app/config.yaml
+    ports:
+      - "19099:19099"
+

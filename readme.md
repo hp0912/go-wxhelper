@@ -45,13 +45,15 @@ task:
 
 2. 创建`docker-compose.yaml`文件
 ```yaml
-version: '3'
+version: '3.9'
 
 services:
   wechat:
     image: lxh01/wxhelper-docker:3.9.5.81
     container_name: gw-wechat
     restart: unless-stopped
+    environment:
+      - WINEDEBUG=fixme-all
     volumes:
       - ./data/wechat:/home/app/.wine/drive_c/users/app/Documents/WeChat\ Files
     ports:
@@ -69,7 +71,8 @@ services:
     container_name: gw-db
     restart: unless-stopped
     depends_on:
-      - wechat
+      wechat:
+        condition: service_healthy
     environment:
       - MYSQL_ROOT_PASSWORD=wechat
       - MYSQL_USER=wechat

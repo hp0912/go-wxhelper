@@ -10,11 +10,19 @@ services:
     ports:
       - "8080:8080"
       - "19088:19088"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:19088/api/checkLogin"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+
 
   mysql:
     image: mysql:8
     container_name: gw-db
     restart: unless-stopped
+    depends_on:
+      - wechat
     environment:
       - MYSQL_ROOT_PASSWORD=wechat
       - MYSQL_USER=wechat
@@ -28,6 +36,8 @@ services:
     image: gitee.ltd/lxh/go-wxhelper:latest
     container_name: gw-service
     restart: unless-stopped
+    depends_on:
+      - mysql
     volumes:
       # 配置文件请参阅项目根目录的config.yaml文件
       - ./config/config.yaml:/app/config.yaml

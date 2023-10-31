@@ -96,14 +96,9 @@ services:
 
 ```
 
-3. 启动  
-`这玩意儿有点儿不完善，先启动wechat，确定启动起来了再启动剩余的`
+3. 启动
 ```shell
 # 以下命令选个能用的就行
 docker-compose up -d # 老版本
 docker compose up -d # 新版本
-
-# 分顺序启动
-docker compose up -d wechat # 1. 启动微信
-docker compose up -d # 启动剩余的
 ```

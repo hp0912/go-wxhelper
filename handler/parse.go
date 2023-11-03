@@ -26,8 +26,13 @@ func Parse(remoteAddr net.Addr, msg []byte) {
 	groupUser := ""
 	msgStr := m.Content
 	if strings.Contains(m.FromUser, "@") {
-		// 系统消息不单独处理
-		if m.Type != types.MsgTypeRecalled && m.Type != types.MsgTypeSys {
+		switch m.Type {
+		case types.MsgTypeRecalled:
+			// 消息撤回
+		case types.MsgTypeSys:
+			// 系统消息
+		default:
+			// 默认消息处理
 			groupUser = strings.Split(m.Content, "\n")[0]
 			groupUser = strings.ReplaceAll(groupUser, ":", "")
 

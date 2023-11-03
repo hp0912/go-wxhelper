@@ -19,13 +19,13 @@ func (Friend) TableName() string {
 // GroupUser
 // @description: 群成员
 type GroupUser struct {
-	GroupId   string    `json:"groupId"`                         // 群Id
-	Account   string    `json:"account"`                         // 账号
-	HeadImage string    `json:"headImage"`                       // 头像
-	Nickname  string    `json:"nickname"`                        // 昵称
-	Wxid      string    `json:"wxid"`                            // 微信Id
-	IsMember  bool      `json:"isMember" gorm:"type:tinyint(1)"` // 是否群成员
-	LeaveTime time.Time `json:"leaveTime"`                       // 离开时间
+	GroupId   string     `json:"groupId"`                         // 群Id
+	Account   string     `json:"account"`                         // 账号
+	HeadImage string     `json:"headImage"`                       // 头像
+	Nickname  string     `json:"nickname"`                        // 昵称
+	Wxid      string     `json:"wxid"`                            // 微信Id
+	IsMember  bool       `json:"isMember" gorm:"type:tinyint(1)"` // 是否群成员
+	LeaveTime *time.Time `json:"leaveTime"`                       // 离开时间
 }
 
 func (GroupUser) TableName() string {

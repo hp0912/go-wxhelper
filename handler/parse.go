@@ -31,6 +31,7 @@ func Parse(remoteAddr net.Addr, msg []byte) {
 			// 消息撤回
 		case types.MsgTypeSys:
 			// 系统消息
+			go handleSysMessage(m)
 		default:
 			// 默认消息处理
 			groupUser = strings.Split(m.Content, "\n")[0]

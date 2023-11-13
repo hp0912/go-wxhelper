@@ -43,5 +43,5 @@ func handleAtMessage(m entity.Message) {
 	}
 
 	// 发送消息
-	utils.SendMessage(m.FromUser, m.GroupUser, resp.Choices[0].Message.Content, 0)
+	utils.SendMessage(m.FromUser, m.GroupUser, "\n"+resp.Choices[0].Message.Content, 0)
 }

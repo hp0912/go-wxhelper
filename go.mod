@@ -7,6 +7,7 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-co-op/gocron v1.34.1
 	github.com/go-resty/resty/v2 v2.8.0
+	github.com/sashabaranov/go-openai v1.17.5
 	github.com/spf13/viper v1.17.0
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.4

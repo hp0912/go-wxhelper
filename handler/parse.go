@@ -56,5 +56,10 @@ func Parse(remoteAddr net.Addr, msg []byte) {
 	ent.DisplayFullContent = m.DisplayFullContent
 	ent.Raw = string(msg)
 
+	// 处理At机器人的消息
+	if strings.HasSuffix(m.DisplayFullContent, "在群聊中@了你") {
+		go handleAtMessage(ent)
+	}
+
 	go service.SaveMessage(ent)
 }

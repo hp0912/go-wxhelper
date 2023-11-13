@@ -18,10 +18,22 @@ func SendMessage(toId, atId, msg string, retryCount int) {
 		log.Printf("重试五次失败，停止发送")
 		return
 	}
+
 	// 组装参数
 	param := map[string]any{
 		"wxid": toId, // 群或好友Id
 		"msg":  msg,  // 消息
+	}
+
+	// 接口地址
+	apiUrl := config.Conf.Wechat.GetURL("/api/sendTextMsg")
+	if atId != "" {
+		apiUrl = config.Conf.Wechat.GetURL("/api/sendAtText")
+		param = map[string]any{
+			"chatRoomId": toId,
+			"wxids":      atId,
+			"msg":        msg, // 消息
+		}
 	}
 	pbs, _ := json.Marshal(param)
 
@@ -29,7 +41,7 @@ func SendMessage(toId, atId, msg string, retryCount int) {
 	resp, err := res.R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(string(pbs)).
-		Post(config.Conf.Wechat.GetURL("/api/sendTextMsg"))
+		Post(apiUrl)
 	if err != nil {
 		log.Printf("发送文本消息失败: %s", err.Error())
 		// 休眠五秒后重新发送

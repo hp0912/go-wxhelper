@@ -30,3 +30,12 @@ task:
       # 不计入统计范围的用户Id
       blacklist:
         - 'wxid_7788687886912'
+
+# AI回复
+ai:
+  # 是否启用
+  enable: false
+  # OpenAI Api key
+  apiKey: sk-xxxx
+  # 接口代理域名，不填默认ChatGPT官方地址
+  baseUrl: https://sxxx

@@ -2,10 +2,12 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/sashabaranov/go-openai"
 	"go-wechat/config"
 	"go-wechat/entity"
 	"go-wechat/utils"
+	"log"
 )
 
 // handleAtMessage
@@ -16,7 +18,11 @@ func handleAtMessage(m entity.Message) {
 		return
 	}
 	// 默认使用AI回复
-	client := openai.NewClient(config.Conf.Ai.ApiKey)
+	conf := openai.DefaultConfig(config.Conf.Ai.ApiKey)
+	if config.Conf.Ai.BaseUrl != "" {
+		conf.BaseURL = fmt.Sprintf("%s/v1", config.Conf.Ai.BaseUrl)
+	}
+	client := openai.NewClientWithConfig(conf)
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
@@ -31,6 +37,7 @@ func handleAtMessage(m entity.Message) {
 	)
 
 	if err != nil {
+		log.Printf("OpenAI聊天发起失败: %v", err.Error())
 		utils.SendMessage(m.FromUser, m.GroupUser, "AI炸啦~", 0)
 		return
 	}

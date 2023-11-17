@@ -28,6 +28,27 @@ func handleAtMessage(m entity.Message) {
 		m.Content = strings.Replace(m.Content, matches[0], "", 1)
 	}
 
+	// 组装消息体
+	messages := make([]openai.ChatCompletionMessage, 0)
+	if config.Conf.Ai.Personality != "" {
+		// 填充人设
+		messages = append(messages, openai.ChatCompletionMessage{
+			Role:    openai.ChatMessageRoleSystem,
+			Content: config.Conf.Ai.Personality,
+		})
+	}
+	// 填充用户消息
+	messages = append(messages, openai.ChatCompletionMessage{
+		Role:    openai.ChatMessageRoleUser,
+		Content: m.Content,
+	})
+
+	// 配置模型
+	model := openai.GPT3Dot5Turbo0613
+	if config.Conf.Ai.Model != "" {
+		model = config.Conf.Ai.Model
+	}
+
 	// 默认使用AI回复
 	conf := openai.DefaultConfig(config.Conf.Ai.ApiKey)
 	if config.Conf.Ai.BaseUrl != "" {
@@ -37,7 +58,7 @@ func handleAtMessage(m entity.Message) {
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo0613,
+			Model: model,
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,

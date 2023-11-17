@@ -58,13 +58,8 @@ func handleAtMessage(m entity.Message) {
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model: model,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: m.Content,
-				},
-			},
+			Model:    model,
+			Messages: messages,
 		},
 	)
 

@@ -8,6 +8,8 @@ import (
 	"go-wechat/entity"
 	"go-wechat/utils"
 	"log"
+	"regexp"
+	"strings"
 )
 
 // handleAtMessage
@@ -17,6 +19,15 @@ func handleAtMessage(m entity.Message) {
 	if !config.Conf.Ai.Enable {
 		return
 	}
+
+	// 预处理一下发送的消息，用正则去掉@机器人的内容
+	re := regexp.MustCompile(`@([^ ]+)`)
+	matches := re.FindStringSubmatch(m.Content)
+	if len(matches) > 0 {
+		// 过滤掉第一个匹配到的
+		m.Content = strings.Replace(m.Content, matches[0], "", 1)
+	}
+
 	// 默认使用AI回复
 	conf := openai.DefaultConfig(config.Conf.Ai.ApiKey)
 	if config.Conf.Ai.BaseUrl != "" {

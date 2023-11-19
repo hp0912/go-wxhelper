@@ -22,7 +22,10 @@ task:
       cron: '*/5 * * * *' # 五分钟一次
   waterGroup:
       enable: false
-      cron: '30 9 * * *'
+      cron:
+        yesterday: '30 9 * * *' # 每天9:30
+        week: '30 9 * * 1' # 每周一9:30
+        month: '30 9 1 * *' # 每月1号9:30
       # 需要发送水群排行榜的群Id
       groups:
         - '18958257758@chatroom'

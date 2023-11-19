@@ -10,40 +10,38 @@ import (
 	"strings"
 )
 
-// 水群排行榜
-
-// yesterday
-// @description: 昨日排行榜
-func yesterday() {
+// week
+// @description: 周排行榜
+func week() {
 	for _, id := range config.Conf.Task.WaterGroup.Groups {
-		dealYesterday(id)
+		dealWeek(id)
 	}
 }
 
-// dealYesterday
+// dealWeek
 // @description: 处理请求
 // @param gid
-func dealYesterday(gid string) {
-	notifyMsgs := []string{"#昨日水群排行榜"}
+func dealWeek(gid string) {
+	notifyMsgs := []string{"#上周水群排行榜"}
 
-	// 获取昨日消息总数
+	// 获取上周消息总数
 	var yesterdayMsgCount int64
 	err := client.MySQL.Model(&entity.Message{}).
 		Where("from_user = ?", gid).
-		Where("`type` < 10000").
-		Where("DATEDIFF(create_at,NOW()) = -1").
+		Where("type < 10000").
+		Where("YEARWEEK(date_format(create_at, '%Y-%m-%d')) = YEARWEEK(now()) - 1").
 		Count(&yesterdayMsgCount).Error
 	if err != nil {
-		log.Printf("获取昨日消息总数失败, 错误信息: %v", err)
+		log.Printf("获取上周消息总数失败, 错误信息: %v", err)
 		return
 	}
-	log.Printf("昨日消息总数: %d", yesterdayMsgCount)
+	log.Printf("上周消息总数: %d", yesterdayMsgCount)
 	if yesterdayMsgCount == 0 {
 		return
 	}
 
 	notifyMsgs = append(notifyMsgs, " ")
-	notifyMsgs = append(notifyMsgs, fmt.Sprintf("昨日消息总数: %d", yesterdayMsgCount))
+	notifyMsgs = append(notifyMsgs, fmt.Sprintf("上周消息总数: %d", yesterdayMsgCount))
 
 	// 返回数据
 	type record struct {
@@ -58,7 +56,7 @@ func dealYesterday(gid string) {
 		Select("tm.group_user", "tgu.nickname", "count( 1 ) AS `count`").
 		Where("tm.from_user = ?", gid).
 		Where("tm.type < 10000").
-		Where("DATEDIFF(tm.create_at,NOW()) = -1").
+		Where("YEARWEEK(date_format(tm.create_at, '%Y-%m-%d')) = YEARWEEK(now()) - 1").
 		Group("tm.group_user, tgu.nickname").Order("`count` DESC").
 		Limit(10)
 
@@ -72,7 +70,7 @@ func dealYesterday(gid string) {
 	err = tx.Find(&records).Error
 
 	if err != nil {
-		log.Printf("获取昨日消息失败, 错误信息: %v", err)
+		log.Printf("获取上周消息失败, 错误信息: %v", err)
 		return
 	}
 	notifyMsgs = append(notifyMsgs, " ")

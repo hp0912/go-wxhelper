@@ -20,8 +20,16 @@ func InitTasks() {
 
 	// 水群排行
 	if config.Conf.Task.WaterGroup.Enable {
-		log.Printf("水群排行任务已启用，执行表达式: %s", config.Conf.Task.WaterGroup.Cron)
-		_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron).Do(yesterday)
+		log.Printf("水群排行任务已启用，执行表达式: %+v", config.Conf.Task.WaterGroup.Cron)
+		if config.Conf.Task.WaterGroup.Cron.Yesterday != "" {
+			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Yesterday).Do(yesterday)
+		}
+		if config.Conf.Task.WaterGroup.Cron.Week != "" {
+			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Week).Do(week)
+		}
+		if config.Conf.Task.WaterGroup.Cron.Month != "" {
+			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Month).Do(month)
+		}
 	}
 
 	// 更新好友列表

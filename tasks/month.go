@@ -29,7 +29,7 @@ func dealMonth(gid string) {
 	err := client.MySQL.Model(&entity.Message{}).
 		Where("from_user = ?", gid).
 		Where("`type` < 10000").
-		Where("YEARWEEK(date_format(create_at, '%Y-%m-%d')) = YEARWEEK(now()) - 1").
+		Where("PERIOD_DIFF(date_format(now(), '%Y%m'), date_format(create_at, '%Y%m')) = 1").
 		Count(&yesterdayMsgCount).Error
 	if err != nil {
 		log.Printf("获取上月消息总数失败, 错误信息: %v", err)
@@ -56,7 +56,7 @@ func dealMonth(gid string) {
 		Select("tm.group_user", "tgu.nickname", "count( 1 ) AS `count`").
 		Where("tm.from_user = ?", gid).
 		Where("tm.type < 10000").
-		Where("YEARWEEK(date_format(tm.create_at, '%Y-%m-%d')) = YEARWEEK(now()) - 1").
+		Where("PERIOD_DIFF(date_format(now(), '%Y%m'), date_format(create_at, '%Y%m')) = 1").
 		Group("tm.group_user, tgu.nickname").Order("`count` DESC").
 		Limit(10)
 

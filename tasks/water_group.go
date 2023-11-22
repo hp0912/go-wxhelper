@@ -8,6 +8,7 @@ import (
 	"go-wechat/utils"
 	"log"
 	"strings"
+	"time"
 )
 
 // 水群排行榜
@@ -16,7 +17,13 @@ import (
 // @description: 昨日排行榜
 func yesterday() {
 	for _, id := range config.Conf.Task.WaterGroup.Groups {
+		// 消息统计
 		dealYesterday(id)
+		// 获取昨日日期
+		yd := time.Now().Local().AddDate(0, 0, -1).Format("20060102")
+		// 发送词云
+		fileName := fmt.Sprintf("%s_%s.png", yd, id)
+		utils.SendImage(id, "D:\\Share\\wordcloud\\"+fileName, 0)
 	}
 }
 

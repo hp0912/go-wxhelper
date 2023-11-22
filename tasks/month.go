@@ -8,13 +8,20 @@ import (
 	"go-wechat/utils"
 	"log"
 	"strings"
+	"time"
 )
 
 // month
 // @description: 月排行榜
 func month() {
 	for _, id := range config.Conf.Task.WaterGroup.Groups {
+		// 消息统计
 		dealMonth(id)
+		// 获取上个月月份
+		yd := time.Now().Local().AddDate(0, 0, -1).Format("200601")
+		// 发送词云
+		fileName := fmt.Sprintf("%s_%s.png", yd, id)
+		utils.SendImage(id, "D:\\Share\\wordcloud\\"+fileName, 0)
 	}
 }
 

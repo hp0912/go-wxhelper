@@ -8,13 +8,20 @@ import (
 	"go-wechat/utils"
 	"log"
 	"strings"
+	"time"
 )
 
 // week
 // @description: 周排行榜
 func week() {
 	for _, id := range config.Conf.Task.WaterGroup.Groups {
+		// 消息统计
 		dealWeek(id)
+		// 获取上周周数
+		year, weekNo := time.Now().Local().AddDate(0, 0, -1).ISOWeek()
+		// 发送词云
+		fileName := fmt.Sprintf("%d%d_%s.png", year, weekNo, id)
+		utils.SendImage(id, "D:\\Share\\wordcloud\\"+fileName, 0)
 	}
 }
 

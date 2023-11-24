@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
+	"github.com/duke-git/lancet/v2/slice"
 	"github.com/sashabaranov/go-openai"
 	"go-wechat/config"
 	"go-wechat/entity"
@@ -17,6 +18,11 @@ import (
 // @param m
 func handleAtMessage(m entity.Message) {
 	if !config.Conf.Ai.Enable {
+		return
+	}
+
+	// 如果在禁用的群组里面，就不处理
+	if slice.Contain(config.Conf.Ai.DisableGroup, m.FromUser) {
 		return
 	}
 

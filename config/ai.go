@@ -3,9 +3,10 @@ package config
 // ai
 // @description: AI配置
 type ai struct {
-	Enable      bool   `json:"enable" yaml:"enable"`           // 是否启用AI
-	Model       string `json:"model" yaml:"model"`             // 模型
-	ApiKey      string `json:"apiKey" yaml:"apiKey"`           // API Key
-	BaseUrl     string `json:"baseUrl" yaml:"baseUrl"`         // API地址
-	Personality string `json:"personality" yaml:"personality"` // 人设
+	Enable       bool     `json:"enable" yaml:"enable"`             // 是否启用AI
+	Model        string   `json:"model" yaml:"model"`               // 模型
+	ApiKey       string   `json:"apiKey" yaml:"apiKey"`             // API Key
+	BaseUrl      string   `json:"baseUrl" yaml:"baseUrl"`           // API地址
+	Personality  string   `json:"personality" yaml:"personality"`   // 人设
+	DisableGroup []string `json:"disableGroup" yaml:"disableGroup"` // 禁用群组
 }

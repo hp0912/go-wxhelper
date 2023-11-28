@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 	"fmt"
-	"github.com/duke-git/lancet/v2/slice"
 	"github.com/sashabaranov/go-openai"
 	"go-wechat/config"
 	"go-wechat/entity"
+	"go-wechat/service"
 	"go-wechat/utils"
 	"log"
 	"regexp"
@@ -21,8 +21,21 @@ func handleAtMessage(m entity.Message) {
 		return
 	}
 
-	// 如果在禁用的群组里面，就不处理
-	if slice.Contain(config.Conf.Ai.DisableGroup, m.FromUser) {
+	// 取出所有启用了AI的好友或群组
+	us, err := service.GetAllEnableAI()
+	if err != nil {
+		utils.SendMessage(m.FromUser, m.GroupUser, "#系统异常\n"+err.Error(), 0)
+		return
+	}
+	// 判断是否启用，如果没有启用，直接返回
+	var canUse bool
+	for _, u := range us {
+		if u.Wxid == m.FromUser {
+			canUse = true
+			break
+		}
+	}
+	if !canUse {
 		return
 	}
 

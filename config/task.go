@@ -18,10 +18,8 @@ type syncFriends struct {
 // waterGroup
 // @description: 水群排行榜
 type waterGroup struct {
-	Enable    bool           `json:"enable" yaml:"enable"`       // 是否启用
-	Cron      waterGroupCron `json:"cron" yaml:"cron"`           // 定时任务表达式
-	Groups    []string       `json:"groups" yaml:"groups"`       // 启用的群Id
-	Blacklist []string       `json:"blacklist" yaml:"blacklist"` // 黑名单
+	Enable bool           `json:"enable" yaml:"enable"` // 是否启用
+	Cron   waterGroupCron `json:"cron" yaml:"cron"`     // 定时任务表达式
 }
 
 // waterGroupCron

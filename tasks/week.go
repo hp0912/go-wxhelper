@@ -3,8 +3,8 @@ package tasks
 import (
 	"fmt"
 	"go-wechat/client"
-	"go-wechat/config"
 	"go-wechat/entity"
+	"go-wechat/service"
 	"go-wechat/utils"
 	"log"
 	"strings"
@@ -14,14 +14,20 @@ import (
 // week
 // @description: 周排行榜
 func week() {
-	for _, id := range config.Conf.Task.WaterGroup.Groups {
+	groups, err := service.GetAllEnableChatRank()
+	if err != nil {
+		log.Printf("获取启用了聊天排行榜的群组失败, 错误信息: %v", err)
+		return
+	}
+
+	for _, group := range groups {
 		// 消息统计
-		dealWeek(id)
+		dealWeek(group.Wxid)
 		// 获取上周周数
 		year, weekNo := time.Now().Local().AddDate(0, 0, -1).ISOWeek()
 		// 发送词云
-		fileName := fmt.Sprintf("%d%d_%s.png", year, weekNo, id)
-		utils.SendImage(id, "D:\\Share\\wordcloud\\"+fileName, 0)
+		fileName := fmt.Sprintf("%d%d_%s.png", year, weekNo, group.Wxid)
+		utils.SendImage(group.Wxid, "D:\\Share\\wordcloud\\"+fileName, 0)
 	}
 }
 
@@ -58,23 +64,14 @@ func dealWeek(gid string) {
 	}
 
 	var records []record
-	tx := client.MySQL.Table("t_message AS tm").
-		Joins("LEFT JOIN t_group_user AS tgu ON tgu.wxid = tm.group_user AND tm.from_user = tgu.group_id").
+	err = client.MySQL.Table("t_message AS tm").
+		Joins("LEFT JOIN t_group_user AS tgu ON tgu.wxid = tm.group_user AND tm.from_user = tgu.group_id AND tgu.skip_chat_rank = 0").
 		Select("tm.group_user", "tgu.nickname", "count( 1 ) AS `count`").
 		Where("tm.from_user = ?", gid).
 		Where("tm.type < 10000").
 		Where("YEARWEEK(date_format(tm.create_at, '%Y-%m-%d')) = YEARWEEK(now()) - 1").
 		Group("tm.group_user, tgu.nickname").Order("`count` DESC").
-		Limit(10)
-
-	// 黑名单
-	blacklist := config.Conf.Task.WaterGroup.Blacklist
-	// 如果有黑名单，过滤掉
-	if len(blacklist) > 0 {
-		tx.Where("tm.group_user NOT IN (?)", blacklist)
-	}
-
-	err = tx.Find(&records).Error
+		Limit(10).Find(&records).Error
 
 	if err != nil {
 		log.Printf("获取上周消息失败, 错误信息: %v", err)

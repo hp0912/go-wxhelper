@@ -7,7 +7,7 @@ cd wechat-hook
 1. 创建配置文件`config.yaml`
 ```shell
 mkdir config # 先创建一个文件夹保存配置文件，文件名不要变
-vim config.yaml # 编辑配置文件，内容如下
+vim config.yaml # 编辑配置文件，内容如下，最新配置请参考项目里的config.yaml文件
 ```
 ```yaml
 # 微信HOOK配置
@@ -34,13 +34,10 @@ task:
       cron: '0 * * * *'
   waterGroup:
       enable: true
-      cron: '30 9 * * *'
-      # 需要发送水群排行榜的群Id
-      groups:
-        - '11111@chatroom' # 自行配置
-      # 不计入统计范围的用户Id
-      blacklist:
-        - 'wxid_xxxx' # 自行配置
+      cron:
+        yesterday: '30 9 * * *' # 每天9:30
+        week: '30 9 * * 1' # 每周一9:30
+        month: '30 9 1 * *' # 每月1号9:30
 ```
 
 2. 创建`docker-compose.yaml`文件

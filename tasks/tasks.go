@@ -3,6 +3,8 @@ package tasks
 import (
 	"github.com/go-co-op/gocron"
 	"go-wechat/config"
+	"go-wechat/tasks/friends"
+	"go-wechat/tasks/watergroup"
 	"log"
 	"time"
 )
@@ -22,20 +24,20 @@ func InitTasks() {
 	if config.Conf.Task.WaterGroup.Enable {
 		log.Printf("水群排行任务已启用，执行表达式: %+v", config.Conf.Task.WaterGroup.Cron)
 		if config.Conf.Task.WaterGroup.Cron.Yesterday != "" {
-			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Yesterday).Do(yesterday)
+			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Yesterday).Do(watergroup.Yesterday)
 		}
 		if config.Conf.Task.WaterGroup.Cron.Week != "" {
-			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Week).Do(week)
+			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Week).Do(watergroup.Week)
 		}
 		if config.Conf.Task.WaterGroup.Cron.Month != "" {
-			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Month).Do(month)
+			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Month).Do(watergroup.Month)
 		}
 	}
 
 	// 更新好友列表
 	if config.Conf.Task.SyncFriends.Enable {
 		log.Printf("更新好友列表任务已启用，执行表达式: %s", config.Conf.Task.SyncFriends.Cron)
-		_, _ = s.Cron(config.Conf.Task.SyncFriends.Cron).Do(syncFriends)
+		_, _ = s.Cron(config.Conf.Task.SyncFriends.Cron).Do(friends.Sync)
 	}
 
 	// 开启定时任务

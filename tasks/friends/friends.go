@@ -1,4 +1,4 @@
-package tasks
+package friends
 
 import (
 	"encoding/json"
@@ -20,9 +20,9 @@ import (
 // http客户端
 var hc = resty.New()
 
-// syncFriends
+// Sync
 // @description: 同步好友列表
-func syncFriends() {
+func Sync() {
 	var base model.Response[[]model.FriendItem]
 
 	resp, err := hc.R().

@@ -14,9 +14,6 @@ import (
 // @param atId
 // @param msg
 func SendMessage(toId, atId, msg string, retryCount int) {
-	if toId != "" {
-		return
-	}
 	if retryCount > 5 {
 		log.Printf("重试五次失败，停止发送")
 		return
@@ -60,10 +57,6 @@ func SendMessage(toId, atId, msg string, retryCount int) {
 // @param imgPath string 图片路径
 // @param retryCount int 重试次数
 func SendImage(toId, imgPath string, retryCount int) {
-	if toId != "" {
-		return
-	}
-
 	if retryCount > 5 {
 		log.Printf("重试五次失败，停止发送")
 		return

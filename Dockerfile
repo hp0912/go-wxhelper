@@ -18,4 +18,4 @@ EXPOSE 8080
 WORKDIR /app
 COPY --from=builder /builder/app ./app
 COPY --from=builder /builder/views ./views
-CMD ./app
+CMD ls -lah && ./app

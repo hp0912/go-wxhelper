@@ -55,7 +55,7 @@ func (dt DateTime) Value() (dv driver.Value, err error) {
 
 // 用于 fmt.Println 和后续验证场景
 func (dt DateTime) String() string {
-	return dt.Format(dateTimeFormat)
+	return dt.Format("2006-01-02 15:04:05")
 }
 
 // Format 格式化

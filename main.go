@@ -8,7 +8,10 @@ import (
 	"go-wechat/tasks"
 	"go-wechat/tcpserver"
 	"go-wechat/utils"
+	"html/template"
 	"log"
+	"net/http"
+	"strings"
 	"time"
 )
 
@@ -30,13 +33,31 @@ func main() {
 
 	// 启动HTTP服务
 	app := gin.Default()
+
+	// 自定义模板引擎函数
+	app.SetFuncMap(template.FuncMap{
+		"checkSwap": func(flag bool) string {
+			if flag {
+				return "swap-active"
+			}
+			return ""
+		},
+	})
+
 	app.LoadHTMLGlob("views/*.html")
 	app.Static("/assets", "./views/static")
 	app.StaticFile("/favicon.ico", "./views/wechat.ico")
 	// 404返回数据
 	app.NoRoute(func(ctx *gin.Context) {
+		if strings.HasPrefix(ctx.Request.URL.Path, "/api") {
+			ctx.String(404, "接口不存在")
+			return
+		}
 		// 404直接跳转到首页
 		ctx.Redirect(302, "/index.html")
+	})
+	app.NoMethod(func(ctx *gin.Context) {
+		ctx.String(http.StatusMethodNotAllowed, "不支持的请求方式")
 	})
 	// 初始化路由
 	router.Init(app)

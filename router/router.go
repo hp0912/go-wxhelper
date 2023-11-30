@@ -18,4 +18,11 @@ func Init(g *gin.Engine) {
 	g.GET("/test.html", func(ctx *gin.Context) {
 		ctx.HTML(200, "test.html", nil)
 	})
+
+	// 接口
+	api := g.Group("/api")
+	api.PUT("/ai/status", app.ChangeEnableAiStatus)               // 修改是否开启AI状态
+	api.PUT("/grouprank/status", app.ChangeEnableGroupRankStatus) // 修改是否开启水群排行榜状态
+	api.PUT("/grouprank/skip", app.ChangeSkipGroupRankStatus)     // 修改是否跳过水群排行榜状态
+	api.GET("/group/users", app.GetGroupUsers)                    // 获取群成员列表
 }

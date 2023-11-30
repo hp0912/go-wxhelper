@@ -7,7 +7,7 @@ COPY . .
 
 RUN go version
 RUN go mod download && go build -o app
-RUN ls -lh && chmod +x ./app
+RUN ls -lh && chmod -R +x ./*
 
 FROM code.hyxc1.com/open/alpine:3.16.0 as runner
 LABEL org.opencontainers.image.authors="lxh@cxh.cn"
@@ -17,5 +17,5 @@ EXPOSE 8080
 
 WORKDIR /app
 COPY --from=builder /builder/app ./app
-COPY ./views ./views
+COPY --from=builder /builder/views ./views
 CMD ./app

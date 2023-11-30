@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>水群助手</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="assets/js/index.js"></script>
+</head>
+<body>
+    <div class="p-5 space-y-5">
+        <!-- 如果msg不等于success，显示alert -->
+        {{ if ne .msg "success" }}
+        <div role="alert" class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>{{ .msg }}</span>
+        </div>
+        {{ end }}
+
+        <div class="collapse collapse-arrow bg-base-200">
+            <input type="radio" name="my-accordion-2" checked="checked" />
+            <div class="collapse-title text-xl font-medium">
+                好友列表
+            </div>
+            <div class="collapse-content">
+                <!-- 循环好友列表 -->
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra">
+                        <!-- head -->
+                        <thead>
+                        <tr>
+                            <th>微信Id</th>
+                            <th>微信号</th>
+                            <th>昵称</th>
+                            <th>最后活跃时间</th>
+                            <th>是否在通讯录</th>
+                            <th>是否启用AI</th>
+                            <th>是否启用水群排行榜</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{ range .friends }}
+                        <tr>
+                            <td>{{ .Wxid }}</td>
+                            <td>{{ .CustomAccount }}</td>
+                            <td>{{ .Nickname }}</td>
+                            <td>
+                                {{ if eq .LastActiveTime.IsNil true }}
+                                无数据
+                                {{ else }}
+                                {{ .LastActiveTime }}
+                                {{ end }}
+                            </td>
+                            <td>{{ .IsOk }}</td>
+                            <td>{{ .EnableAi }}</td>
+                            <td>{{ .EnableChatRank }}</td>
+                        </tr>
+                        {{ end }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="collapse collapse-arrow bg-base-200">
+            <input type="radio" name="my-accordion-2" />
+            <div class="collapse-title text-xl font-medium">
+                群列表
+            </div>
+            <div class="collapse-content">
+                <!-- 循环群列表 -->
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra">
+                        <!-- head -->
+                        <thead>
+                        <tr>
+                            <th>群Id</th>
+                            <th>昵称</th>
+                            <th>最后活跃时间</th>
+                            <th>是否在通讯录</th>
+                            <th>是否启用AI</th>
+                            <th>是否启用水群排行榜</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{ range .groups }}
+                        <tr>
+                            <td>{{ .Wxid }}</td>
+                            <td>{{ .Nickname }}</td>
+                            <td>
+                                {{ if eq .LastActiveTime.IsNil true }}
+                                无数据
+                                {{ else }}
+                                {{ .LastActiveTime }}
+                                {{ end }}
+                            </td>
+                            <td>{{ .IsOk }}</td>
+                            <td>{{ .EnableAi }}</td>
+                            <td>{{ .EnableChatRank }}</td>
+                        </tr>
+                        {{ end }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

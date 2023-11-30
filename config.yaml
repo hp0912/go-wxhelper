@@ -16,7 +16,7 @@ mysql:
   db: wechat
 
 task:
-  enable: true
+  enable: false
   syncFriends:
       enable: true
       cron: '*/5 * * * *' # 五分钟一次

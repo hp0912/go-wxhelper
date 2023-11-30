@@ -12,6 +12,7 @@ type Friend struct {
 	Wxid           string `json:"wxid"`                                                     // 微信原始Id
 	EnableAi       bool   `json:"enableAI" gorm:"type:tinyint(1) default 0 not null"`       // 是否使用AI
 	EnableChatRank bool   `json:"enableChatRank" gorm:"type:tinyint(1) default 0 not null"` // 是否使用聊天排行
+	IsOk           bool   `json:"isOk" gorm:"type:tinyint(1) default 0 not null"`           // 是否正常
 }
 
 func (Friend) TableName() string {

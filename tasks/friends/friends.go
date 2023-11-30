@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"github.com/go-resty/resty/v2"
 	"go-wechat/client"
+	"go-wechat/common/constant"
 	"go-wechat/config"
-	"go-wechat/constant"
 	"go-wechat/entity"
 	"go-wechat/model"
 	"gorm.io/gorm"
@@ -38,6 +38,8 @@ func Sync() {
 	tx := client.MySQL.Begin()
 	defer tx.Commit()
 
+	nowIds := []string{}
+
 	for _, friend := range base.Data {
 		if strings.Contains(friend.Wxid, "gh_") || strings.Contains(friend.Wxid, "@openim") {
 			continue
@@ -47,6 +49,7 @@ func Sync() {
 			continue
 		}
 		log.Printf("昵称: %s -> 类型: %d -> 微信号: %s -> 微信原始Id: %s", friend.Nickname, friend.Type, friend.CustomAccount, friend.Wxid)
+		nowIds = append(nowIds, friend.Wxid)
 
 		// 判断是否存在，不存在的话就新增，存在就修改一下名字
 		var count int64
@@ -86,6 +89,9 @@ func Sync() {
 			syncGroupUsers(tx, friend.Wxid)
 		}
 	}
+
+	// 清理不在列表中的好友
+	err = tx.Model(&entity.Friend{}).Where("wxid NOT IN (?)", nowIds).Update("is_ok", false).Error
 
 	log.Println("同步好友列表完成")
 }

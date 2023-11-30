@@ -1,40 +1,20 @@
 package main
 
 import (
-	"bytes"
+	"github.com/gin-gonic/gin"
 	"go-wechat/config"
-	"go-wechat/handler"
 	"go-wechat/initialization"
+	"go-wechat/router"
 	"go-wechat/tasks"
+	"go-wechat/tcpserver"
 	"go-wechat/utils"
-	"io"
 	"log"
-	"net"
 	"time"
 )
 
 func init() {
 	initialization.InitConfig()
 	tasks.InitTasks()
-}
-
-func process(conn net.Conn) {
-	// 处理完关闭连接
-	defer func() {
-		log.Printf("处理完成: -> %s", conn.RemoteAddr())
-		_ = conn.Close()
-	}()
-
-	var buf bytes.Buffer
-	if _, err := io.Copy(&buf, conn); err != nil {
-		log.Printf("[%s]返回数据失败，错误信息: %v", conn.RemoteAddr(), err)
-	}
-	log.Printf("[%s]数据长度: %d", conn.RemoteAddr(), buf.Len())
-	go handler.Parse(conn.RemoteAddr(), buf.Bytes())
-	// 将接受到的数据返回给客户端
-	if _, err := conn.Write([]byte("200 OK")); err != nil {
-		log.Printf("[%s]返回数据失败，错误信息: %v", conn.RemoteAddr(), err)
-	}
 }
 
 func main() {
@@ -45,21 +25,22 @@ func main() {
 		utils.SetCallback(config.Conf.Wechat.Callback)
 	}
 
-	// 建立 tcp 服务
-	listen, err := net.Listen("tcp", "0.0.0.0:19099")
-	if err != nil {
-		log.Printf("listen failed, err:%v", err)
-		return
-	}
+	// 启动TCP服务
+	go tcpserver.Start()
 
-	for {
-		// 等待客户端建立连接
-		conn, err := listen.Accept()
-		if err != nil {
-			log.Printf("accept failed, err:%v", err)
-			continue
-		}
-		// 启动一个单独的 goroutine 去处理连接
-		go process(conn)
+	// 启动HTTP服务
+	app := gin.Default()
+	app.LoadHTMLGlob("views/*.html")
+	app.Static("/assets", "./views/assets")
+	app.StaticFile("/favicon.ico", "./views/wechat.ico")
+	// 404返回数据
+	app.NoRoute(func(ctx *gin.Context) {
+		// 404直接跳转到首页
+		ctx.Redirect(302, "/index.html")
+	})
+	// 初始化路由
+	router.Init(app)
+	if err := app.Run(":8080"); err != nil {
+		log.Panicf("服务启动失败：%v", err)
 	}
 }

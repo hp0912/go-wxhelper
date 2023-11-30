@@ -2,6 +2,9 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-wechat/client"
+	"go-wechat/entity"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 )
@@ -24,6 +27,15 @@ func ChangeEnableAiStatus(ctx *gin.Context) {
 	}
 	log.Printf("待修改的微信Id：%s", p.WxId)
 
+	err := client.MySQL.Model(&entity.Friend{}).
+		Where("wxid = ?", p.WxId).
+		Update("`enable_ai`", gorm.Expr(" !`enable_ai`")).Error
+	if err != nil {
+		log.Printf("修改是否开启AI失败：%s", err)
+		ctx.String(http.StatusInternalServerError, "操作失败: %s", err)
+		return
+	}
+
 	ctx.String(http.StatusOK, "操作成功")
 }
 
@@ -38,6 +50,15 @@ func ChangeEnableGroupRankStatus(ctx *gin.Context) {
 	}
 	log.Printf("待修改的群Id：%s", p.WxId)
 
+	err := client.MySQL.Model(&entity.Friend{}).
+		Where("wxid = ?", p.WxId).
+		Update("`enable_chat_rank`", gorm.Expr(" !`enable_chat_rank`")).Error
+	if err != nil {
+		log.Printf("修改开启水群排行榜失败：%s", err)
+		ctx.String(http.StatusInternalServerError, "操作失败: %s", err)
+		return
+	}
+
 	ctx.String(http.StatusOK, "操作成功")
 }
 
@@ -51,6 +72,16 @@ func ChangeSkipGroupRankStatus(ctx *gin.Context) {
 		return
 	}
 	log.Printf("待修改的群Id：%s -> %s", p.WxId, p.UserId)
+
+	err := client.MySQL.Model(&entity.GroupUser{}).
+		Where("group_id = ?", p.WxId).
+		Where("wxid = ?", p.UserId).
+		Update("`skip_chat_rank`", gorm.Expr(" !`skip_chat_rank`")).Error
+	if err != nil {
+		log.Printf("修改跳过水群排行榜失败：%s", err)
+		ctx.String(http.StatusInternalServerError, "操作失败: %s", err)
+		return
+	}
 
 	ctx.String(http.StatusOK, "操作成功")
 }

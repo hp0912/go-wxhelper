@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>水群助手</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.14/dist/full.min.css" rel="stylesheet" type="text/css" />
-
+<!--    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.14/dist/full.min.css" rel="stylesheet" type="text/css" />-->
+    <link href="assets/css/daisyui-4.4.14-full.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/index.css" rel="stylesheet" type="text/css" />
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,7 +24,7 @@
         {{ end }}
 
         <div role="tablist" class="tabs tabs-bordered">
-            <input type="radio" name="friend_tab" role="tab" class="tab" aria-label="好友列表" />
+            <input type="radio" name="friend_tab" role="tab" class="tab" aria-label="好友列表" checked />
             <div role="tabpanel" class="tab-content p-6">
                 <!-- 循环好友列表 -->
                 <table class="table table-zebra">
@@ -77,7 +77,7 @@
                 </table>
             </div>
 
-            <input type="radio" name="friend_tab" role="tab" class="tab" aria-label="群列表" checked/>
+            <input type="radio" name="friend_tab" role="tab" class="tab" aria-label="群列表" />
             <div role="tabpanel" class="tab-content p-6">
                 <!-- 循环群列表 -->
                 <table class="table table-zebra">
@@ -135,7 +135,7 @@
                             </label>
                         </td>
                         <td>
-                            <button class="btn btn-link" onclick="getGroupUsers({{.Wxid}})">查看群成员</button>
+                            <button class="btn btn-link" onclick="getGroupUsers({{.Wxid}}, {{.Nickname}})">查看群成员</button>
                         </td>
                     </tr>
                     {{ end }}
@@ -148,11 +148,16 @@
     </div>
 
     <dialog id="groupUserModal" class="modal">
-        <div class="modal-box w-11/12 max-w-5xl">
-            <form method="dialog">
-                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-            </form>
-            <h3 class="font-bold text-lg">我是群名称</h3>
+        <div class="modal-box w-11/12 max-w-7xl">
+<!--            <form method="dialog">-->
+<!--                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>-->
+<!--            </form>-->
+            <h3 class="font-bold text-lg" id="groupUserModalName">我是群名称</h3>
+            <!-- 加载动画 -->
+
+
+            <div class="divider divider-warning">成员列表</div>
+            <!-- 好友列表 -->
             <table class="table table-zebra">
                 <!-- head -->
                 <thead>
@@ -165,19 +170,10 @@
                     <th>是否跳过水群排行榜</th>
                 </tr>
                 </thead>
-                <tbody id="groupUsers">
-                <tr>
-                    <td>25984982106634049@openim</td>
-                    <td>成员</td>
-                    <td>true</td>
-                    <td>2023-11-30 16:49:42</td>
-                    <td>2023-11-30 16:49:42</td>
-                    <td>
-                        <input type="checkbox" class="toggle toggle-success" onclick="changeUserGroupRankSkipStatus()" />
-                    </td>
-                </tr>
-                </tbody>
+                <tbody id="groupUsers"></tbody>
             </table>
+
+
         </div>
     </dialog>
 </body>

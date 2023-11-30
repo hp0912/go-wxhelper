@@ -2,8 +2,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-wechat/client"
-	"go-wechat/entity"
+	"go-wechat/service"
 	"net/http"
 )
 
@@ -21,11 +20,11 @@ func GetGroupUsers(ctx *gin.Context) {
 		return
 	}
 	// 查询数据
-	var users []entity.GroupUser
-	if err := client.MySQL.Where("group_id = ?", p.GroupId).Find(&users).Error; err != nil {
-		ctx.String(http.StatusInternalServerError, "查询数据失败")
+	records, err := service.GetGroupUsersByGroupId(p.GroupId)
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, "查询失败: %s", err.Error())
 		return
 	}
 	// 暂时先就这样写着，跑通了再改
-	ctx.JSON(http.StatusOK, users)
+	ctx.JSON(http.StatusOK, records)
 }

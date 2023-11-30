@@ -2,7 +2,7 @@ console.log("打开首页")
 
 //	改变AI开启状态
 function changeAiEnableStatus(wxId) {
-    console.log("修改AI开启状态: ", wxId)
+    // console.log("修改AI开启状态: ", wxId)
 
     axios({
         method: 'put',
@@ -14,12 +14,13 @@ function changeAiEnableStatus(wxId) {
         console.log(`返回结果: ${JSON.stringify(response)}`);
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
+        alert("修改失败")
     })
 }
 
 // 修改水群排行榜状态
 function changeGroupRankEnableStatus(wxId) {
-    console.log("修改水群排行榜开启状态: ", wxId)
+    // console.log("修改水群排行榜开启状态: ", wxId)
     axios({
         method: 'put',
         url: '/api/grouprank/status',
@@ -30,6 +31,7 @@ function changeGroupRankEnableStatus(wxId) {
         console.log(`返回结果: ${JSON.stringify(response)}`);
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
+        alert("修改失败")
     })
 }
 
@@ -40,35 +42,44 @@ function changeUserGroupRankSkipStatus(groupId, userId) {
         method: 'put',
         url: '/api/grouprank/skip',
         data: {
-            wxId: wxId,
+            wxId: groupId,
             userId: userId
         }
     }).then(function (response) {
         console.log(`返回结果: ${JSON.stringify(response)}`);
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
+        alert("修改失败")
     })
 }
 
 // 获取群成员列表
-function getGroupUsers(groupId) {
+function getGroupUsers(groupId, groupName) {
+    // 获取表格的tbody部分，以便稍后向其中添加行
+    var tbody = document.getElementById("groupUsers");
+    tbody.innerHTML = ""
+
     // 打开模态框
     const modal = document.getElementById("groupUserModal");
     modal.showModal()
+
+    // 设置群名称
+    const groupNameTag = document.getElementById("groupUserModalName");
+    groupNameTag.innerHTML = '<span class="loading loading-dots loading-lg"></span>'
+
+    // 显示加载框
+    // const loading = document.getElementById("groupUserDataLoading");
+    // loading.style.display = "block"
 
     axios.get('/api/group/users', {
         params: {
             groupId: groupId
         }
     }).then(function (response) {
-        console.log(`返回结果: ${JSON.stringify(response)}`);
+        // console.log(`返回结果: ${JSON.stringify(response)}`);
         // 渲染群成员列表
         const groupUsers = response.data
-
-        // const groupUserList = document.getElementById("groupUsers")
-
-        // 获取表格的tbody部分，以便稍后向其中添加行
-        var tbody = document.getElementById("groupUsers");
+        // 循环渲染数据
         for (let i = 0; i < groupUsers.length; i++) {
             const groupUser = groupUsers[i]
 
@@ -76,29 +87,44 @@ function getGroupUsers(groupId) {
 
             // 微信Id
             var wxId = row.insertCell(0);
-            wxId.innerHTML = data[i].wxId;
+            wxId.innerHTML = groupUser.wxid;
 
             // 昵称
             var nickname = row.insertCell(1);
-            nickname.innerHTML = data[i].wxId;
+            nickname.innerHTML = groupUser.nickname;
 
             // 是否群成员
             var isMember = row.insertCell(2);
-            isMember.innerHTML = data[i].wxId;
+            if (groupUser.isMember) {
+                isMember.innerHTML = '<div class="badge badge-info gap-2">是</div>';
+            } else {
+                isMember.innerHTML = '<div class="badge badge-error gap-2">否</div>';
+            }
 
             // 最后活跃时间
-            var wxId = row.insertCell(3);
-            wxId.innerHTML = data[i].wxId;
+            var lastActiveTime = row.insertCell(3);
+            lastActiveTime.innerHTML = groupUser.lastActiveTime;
 
             // 退群时间
-            var wxId = row.insertCell(4);
-            wxId.innerHTML = data[i].wxId;
+            var leaveTime = row.insertCell(4);
+            leaveTime.innerHTML = groupUser.leaveTime;
 
             // 是否跳过水群排行榜
-            var wxId = row.insertCell(5);
-            wxId.innerHTML = data[i].wxId;
+            var skipChatRank = row.insertCell(5);
+            let skipChatRankHtml = `<input type="checkbox" class="toggle toggle-error" ${groupUser.skipChatRank ? 'checked' : ''} onclick="changeUserGroupRankSkipStatus(\'${groupId}\', \'${groupUser.wxid}\')" />`
+            skipChatRank.innerHTML = skipChatRankHtml;
+
+            // if (groupUser.skipChatRank) {
+            //
+            // } else {
+            //     skipChatRank.innerHTML = '<input type="checkbox" class="toggle toggle-error" />';
+            // }
         }
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
+    }).finally(function () {
+        // 隐藏加载框
+        // loading.style.display = "none"
+        groupNameTag.innerHTML = groupName
     })
 }

@@ -17,3 +17,16 @@ type FriendItem struct {
 	IsOk           bool           // 是否还在通讯库(群聊是要还在群里也算)
 	LastActiveTime types.DateTime // 最后活跃时间
 }
+
+// GroupUserItem
+// @description: 群成员列表数据
+type GroupUserItem struct {
+	Wxid           string         `json:"wxid"`           // 微信Id
+	Account        string         `json:"account"`        // 账号
+	HeadImage      string         `json:"headImage"`      // 头像
+	Nickname       string         `json:"nickname"`       // 昵称
+	IsMember       bool           `json:"isMember" `      // 是否群成员
+	LastActiveTime types.DateTime `json:"lastActiveTime"` // 最后活跃时间
+	LeaveTime      types.DateTime `json:"leaveTime"`      // 离开时间
+	SkipChatRank   bool           `json:"skipChatRank" `  // 是否跳过聊天排行
+}

@@ -13,6 +13,7 @@ FROM code.hyxc1.com/open/alpine:3.16.0 as runner
 LABEL org.opencontainers.image.authors="lxh@cxh.cn"
 
 EXPOSE 19099
+EXPOSE 8080
 
 WORKDIR /app
 COPY --from=builder /builder/app ./app

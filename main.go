@@ -31,7 +31,7 @@ func main() {
 	// 启动HTTP服务
 	app := gin.Default()
 	app.LoadHTMLGlob("views/*.html")
-	app.Static("/assets", "./views/assets")
+	app.Static("/assets", "./views/static")
 	app.StaticFile("/favicon.ico", "./views/wechat.ico")
 	// 404返回数据
 	app.NoRoute(func(ctx *gin.Context) {

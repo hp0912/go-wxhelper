@@ -16,4 +16,5 @@ EXPOSE 19099
 
 WORKDIR /app
 COPY --from=builder /builder/app ./app
+COPY ./views ./views
 CMD ./app

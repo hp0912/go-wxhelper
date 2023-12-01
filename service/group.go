@@ -19,7 +19,7 @@ func GetGroupUsersByGroupId(groupId string) (records []vo.GroupUserItem, err err
 		Select("tgu.*", "MAX(tm.create_at) AS last_active_time").
 		Where("tgu.group_id = ?", groupId).
 		Group("tgu.group_id, tgu.wxid").
-		Order("tgu.wxid ASC").
+		Order("tgu.join_time DESC").
 		Find(&records).Error
 	return
 }

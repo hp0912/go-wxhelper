@@ -154,6 +154,7 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 					Nickname:  cp.Nickname,
 					Wxid:      cp.Wxid,
 					IsMember:  true,
+					JoinTime:  time.Now().Local(),
 				}).Error
 				if err != nil {
 					log.Printf("新增群成员失败: %s", err.Error())

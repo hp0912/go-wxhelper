@@ -14,6 +14,7 @@ type Friend struct {
 	PinyinAll      string `json:"pinyinAll"`                                                // 昵称全拼
 	EnableAi       bool   `json:"enableAI" gorm:"type:tinyint(1) default 0 not null"`       // 是否使用AI
 	EnableChatRank bool   `json:"enableChatRank" gorm:"type:tinyint(1) default 0 not null"` // 是否使用聊天排行
+	EnableWelcome  bool   `json:"enableWelcome" gorm:"type:tinyint(1) default 0 not null"`  // 是否启用迎新
 	IsOk           bool   `json:"isOk" gorm:"type:tinyint(1) default 0 not null"`           // 是否正常
 }
 

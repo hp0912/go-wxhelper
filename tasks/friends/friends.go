@@ -65,6 +65,7 @@ func Sync() {
 				Pinyin:        friend.Pinyin,
 				PinyinAll:     friend.PinyinAll,
 				Wxid:          friend.Wxid,
+				IsOk:          true,
 			}).Error
 			if err != nil {
 				log.Printf("新增好友失败: %s", err.Error())

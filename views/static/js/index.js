@@ -35,6 +35,22 @@ function changeGroupRankEnableStatus(wxId) {
     })
 }
 
+// 修改欢迎语开启状态
+function changeWelcomeEnableStatus(wxId) {
+    axios({
+        method: 'put',
+        url: '/api/welcome/status',
+        data: {
+            wxId: wxId
+        }
+    }).then(function (response) {
+        console.log(`返回结果: ${JSON.stringify(response)}`);
+    }).catch(function (error) {
+        console.log(`错误信息: ${error}`);
+        alert("修改失败")
+    })
+}
+
 // 修改群成员是否参与排行榜状态
 function changeUserGroupRankSkipStatus(groupId, userId) {
     console.log("修改水群排行榜开启状态: ", groupId, userId)

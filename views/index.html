@@ -90,6 +90,7 @@
                         <th>是否在通讯录</th>
                         <th>是否启用AI</th>
                         <th>是否启用水群排行榜</th>
+                        <th>是否启用迎新</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -129,6 +130,14 @@
                             <!-- EnableChatRank -->
                             <label class="swap swap-flip {{ checkSwap .EnableChatRank }}">
                                 <input type="checkbox" onclick="changeGroupRankEnableStatus({{.Wxid}})"/>
+
+                                <div class="swap-on">✔️已启用</div>
+                                <div class="swap-off">❌已禁用</div>
+                            </label>
+                        </td>
+                        <td>
+                            <label class="swap swap-flip {{ checkSwap .EnableWelcome }}">
+                                <input type="checkbox" onclick="changeWelcomeEnableStatus({{.Wxid}})"/>
 
                                 <div class="swap-on">✔️已启用</div>
                                 <div class="swap-off">❌已禁用</div>

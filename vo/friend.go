@@ -14,6 +14,7 @@ type FriendItem struct {
 	Wxid           string         // 微信原始Id
 	EnableAi       bool           // 是否使用AI
 	EnableChatRank bool           // 是否使用聊天排行
+	EnableWelcome  bool           // 是否使用迎新
 	IsOk           bool           // 是否还在通讯库(群聊是要还在群里也算)
 	LastActiveTime types.DateTime // 最后活跃时间
 }

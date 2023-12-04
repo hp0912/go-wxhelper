@@ -6,6 +6,7 @@ import (
 	"go-wechat/model"
 	"go-wechat/service"
 	"go-wechat/types"
+	"go-wechat/utils"
 	"log"
 	"net"
 	"strings"
@@ -23,43 +24,47 @@ func Parse(remoteAddr net.Addr, msg []byte) {
 		return
 	}
 	// 提取出群成员信息
-	groupUser := ""
-	msgStr := m.Content
+	//groupUser := ""
+	//msgStr := m.Content
 	if strings.Contains(m.FromUser, "@") {
-		switch m.Type {
-		case types.MsgTypeRecalled:
-			// 消息撤回
-		case types.MsgTypeSys:
-			// 系统消息
-			go handleSysMessage(m)
-		default:
-			// 默认消息处理
-			groupUser = strings.Split(m.Content, "\n")[0]
-			groupUser = strings.ReplaceAll(groupUser, ":", "")
-
-			// 文字消息单独提出来处理一下
-			msgStr = strings.Join(strings.Split(m.Content, "\n")[1:], "\n")
+		// 群消息，处理一下消息和发信人
+		groupUser := strings.Split(m.Content, "\n")[0]
+		groupUser = strings.ReplaceAll(groupUser, ":", "")
+		// 如果两个id一致，说明是系统发的
+		if m.FromUser != groupUser {
+			m.GroupUser = groupUser
 		}
+		// 用户的操作单独提出来处理一下
+		m.Content = strings.Join(strings.Split(m.Content, "\n")[1:], "\n")
 	}
-	log.Printf("%s\n消息来源: %s\n群成员: %s\n消息类型: %v\n消息内容: %s", remoteAddr, m.FromUser, groupUser, m.Type, msgStr)
+	log.Printf("%s\n消息来源: %s\n群成员: %s\n消息类型: %v\n消息内容: %s", remoteAddr, m.FromUser, m.GroupUser, m.Type, m.Content)
+
+	// 异步处理消息
+	go func() {
+		if m.IsNewUserJoin() {
+			// 欢迎新成员
+			go handleNewUserJoin(m)
+		} else if m.IsAt() {
+			// @机器人的消息
+			go handleAtMessage(m)
+		} else if !strings.Contains(m.FromUser, "@") && m.Type == types.MsgTypeText {
+			// 私聊消息处理
+			utils.SendMessage(m.FromUser, "", "暂未开启私聊AI", 0)
+		}
+	}()
 
 	// 转换为结构体之后入库
 	var ent entity.Message
 	ent.MsgId = m.MsgId
 	ent.CreateTime = m.CreateTime
 	ent.CreateAt = time.Unix(int64(m.CreateTime), 0)
-	ent.Content = msgStr
+	ent.Content = m.Content
 	ent.FromUser = m.FromUser
-	ent.GroupUser = groupUser
+	ent.GroupUser = m.GroupUser
 	ent.ToUser = m.ToUser
 	ent.Type = m.Type
 	ent.DisplayFullContent = m.DisplayFullContent
 	ent.Raw = string(msg)
-
-	// 处理At机器人的消息
-	if strings.HasSuffix(m.DisplayFullContent, "在群聊中@了你") {
-		go handleAtMessage(ent)
-	}
 
 	go service.SaveMessage(ent)
 }

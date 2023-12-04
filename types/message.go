@@ -4,6 +4,7 @@ import "fmt"
 
 type MessageType int
 
+// 微信定义的消息类型
 const (
 	MsgTypeText           MessageType = 1     // 文本消息
 	MsgTypeImage          MessageType = 3     // 图片消息

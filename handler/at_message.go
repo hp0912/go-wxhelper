@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/sashabaranov/go-openai"
+	"go-wechat/client"
 	"go-wechat/config"
 	"go-wechat/entity"
-	"go-wechat/service"
+	"go-wechat/model"
 	"go-wechat/utils"
 	"log"
 	"regexp"
@@ -16,26 +17,15 @@ import (
 // handleAtMessage
 // @description: 处理At机器人的消息
 // @param m
-func handleAtMessage(m entity.Message) {
+func handleAtMessage(m model.Message) {
 	if !config.Conf.Ai.Enable {
 		return
 	}
 
 	// 取出所有启用了AI的好友或群组
-	us, err := service.GetAllEnableAI()
-	if err != nil {
-		utils.SendMessage(m.FromUser, m.GroupUser, "#系统异常\n"+err.Error(), 0)
-		return
-	}
-	// 判断是否启用，如果没有启用，直接返回
-	var canUse bool
-	for _, u := range us {
-		if u.Wxid == m.FromUser {
-			canUse = true
-			break
-		}
-	}
-	if !canUse {
+	var count int64
+	client.MySQL.Model(&entity.Friend{}).Where("enable_ai IS TRUE").Where("wxid = ?", m.FromUser).Count(&count)
+	if count < 1 {
 		return
 	}
 
@@ -63,9 +53,9 @@ func handleAtMessage(m entity.Message) {
 	})
 
 	// 配置模型
-	model := openai.GPT3Dot5Turbo0613
+	chatModel := openai.GPT3Dot5Turbo0613
 	if config.Conf.Ai.Model != "" {
-		model = config.Conf.Ai.Model
+		chatModel = config.Conf.Ai.Model
 	}
 
 	// 默认使用AI回复
@@ -77,7 +67,7 @@ func handleAtMessage(m entity.Message) {
 	resp, err := client.CreateChatCompletion(
 		context.Background(),
 		openai.ChatCompletionRequest{
-			Model:    model,
+			Model:    chatModel,
 			Messages: messages,
 		},
 	)

@@ -13,7 +13,7 @@ import (
 func handleNewUserJoin(m model.Message) {
 	// 判断是否开启迎新
 	var count int64
-	client.MySQL.Model(&entity.Friend{}).Where("enable_welcome IS TRUE").Where("wxid = ?", m.FromUser).Count(&count)
+	_ = client.MySQL.Model(&entity.Friend{}).Where("enable_welcome IS TRUE").Where("wxid = ?", m.FromUser).Count(&count).Error
 	if count < 1 {
 		return
 	}

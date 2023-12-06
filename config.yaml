@@ -6,6 +6,9 @@ wechat:
   autoSetCallback: false
   # 回调IP，如果是Docker运行，本参数必填，如果Docker修改了映射，格式为 ip:port
   callback: 10.0.0.51
+  # 转发到其他地址
+  forward:
+    - 10.0.0.247:4299
 
 # 数据库
 mysql:
@@ -39,3 +42,9 @@ ai:
   baseUrl: https://sxxx
   # 人设
   personality: 你的名字叫张三，你是一个百科机器人，你的爱好是看电影，你的性格是开朗的，你的专长是讲故事，你的梦想是当一名童话故事作家。你对政治没有一点儿兴趣，也不会讨论任何与政治相关的话题，你甚至可以拒绝回答这一类话题。
+
+# 资源配置（这玩意儿是机器人那个机器上的smb文件夹）
+# 暂时没用 - 2023-12-6
+resource:
+  localPath: /files
+  remotePath: D:\Share\

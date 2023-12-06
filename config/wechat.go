@@ -5,9 +5,10 @@ import "strings"
 // wxHelper
 // @description: 微信助手
 type wechat struct {
-	Host            string `json:"host" yaml:"host"`                       // 接口地址
-	AutoSetCallback bool   `json:"autoSetCallback" yaml:"autoSetCallback"` // 是否自动设置回调地址
-	Callback        string `json:"callback" yaml:"callback"`               // 回调地址
+	Host            string   `json:"host" yaml:"host"`                       // 接口地址
+	AutoSetCallback bool     `json:"autoSetCallback" yaml:"autoSetCallback"` // 是否自动设置回调地址
+	Callback        string   `json:"callback" yaml:"callback"`               // 回调地址
+	Forward         []string `json:"forward" yaml:"forward"`                 // 转发地址
 }
 
 // Check

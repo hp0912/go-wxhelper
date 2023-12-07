@@ -4,6 +4,7 @@ import (
 	"go-wechat/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
 )
 
@@ -17,7 +18,13 @@ func InitMySQLClient() {
 		DontSupportRenameIndex:  true, // 重命名索引时采用删除并新建的方式
 		DontSupportRenameColumn: true, // 用 `change` 重命名列
 	}
-	conn, err := gorm.Open(mysql.New(mysqlConfig))
+
+	// gorm 配置
+	gormConfig := gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	}
+
+	conn, err := gorm.Open(mysql.New(mysqlConfig), &gormConfig)
 	if err != nil {
 		log.Panicf("初始化MySQL连接失败, 错误信息: %v", err)
 	} else {

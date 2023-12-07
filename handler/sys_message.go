@@ -6,7 +6,6 @@ import (
 	"go-wechat/entity"
 	"go-wechat/model"
 	"go-wechat/utils"
-	"log"
 )
 
 // handleNewUserJoin
@@ -15,12 +14,8 @@ import (
 func handleNewUserJoin(m model.Message) {
 	// 判断是否开启迎新
 	var count int64
-	err := client.MySQL.Model(&entity.Friend{}).
-		Where("enable_welcome IS TRUE").
-		Where("wxid = ?", m.FromUser).
-		Count(&count).Error
-	if err != nil {
-		log.Printf("查询是否开启迎新失败: %s", err.Error())
+	client.MySQL.Model(&entity.Friend{}).Where("enable_welcome IS TRUE").Where("wxid = ?", m.FromUser).Count(&count)
+	if count < 1 {
 		return
 	}
 	if count < 1 {

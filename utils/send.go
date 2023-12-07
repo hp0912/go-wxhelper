@@ -112,7 +112,7 @@ func SendEmotion(toId, emotionHash string, retryCount int) {
 	resp, err := res.R().
 		SetHeader("Content-Type", "application/json;chartset=utf-8").
 		SetBody(string(pbs)).
-		Post(config.Conf.Wechat.GetURL("/api/sendImagesMsg"))
+		Post(config.Conf.Wechat.GetURL("/api/sendCustomEmotion"))
 	if err != nil {
 		log.Printf("发送表情包消息失败: %s", err.Error())
 		// 休眠五秒后重新发送

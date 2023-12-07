@@ -42,6 +42,7 @@ func Parse(remoteAddr net.Addr, msg []byte) {
 	// 异步处理消息
 	go func() {
 		if m.IsNewUserJoin() {
+			log.Printf("%s -> 开始迎新 -> %s", m.FromUser, m.Content)
 			// 欢迎新成员
 			go handleNewUserJoin(m)
 		} else if m.IsAt() {

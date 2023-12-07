@@ -16,8 +16,9 @@ import (
 )
 
 func init() {
-	initialization.InitConfig()
-	tasks.InitTasks()
+	initialization.InitConfig()          // 初始化配置
+	initialization.InitWechatRobotInfo() // 初始化机器人信息
+	tasks.InitTasks()                    // 初始化定时任务
 }
 
 func main() {

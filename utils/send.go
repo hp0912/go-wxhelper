@@ -2,7 +2,9 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/go-resty/resty/v2"
+	"go-wechat/common/current"
 	"go-wechat/config"
 	"log"
 	"time"
@@ -81,4 +83,41 @@ func SendImage(toId, imgPath string, retryCount int) {
 		SendImage(toId, imgPath, retryCount+1)
 	}
 	log.Printf("发送图片消息结果: %s", resp.String())
+}
+
+// SendEmotion
+// @description: 发送自定义表情包
+// @param toId string 群或者好友Id
+// @param emotionHash string 表情包hash(md5值)
+// @param retryCount int 重试次数
+func SendEmotion(toId, emotionHash string, retryCount int) {
+	if retryCount > 5 {
+		log.Printf("重试五次失败，停止发送")
+		return
+	}
+
+	// 组装表情包本地地址
+	// 规则：机器人数据目录\FileStorage\CustomEmotion\表情包hash前两位\表情包hash
+	emotionPath := fmt.Sprintf("%sFileStorage\\CustomEmotion\\%s\\%s",
+		current.GetRobotInfo().CurrentDataPath, emotionHash[:2], emotionHash)
+
+	// 组装参数
+	param := map[string]any{
+		"wxid":     toId,        // 群或好友Id
+		"filePath": emotionPath, // 图片地址
+	}
+	pbs, _ := json.Marshal(param)
+
+	res := resty.New()
+	resp, err := res.R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(string(pbs)).
+		Post(config.Conf.Wechat.GetURL("/api/sendImagesMsg"))
+	if err != nil {
+		log.Printf("发送表情包消息失败: %s", err.Error())
+		// 休眠五秒后重新发送
+		time.Sleep(5 * time.Second)
+		SendImage(toId, emotionHash, retryCount+1)
+	}
+	log.Printf("发送表情包消息结果: %s", resp.String())
 }

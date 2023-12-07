@@ -18,12 +18,9 @@ func handleNewUserJoin(m model.Message) {
 	if count < 1 {
 		return
 	}
-	if count < 1 {
-		return
-	}
 
 	// 读取欢迎新成员配置
-	conf, ok := config.Conf.Resource["welcomeNew"]
+	conf, ok := config.Conf.Resource["welcome-new"]
 	if !ok {
 		// 未配置，跳过
 		return

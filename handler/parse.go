@@ -24,9 +24,8 @@ func Parse(remoteAddr net.Addr, msg []byte) {
 		return
 	}
 	// 提取出群成员信息
-	//groupUser := ""
-	//msgStr := m.Content
-	if strings.Contains(m.FromUser, "@") {
+	// Sys类型的消息正文不包含微信 Id，所以不需要处理
+	if m.IsGroup() && m.Type != types.MsgTypeSys {
 		// 群消息，处理一下消息和发信人
 		groupUser := strings.Split(m.Content, "\n")[0]
 		groupUser = strings.ReplaceAll(groupUser, ":", "")

@@ -33,6 +33,10 @@ type systemMsgDataXml struct {
 // @description: 消息主体
 type sysMsg struct{}
 
+func (m Message) IsGroup() bool {
+	return strings.HasSuffix(m.FromUser, "@chatroom")
+}
+
 // IsPat
 // @description: 是否是拍一拍消息
 // @receiver m

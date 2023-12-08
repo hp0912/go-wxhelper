@@ -48,7 +48,7 @@ func Sync() {
 		if slices.Contains(constant.SpecialId, friend.Wxid) {
 			continue
 		}
-		log.Printf("昵称: %s -> 类型: %d -> 微信号: %s -> 微信原始Id: %s", friend.Nickname, friend.Type, friend.CustomAccount, friend.Wxid)
+		//log.Printf("昵称: %s -> 类型: %d -> 微信号: %s -> 微信原始Id: %s", friend.Nickname, friend.Type, friend.CustomAccount, friend.Wxid)
 		nowIds = append(nowIds, friend.Wxid)
 
 		// 判断是否存在，不存在的话就新增，存在就修改一下名字
@@ -121,7 +121,7 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 
 	// 昵称Id
 	wxIds := strings.Split(baseResp.Data.Members, "^G")
-	log.Printf("      群成员数: %d", len(wxIds))
+	//log.Printf("      群成员数: %d", len(wxIds))
 
 	// 修改不在数组的群成员状态为不在
 	pm := map[string]any{
@@ -138,7 +138,7 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 		// 获取成员信息
 		cp, _ := getContactProfile(wxid)
 		if cp.Wxid != "" {
-			log.Printf("            微信Id: %s -> 昵称: %s -> 微信号: %s", wxid, cp.Nickname, cp.Account)
+			//log.Printf("            微信Id: %s -> 昵称: %s -> 微信号: %s", wxid, cp.Nickname, cp.Account)
 			// 查询成员是否存在，不在就新增，否则修改
 			var count int64
 			err = tx.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Where("wxid = ?", wxid).Count(&count).Error

@@ -6,9 +6,11 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
+	"os"
+	"strconv"
 )
 
-// MySQL客户端
+// MySQL MySQL客户端
 var MySQL *gorm.DB
 
 func InitMySQLClient() {
@@ -20,8 +22,10 @@ func InitMySQLClient() {
 	}
 
 	// gorm 配置
-	gormConfig := gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+	gormConfig := gorm.Config{}
+	// 是否开启调试模式
+	if flag, _ := strconv.ParseBool(os.Getenv("GORM_DEBUG")); flag {
+		gormConfig.Logger = logger.Default.LogMode(logger.Info)
 	}
 
 	conn, err := gorm.Open(mysql.New(mysqlConfig), &gormConfig)

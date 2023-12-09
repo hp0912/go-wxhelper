@@ -18,6 +18,7 @@ func SaveMessage(msg entity.Message) {
 		return
 	}
 	if count > 0 {
+		//log.Printf("消息已存在，消息Id: %d", msg.MsgId)
 		return
 	}
 	err = client.MySQL.Create(&msg).Error

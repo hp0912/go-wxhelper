@@ -10,6 +10,7 @@ import (
 	"go-wechat/config"
 	"go-wechat/entity"
 	"go-wechat/model"
+	"go-wechat/service"
 	"go-wechat/types"
 	"go-wechat/utils"
 	"log"
@@ -54,6 +55,7 @@ func handleAtMessage(m model.Message) {
 	// 查询发信人前面几条文字信息，组装进来
 	var oldMessages []entity.Message
 	client.MySQL.Model(&entity.Message{}).
+		Where("msg_id != ?", m.MsgId).
 		Where("create_at >= DATE_SUB(NOW(),INTERVAL 30 MINUTE)").
 		Where("from_user = ? AND group_user = ? AND display_full_content LIKE ?", m.FromUser, m.GroupUser, "%在群聊中@了你").
 		Or("to_user = ? AND group_user = ?", m.FromUser, m.GroupUser).
@@ -124,7 +126,7 @@ func handleAtMessage(m model.Message) {
 	replyMessage.GroupUser = m.GroupUser                // 群成员
 	replyMessage.ToUser = m.FromUser                    // 收信人是发信人
 	replyMessage.Type = types.MsgTypeText
-	client.MySQL.Create(&replyMessage) // 保存入库
+	service.SaveMessage(replyMessage) // 保存消息
 
 	// 发送消息
 	utils.SendMessage(m.FromUser, m.GroupUser, "\n"+resp.Choices[0].Message.Content, 0)

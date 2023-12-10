@@ -35,7 +35,7 @@ func SetCallback(userHost string) {
 	}
 
 	port := 19099
-	if userHost != "" {
+	if userHost != "" && userHost != "auto" {
 		uh := strings.Split(strings.TrimSpace(userHost), ":")
 		host = uh[0]
 		if len(uh) == 2 {

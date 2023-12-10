@@ -4,7 +4,7 @@ wechat:
   host: 10.0.0.73:19088
   # 是否在启动的时候自动设置hook服务的回调
   autoSetCallback: false
-  # 回调IP，如果是Docker运行，本参数必填，如果Docker修改了映射，格式为 ip:port
+  # 回调IP，如果是Docker运行，本参数必填(填auto表示自动，不适用于 docker 环境)，如果Docker修改了映射，格式为 ip:port
   callback: 10.0.0.51
   # 转发到其他地址
   forward:

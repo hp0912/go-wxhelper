@@ -16,8 +16,8 @@ wechat:
   host: wechat:19088
   # 是否在启动的时候自动设置hook服务的回调
   autoSetCallback: true
-  # 回调IP，如果是Docker运行，本参数必填，如果Docker修改了映射，格式为 ip:port，如果使用项目提供的docker-compsoe.yaml文件启动，可以不写
-  callback: 
+  # 回调IP，如果是Docker运行，本参数必填，如果Docker修改了映射，格式为 ip:port，如果使用项目提供的docker-compsoe.yaml文件启动，可以填`auto`
+  callback: auto
 
 # 数据库
 mysql:

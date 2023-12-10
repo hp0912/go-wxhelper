@@ -29,7 +29,11 @@ func ClearCallback() {
 // @param host
 func SetCallback(userHost string) {
 	// 获取本机IP地址
-	host := net.ParseIP(netutil.GetInternalIp()).String()
+	host := userHost
+	if userHost == "auto" {
+		host = net.ParseIP(netutil.GetInternalIp()).String()
+	}
+
 	port := 19099
 	if userHost != "" {
 		uh := strings.Split(strings.TrimSpace(userHost), ":")

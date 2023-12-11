@@ -3,7 +3,6 @@ package tcpserver
 import (
 	"bytes"
 	"go-wechat/config"
-	"go-wechat/handler"
 	"io"
 	"log"
 	"net"
@@ -24,7 +23,7 @@ func process(conn net.Conn) {
 		log.Printf("[%s]返回数据失败，错误信息: %v", conn.RemoteAddr(), err)
 	}
 	log.Printf("[%s]数据长度: %d", conn.RemoteAddr(), buf.Len())
-	go handler.Parse(conn.RemoteAddr(), buf.Bytes())
+	go parse(conn.RemoteAddr(), buf.Bytes())
 
 	// 转发到其他地方去
 	if len(config.Conf.Wechat.Forward) > 0 {

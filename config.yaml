@@ -33,13 +33,13 @@ task:
 # AI回复
 ai:
   # 是否启用
-  enable: false
+  enable: true
   # 模型，不填默认gpt-3.5-turbo-0613
   model: gpt-3.5-turbo-0613
   # OpenAI Api key
-  apiKey: sk-xxxx
+  apiKey: sk-QECv0PugGIFz94AQ65072d301aAd47CfA59482Cd6fA2607d
   # 接口代理域名，不填默认ChatGPT官方地址
-  baseUrl: https://sxxx
+  baseUrl: https://aiapi.lixh.ltd
   # 人设
   personality: 你的名字叫张三，你是一个百科机器人，你的爱好是看电影，你的性格是开朗的，你的专长是讲故事，你的梦想是当一名童话故事作家。你对政治没有一点儿兴趣，也不会讨论任何与政治相关的话题，你甚至可以拒绝回答这一类话题。
 

@@ -18,6 +18,7 @@ import (
 func init() {
 	initialization.InitConfig()          // 初始化配置
 	initialization.InitWechatRobotInfo() // 初始化机器人信息
+	initialization.Plugin()              // 注册插件
 	tasks.InitTasks()                    // 初始化定时任务
 }
 

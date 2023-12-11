@@ -1,28 +1,28 @@
-package handler
+package tcpserver
 
 import (
 	"encoding/json"
-	"go-wechat/entity"
+	"go-wechat/common/current"
 	"go-wechat/model"
-	"go-wechat/service"
 	"go-wechat/types"
-	"go-wechat/utils"
 	"log"
 	"net"
 	"strings"
-	"time"
 )
 
-// Parse
+// parse
 // @description: 解析消息
 // @param msg
-func Parse(remoteAddr net.Addr, msg []byte) {
+func parse(remoteAddr net.Addr, msg []byte) {
 	var m model.Message
 	if err := json.Unmarshal(msg, &m); err != nil {
 		log.Printf("[%s]消息解析失败： %v", remoteAddr, err)
 		log.Printf("[%s]消息内容： %d -> %v", remoteAddr, len(msg), string(msg))
 		return
 	}
+	// 记录原始数据
+	m.Raw = string(msg)
+
 	// 提取出群成员信息
 	// Sys类型的消息正文不包含微信 Id，所以不需要处理
 	if m.IsGroup() && m.Type != types.MsgTypeSys {
@@ -38,33 +38,9 @@ func Parse(remoteAddr net.Addr, msg []byte) {
 	}
 	log.Printf("%s\n消息来源: %s\n群成员: %s\n消息类型: %v\n消息内容: %s", remoteAddr, m.FromUser, m.GroupUser, m.Type, m.Content)
 
-	// 异步处理消息
-	go func() {
-		if m.IsNewUserJoin() {
-			log.Printf("%s -> 开始迎新 -> %s", m.FromUser, m.Content)
-			// 欢迎新成员
-			go handleNewUserJoin(m)
-		} else if m.IsAt() {
-			// @机器人的消息
-			go handleAtMessage(m)
-		} else if !strings.Contains(m.FromUser, "@") && m.Type == types.MsgTypeText {
-			// 私聊消息处理
-			utils.SendMessage(m.FromUser, "", "暂未开启私聊AI", 0)
-		}
-	}()
+	// 插件不为空，开始执行
+	if p := current.GetRobotMessageHandler(); p != nil {
+		p(&m)
+	}
 
-	// 转换为结构体之后入库
-	var ent entity.Message
-	ent.MsgId = m.MsgId
-	ent.CreateTime = m.CreateTime
-	ent.CreateAt = time.Unix(int64(m.CreateTime), 0)
-	ent.Content = m.Content
-	ent.FromUser = m.FromUser
-	ent.GroupUser = m.GroupUser
-	ent.ToUser = m.ToUser
-	ent.Type = m.Type
-	ent.DisplayFullContent = m.DisplayFullContent
-	ent.Raw = string(msg)
-
-	go service.SaveMessage(ent)
 }

@@ -1,17 +1,17 @@
-package handler
+package plugins
 
 import (
 	"go-wechat/client"
 	"go-wechat/config"
 	"go-wechat/entity"
-	"go-wechat/model"
+	"go-wechat/plugin"
 	"go-wechat/utils"
 )
 
-// handleNewUserJoin
+// WelcomeNew
 // @description: 欢迎新成员
 // @param m
-func handleNewUserJoin(m model.Message) {
+func WelcomeNew(m *plugin.MessageContext) {
 	// 判断是否开启迎新
 	var count int64
 	client.MySQL.Model(&entity.Friend{}).Where("enable_welcome IS TRUE").Where("wxid = ?", m.FromUser).Count(&count)

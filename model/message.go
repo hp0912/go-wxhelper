@@ -20,6 +20,7 @@ type Message struct {
 	Signature          string            `json:"signature"`
 	ToUser             string            `json:"toUser"`
 	Type               types.MessageType `json:"type"`
+	Raw                string            `json:"raw"`
 }
 
 // systemMsgDataXml
@@ -88,4 +89,13 @@ func (m Message) IsNewUserJoin() bool {
 // @return bool
 func (m Message) IsAt() bool {
 	return strings.HasSuffix(m.DisplayFullContent, "在群聊中@了你")
+}
+
+// IsPrivateText
+// @description: 是否是私聊消息
+// @receiver m
+// @return bool
+func (m Message) IsPrivateText() bool {
+	// 发信人不以@chatroom结尾且消息类型为文本
+	return !strings.HasSuffix(m.FromUser, "chatroom") && m.Type == types.MsgTypeText
 }

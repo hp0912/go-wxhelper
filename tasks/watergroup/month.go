@@ -2,6 +2,7 @@ package watergroup
 
 import (
 	"fmt"
+	"go-wechat/config"
 	"go-wechat/service"
 	"go-wechat/utils"
 	"log"
@@ -21,11 +22,17 @@ func Month() {
 	for _, group := range groups {
 		// 消息统计
 		dealMonth(group.Wxid)
+
+		res, ok := config.Conf.Resource["wordcloud"]
+		if !ok {
+			continue
+		}
+
 		// 获取上个月月份
 		yd := time.Now().Local().AddDate(0, 0, -1).Format("200601")
 		// 发送词云
 		fileName := fmt.Sprintf("%s_%s.png", yd, group.Wxid)
-		utils.SendImage(group.Wxid, "D:\\Share\\wordcloud\\"+fileName, 0)
+		utils.SendImage(group.Wxid, fmt.Sprintf(res.Path, fileName), 0)
 	}
 }
 

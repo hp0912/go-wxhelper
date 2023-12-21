@@ -1,4 +1,4 @@
-package plugins
+package command
 
 import (
 	"encoding/json"
@@ -11,6 +11,7 @@ import (
 	"go-wechat/vo"
 	"gorm.io/gorm"
 	"log"
+	"strings"
 )
 
 // leiGod
@@ -31,6 +32,37 @@ type leiGod struct {
 // @return leiGodI
 func newLeiGod(userId string) leiGodI {
 	return &leiGod{userId: userId}
+}
+
+// LeiGodCmd
+// @description: 雷神加速器指令
+// @param userId
+// @param cmd
+// @param args
+// @return string
+func LeiGodCmd(userId, cmd string, args ...string) {
+	lg := newLeiGod(userId)
+
+	var replyMsg string
+	switch cmd {
+	case "绑定", "b":
+		var force bool
+		if len(args) == 3 && args[2] == "-f" {
+			force = true
+		}
+		replyMsg = lg.binding(args[0], args[1], force)
+	case "详情", "i":
+		replyMsg = lg.info()
+	case "暂停", "p":
+		replyMsg = lg.pause()
+	default:
+		replyMsg = "指令错误"
+	}
+
+	// 返回消息
+	if strings.TrimSpace(replyMsg) != "" {
+		utils.SendMessage(userId, "", replyMsg, 0)
+	}
 }
 
 // binding

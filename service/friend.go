@@ -50,3 +50,13 @@ func GetAllEnableChatRank() (records []entity.Friend, err error) {
 	err = client.MySQL.Where("enable_chat_rank = ?", 1).Where("wxid LIKE '%@chatroom'").Find(&records).Error
 	return
 }
+
+// CheckIsEnableCommand
+// @description: 检查用户是否启用了指令
+// @param userId
+// @return flag
+func CheckIsEnableCommand(userId string) (flag bool) {
+	var coo int64
+	client.MySQL.Model(&entity.Friend{}).Where("enable_command = 1").Where("wxid = ?", userId).Count(&coo)
+	return coo > 0
+}

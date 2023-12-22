@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/xml"
 	"go-wechat/types"
+	"regexp"
 	"strings"
 )
 
@@ -98,4 +99,29 @@ func (m Message) IsAt() bool {
 func (m Message) IsPrivateText() bool {
 	// 发信人不以@chatroom结尾且消息类型为文本
 	return !strings.HasSuffix(m.FromUser, "chatroom") && m.Type == types.MsgTypeText
+}
+
+// CleanContentStartWith
+// @description: 判断是否包含指定消息前缀
+// @receiver m
+// @param prefix
+// @return bool
+func (m Message) CleanContentStartWith(prefix string) bool {
+	content := m.Content
+
+	// 如果是@消息，过滤掉@的内容
+	if m.IsAt() {
+		re := regexp.MustCompile(`@([^ | ]+)`)
+		matches := re.FindStringSubmatch(content)
+		if len(matches) > 0 {
+			// 过滤掉第一个匹配到的
+			content = strings.Replace(content, matches[0], "", 1)
+		}
+	}
+
+	// 去掉最前面的空格
+	content = strings.TrimLeft(content, " ")
+	content = strings.TrimLeft(content, " ")
+
+	return strings.HasPrefix(content, prefix)
 }

@@ -5,6 +5,7 @@ import (
 	"go-wechat/model"
 	plugin "go-wechat/plugin"
 	"go-wechat/plugin/plugins"
+	"go-wechat/service"
 )
 
 // Plugin
@@ -24,8 +25,8 @@ func Plugin() {
 
 	// 私聊指令消息
 	dispatcher.RegisterHandler(func(m *model.Message) bool {
-		// 私聊消息直接进去
-		return m.IsPrivateText()
+		// 私聊消息 或 群聊艾特机器人并且以/开头的消息
+		return (m.IsPrivateText() || (m.IsAt() && m.CleanContentStartWith("/"))) && service.CheckIsEnableCommand(m.FromUser)
 	}, plugins.Command)
 
 	// AI消息插件

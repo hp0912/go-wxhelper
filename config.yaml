@@ -21,14 +21,15 @@ mysql:
 task:
   enable: false
   syncFriends:
-      enable: true
+      enable: false
       cron: '*/5 * * * *' # 五分钟一次
   waterGroup:
-      enable: false
+      enable: true
       cron:
         yesterday: '30 9 * * *' # 每天9:30
         week: '30 9 * * 1' # 每周一9:30
         month: '30 9 1 * *' # 每月1号9:30
+        year: '55 0 1 1 *' # 每年1月1号9:30
 
 # AI回复
 ai:

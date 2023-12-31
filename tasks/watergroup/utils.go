@@ -33,6 +33,8 @@ func getRankData(groupId, date string) (rank []rankUser, err error) {
 		tx.Where("YEARWEEK(date_format(tm.create_at, '%Y-%m-%d')) = YEARWEEK(now()) - 1")
 	case "month":
 		tx.Where("PERIOD_DIFF(date_format(now(), '%Y%m'), date_format(create_at, '%Y%m')) = 1")
+	case "year":
+		tx.Where("YEAR(tm.create_at) = YEAR(NOW()) - 1")
 	}
 
 	// 查询指定时间段全部数据

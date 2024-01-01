@@ -67,7 +67,7 @@ func dealYear(gid string) {
 	notifyMsgs = append(notifyMsgs, "对于那些未上榜的朋友们，我要说，你们也是我们群聊中非常重要的一部分。你们或许没有在排行榜上留下痕迹，但你们的存在和参与同样不可或缺。你们为群聊注入了新的思维和观点，为我们提供了不同的视角和见解。")
 	notifyMsgs = append(notifyMsgs, "因此，我想特别鼓励未上榜的朋友们，继续发扬你们的热情和积极性。无论是在分享知识、讨论问题、还是互相支持鼓励，你们的贡献都是宝贵的。让我们共同创造一个更加活跃和有意义的群聊环境。")
 	notifyMsgs = append(notifyMsgs, "最后，让我们一起迈向新的一年，相信自己的潜力和可能性，用我们的友谊和互助支持彼此。愿新的一年给我们带来更多的快乐、成功和成长。")
-	notifyMsgs = append(notifyMsgs, "祝福你们新年快乐！让我们一起迎接2022年的到来！")
+	notifyMsgs = append(notifyMsgs, fmt.Sprintf("祝福你们新年快乐！让我们一起迎接%d年的到来！", time.Now().Local().Year()))
 	notifyMsgs = append(notifyMsgs, "     -- OpnWechat")
 	notifyMsgs = append(notifyMsgs, " ")
 	notifyMsgs = append(notifyMsgs, fmt.Sprintf("🗣️ 去年本群 %d 位朋友共产生 %d 条发言", len(records), msgCount))

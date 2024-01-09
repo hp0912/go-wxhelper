@@ -28,4 +28,5 @@ type waterGroupCron struct {
 	Yesterday string `json:"yesterday" yaml:"yesterday"` // 昨日排行榜
 	Week      string `json:"week" yaml:"week"`           // 周排行榜
 	Month     string `json:"month" yaml:"month"`         // 月排行榜
+	Year      string `json:"year" yaml:"year"`           // 年排行榜
 }

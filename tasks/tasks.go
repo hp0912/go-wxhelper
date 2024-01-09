@@ -32,6 +32,9 @@ func InitTasks() {
 		if config.Conf.Task.WaterGroup.Cron.Month != "" {
 			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Month).Do(watergroup.Month)
 		}
+		if config.Conf.Task.WaterGroup.Cron.Year != "" {
+			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Year).Do(watergroup.Year)
+		}
 	}
 
 	// 更新好友列表

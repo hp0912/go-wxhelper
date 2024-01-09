@@ -14,6 +14,8 @@ vim config.yaml # 编辑配置文件，内容如下，最新配置请参考项�
 wechat:
   # 微信HOOK接口地址
   host: wechat:19088
+  # 微信容器映射出来的vnc页面地址，没有就不填
+  vncUrl: http://192.168.1.175:19087/vnc_lite.html
   # 是否在启动的时候自动设置hook服务的回调
   autoSetCallback: true
   # 回调IP，如果是Docker运行，本参数必填，如果Docker修改了映射，格式为 ip:port，如果使用项目提供的docker-compsoe.yaml文件启动，可以填`auto`
@@ -46,7 +48,7 @@ version: '3.9'
 
 services:
   wechat:
-    image: lxh01/wxhelper-docker:3.9.5.81
+    image: lxh01/wxhelper-docker:3.9.5.81-v11
     container_name: gw-wechat
     restart: unless-stopped
     environment:
@@ -54,7 +56,7 @@ services:
     volumes:
       - ./data/wechat:/home/app/.wine/drive_c/users/app/Documents/WeChat\ Files
     ports:
-      - "8080:8080"
+      - "19087:8080"
       - "19088:19088"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:19088/api/checkLogin"]

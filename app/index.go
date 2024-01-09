@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go-wechat/config"
 	"go-wechat/service"
 	"net/http"
 )
@@ -21,6 +22,7 @@ func Index(ctx *gin.Context) {
 	}
 	result["friends"] = friends
 	result["groups"] = groups
+	result["vnc"] = config.Conf.Wechat.VncUrl
 	// 渲染页面
 	ctx.HTML(http.StatusOK, "index.html", result)
 }

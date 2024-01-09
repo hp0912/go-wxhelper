@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/xml"
+	"github.com/duke-git/lancet/v2/slice"
 	"go-wechat/types"
 	"regexp"
 	"strings"
@@ -29,6 +30,21 @@ type Message struct {
 type systemMsgDataXml struct {
 	SysMsg sysMsg `xml:"sysmsg"`
 	Type   string `xml:"type,attr"`
+}
+
+// atMsgDataXml
+// @description: 微信@消息的xml结构
+type atMsgDataXml struct {
+	XMLName     xml.Name `xml:"msgsource"`
+	Text        string   `xml:",chardata"`
+	AtUserList  string   `xml:"atuserlist"`
+	Silence     string   `xml:"silence"`
+	MemberCount string   `xml:"membercount"`
+	Signature   string   `xml:"signature"`
+	TmpNode     struct {
+		Text        string `xml:",chardata"`
+		PublisherID string `xml:"publisher-id"`
+	} `xml:"tmp_node"`
 }
 
 // sysMsg
@@ -90,6 +106,22 @@ func (m Message) IsNewUserJoin() bool {
 // @return bool
 func (m Message) IsAt() bool {
 	return strings.HasSuffix(m.DisplayFullContent, "在群聊中@了你")
+}
+
+// IsAtAll
+// @description: 是否是At所有人的消息
+// @receiver m
+// @return bool
+func (m Message) IsAtAll() bool {
+	// 解析raw里面的xml
+	var d atMsgDataXml
+	if err := xml.Unmarshal([]byte(m.Raw), &d); err != nil {
+		return false
+	}
+	// 转换@用户列表为数组
+	atUserList := strings.Split(d.AtUserList, ",")
+	// 判断是否包含@所有人
+	return slice.Contain(atUserList, "notify@all")
 }
 
 // IsPrivateText

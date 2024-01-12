@@ -155,6 +155,7 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 					Nickname:  cp.Nickname,
 					Wxid:      cp.Wxid,
 					IsMember:  true,
+					IsAdmin:   wxid == baseResp.Data.Admin,
 					JoinTime:  time.Now().Local(),
 				}).Error
 				if err != nil {
@@ -168,6 +169,7 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 					"head_image": cp.HeadImage,
 					"nickname":   cp.Nickname,
 					"is_member":  true,
+					"is_admin":   wxid == baseResp.Data.Admin,
 					"leave_time": nil,
 				}
 				err = tx.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Where("wxid = ?", wxid).Updates(pm).Error

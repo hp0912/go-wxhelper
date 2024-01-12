@@ -37,6 +37,7 @@
                         <th>最后活跃时间</th>
                         <th>是否在通讯录</th>
                         <th>是否启用AI</th>
+                        <th>是否启用指令</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -71,6 +72,14 @@
                                 <div class="swap-off">❌已禁用</div>
                             </label>
                         </td>
+                        <td>
+                            <label class="swap swap-flip {{ checkSwap .EnableCommand }}">
+                                <input type="checkbox" onclick="changeCommandEnableStatus({{.Wxid}})"/>
+
+                                <div class="swap-on">✔️已启用</div>
+                                <div class="swap-off">❌已禁用</div>
+                            </label>
+                        </td>
                     </tr>
                     {{ end }}
                     </tbody>
@@ -91,6 +100,7 @@
                         <th>是否启用AI</th>
                         <th>是否启用水群排行榜</th>
                         <th>是否启用迎新</th>
+                        <th>是否启用指令</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -144,6 +154,14 @@
                             </label>
                         </td>
                         <td>
+                            <label class="swap swap-flip {{ checkSwap .EnableCommand }}">
+                                <input type="checkbox" onclick="changeCommandEnableStatus({{.Wxid}})"/>
+
+                                <div class="swap-on">✔️已启用</div>
+                                <div class="swap-off">❌已禁用</div>
+                            </label>
+                        </td>
+                        <td>
                             <button class="btn btn-link" onclick="getGroupUsers({{.Wxid}}, {{.Nickname}})">查看群成员</button>
                         </td>
                     </tr>
@@ -183,6 +201,7 @@
                     <th>微信Id</th>
                     <th>昵称</th>
                     <th>是否群成员</th>
+                    <th>是否群主</th>
                     <th>加群时间</th>
                     <th>最后活跃时间</th>
                     <th>退群时间</th>

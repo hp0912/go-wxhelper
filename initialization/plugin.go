@@ -26,13 +26,14 @@ func Plugin() {
 	// 私聊指令消息
 	dispatcher.RegisterHandler(func(m *model.Message) bool {
 		// 私聊消息 或 群聊艾特机器人并且以/开头的消息
-		return (m.IsPrivateText() || (m.IsAt() && !m.IsAtAll() && m.CleanContentStartWith("/"))) && service.CheckIsEnableCommand(m.FromUser)
+		isGroupAt := m.IsAt() && !m.IsAtAll()
+		return (m.IsPrivateText() || isGroupAt) && m.CleanContentStartWith("/") && service.CheckIsEnableCommand(m.FromUser)
 	}, plugins.Command)
 
 	// AI消息插件
 	dispatcher.RegisterHandler(func(m *model.Message) bool {
 		// 群内@或者私聊文字消息
-		return m.IsAt() && !m.IsAtAll() || m.IsPrivateText()
+		return (m.IsAt() && !m.IsAtAll()) || m.IsPrivateText()
 	}, plugins.AI)
 
 	// 欢迎新成员

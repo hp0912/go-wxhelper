@@ -31,6 +31,7 @@ type GroupUser struct {
 	HeadImage    string     `json:"headImage"`                                              // 头像
 	Nickname     string     `json:"nickname"`                                               // 昵称
 	IsMember     bool       `json:"isMember" gorm:"type:tinyint(1) default 0 not null"`     // 是否群成员
+	IsAdmin      bool       `json:"isAdmin" gorm:"type:tinyint(1) default 0 not null"`      // 是否群主
 	JoinTime     time.Time  `json:"joinTime"`                                               // 加入时间
 	LeaveTime    *time.Time `json:"leaveTime"`                                              // 离开时间
 	SkipChatRank bool       `json:"skipChatRank" gorm:"type:tinyint(1) default 0 not null"` // 是否跳过聊天排行

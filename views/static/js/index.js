@@ -112,43 +112,20 @@ function getGroupUsers(groupId, groupName) {
         // 渲染群成员列表
         const groupUsers = response.data
         // 循环渲染数据
-        for (let i = 0; i < groupUsers.length; i++) {
-            const groupUser = groupUsers[i]
+        groupUsers.forEach((groupUser, i) => {
+            const { wxid, nickname, isMember, isAdmin, joinTime, lastActiveTime, leaveTime, skipChatRank } = groupUser;
 
-            let row = tbody.insertRow(i); // 插入新行
-
-            // 微信Id
-            let wxId = row.insertCell(0);
-            wxId.innerHTML = groupUser.wxid;
-
-            // 昵称
-            let nickname = row.insertCell(1);
-            nickname.innerHTML = groupUser.nickname;
-
-            // 是否群成员
-            let isMember = row.insertCell(2);
-            if (groupUser.isMember) {
-                isMember.innerHTML = '<div class="badge badge-info gap-2">是</div>';
-            } else {
-                isMember.innerHTML = '<div class="badge badge-error gap-2">否</div>';
-            }
-
-            // 加群时间
-            let joinTime = row.insertCell(3);
-            joinTime.innerHTML = groupUser.joinTime;
-
-            // 最后活跃时间
-            let lastActiveTime = row.insertCell(4);
-            lastActiveTime.innerHTML = groupUser.lastActiveTime;
-
-            // 退群时间
-            let leaveTime = row.insertCell(5);
-            leaveTime.innerHTML = groupUser.leaveTime;
-
-            // 是否跳过水群排行榜
-            let skipChatRank = row.insertCell(6);
-            skipChatRank.innerHTML = `<input type="checkbox" class="toggle toggle-error" ${groupUser.skipChatRank ? 'checked' : ''} onclick="changeUserGroupRankSkipStatus(\'${groupId}\', \'${groupUser.wxid}\')" />`;
-        }
+            let row = tbody.insertRow(i);
+            // Insert data into cells
+            row.insertCell(0).innerHTML = wxid;
+            row.insertCell(1).innerHTML = nickname;
+            row.insertCell(2).innerHTML = `<div class="badge badge-${isMember ? 'info' : 'error'} gap-2">${isMember ? '是' : '否'}</div>`;
+            row.insertCell(3).innerHTML = `<div class="badge badge-${isAdmin ? 'info' : 'error'} gap-2">${isAdmin ? '是' : '否'}</div>`;
+            row.insertCell(4).innerHTML = joinTime;
+            row.insertCell(5).innerHTML = lastActiveTime;
+            row.insertCell(6).innerHTML = leaveTime;
+            row.insertCell(7).innerHTML = `<input type="checkbox" class="toggle toggle-error" ${skipChatRank ? 'checked' : ''} onclick="changeUserGroupRankSkipStatus('${groupId}', '${wxid}')" />`;
+        });
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
     }).finally(function () {

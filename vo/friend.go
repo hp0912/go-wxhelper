@@ -28,6 +28,7 @@ type GroupUserItem struct {
 	HeadImage      string         `json:"headImage"`      // 头像
 	Nickname       string         `json:"nickname"`       // 昵称
 	IsMember       bool           `json:"isMember" `      // 是否群成员
+	IsAdmin        bool           `json:"isAdmin"`        // 是否群主
 	JoinTime       types.DateTime `json:"joinTime"`       // 加入时间
 	LastActiveTime types.DateTime `json:"lastActiveTime"` // 最后活跃时间
 	LeaveTime      types.DateTime `json:"leaveTime"`      // 离开时间

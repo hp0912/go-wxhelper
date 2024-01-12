@@ -51,6 +51,22 @@ function changeWelcomeEnableStatus(wxId) {
     })
 }
 
+// 修改指令权限启用状态
+function changeCommandEnableStatus(wxId) {
+    axios({
+        method: 'put',
+        url: '/api/command/status',
+        data: {
+            wxId: wxId
+        }
+    }).then(function (response) {
+        console.log(`返回结果: ${JSON.stringify(response)}`);
+    }).catch(function (error) {
+        console.log(`错误信息: ${error}`);
+        alert("修改失败")
+    })
+}
+
 // 修改群成员是否参与排行榜状态
 function changeUserGroupRankSkipStatus(groupId, userId) {
     console.log("修改水群排行榜开启状态: ", groupId, userId)

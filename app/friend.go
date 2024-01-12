@@ -85,6 +85,29 @@ func ChangeEnableWelcomeStatus(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "操作成功")
 }
 
+// ChangeEnableCommandStatus
+// @description: 修改是否开启指令
+// @param ctx
+func ChangeEnableCommandStatus(ctx *gin.Context) {
+	var p changeStatusParam
+	if err := ctx.ShouldBindJSON(&p); err != nil {
+		ctx.String(http.StatusBadRequest, "参数错误")
+		return
+	}
+	log.Printf("待修改的群Id：%s", p.WxId)
+
+	err := client.MySQL.Model(&entity.Friend{}).
+		Where("wxid = ?", p.WxId).
+		Update("`enable_command`", gorm.Expr(" !`enable_command`")).Error
+	if err != nil {
+		log.Printf("修改指令启用状态失败：%s", err)
+		ctx.String(http.StatusInternalServerError, "操作失败: %s", err)
+		return
+	}
+
+	ctx.String(http.StatusOK, "操作成功")
+}
+
 // ChangeSkipGroupRankStatus
 // @description: 修改是否跳过水群排行榜
 // @param ctx

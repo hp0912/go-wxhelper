@@ -15,6 +15,7 @@ type FriendItem struct {
 	EnableAi       bool           // 是否使用AI
 	EnableChatRank bool           // 是否使用聊天排行
 	EnableWelcome  bool           // 是否使用迎新
+	EnableCommand  bool           // 是否启用指令
 	IsOk           bool           // 是否还在通讯库(群聊是要还在群里也算)
 	LastActiveTime types.DateTime // 最后活跃时间
 }

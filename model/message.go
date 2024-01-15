@@ -115,7 +115,7 @@ func (m Message) IsAt() bool {
 func (m Message) IsAtAll() bool {
 	// 解析raw里面的xml
 	var d atMsgDataXml
-	if err := xml.Unmarshal([]byte(m.Raw), &d); err != nil {
+	if err := xml.Unmarshal([]byte(m.Signature), &d); err != nil {
 		return false
 	}
 	// 转换@用户列表为数组

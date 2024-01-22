@@ -13,6 +13,7 @@ type FriendItem struct {
 	PinyinAll      string         // 昵称全拼
 	Wxid           string         // 微信原始Id
 	EnableAi       bool           // 是否使用AI
+	AiModel        string         // AI模型
 	EnableChatRank bool           // 是否使用聊天排行
 	EnableWelcome  bool           // 是否使用迎新
 	EnableCommand  bool           // 是否启用指令

@@ -28,9 +28,9 @@ func AI(m *plugin.MessageContext) {
 	}
 
 	// 取出所有启用了AI的好友或群组
-	var count int64
-	client.MySQL.Model(&entity.Friend{}).Where("enable_ai IS TRUE").Where("wxid = ?", m.FromUser).Count(&count)
-	if count < 1 {
+	var friendInfo entity.Friend
+	client.MySQL.Where("wxid = ?", m.FromUser).First(&friendInfo)
+	if friendInfo.Wxid == "" {
 		return
 	}
 
@@ -93,7 +93,9 @@ func AI(m *plugin.MessageContext) {
 
 	// 配置模型
 	chatModel := openai.GPT3Dot5Turbo0613
-	if config.Conf.Ai.Model != "" {
+	if friendInfo.AiModel != "" {
+		chatModel = friendInfo.AiModel
+	} else if config.Conf.Ai.Model != "" {
 		chatModel = config.Conf.Ai.Model
 	}
 

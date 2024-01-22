@@ -13,6 +13,7 @@ type Friend struct {
 	Pinyin         string `json:"pinyin"`                                                   // 昵称拼音大写首字母
 	PinyinAll      string `json:"pinyinAll"`                                                // 昵称全拼
 	EnableAi       bool   `json:"enableAI" gorm:"type:tinyint(1) default 0 not null"`       // 是否使用AI
+	AiModel        string `json:"aiModel"`                                                  // AI模型
 	EnableChatRank bool   `json:"enableChatRank" gorm:"type:tinyint(1) default 0 not null"` // 是否使用聊天排行
 	EnableWelcome  bool   `json:"enableWelcome" gorm:"type:tinyint(1) default 0 not null"`  // 是否启用迎新
 	IsOk           bool   `json:"isOk" gorm:"type:tinyint(1) default 0 not null"`           // 是否正常

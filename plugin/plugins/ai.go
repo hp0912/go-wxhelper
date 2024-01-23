@@ -33,6 +33,10 @@ func AI(m *plugin.MessageContext) {
 	if friendInfo.Wxid == "" {
 		return
 	}
+	// 判断有没有启用AI
+	if !friendInfo.EnableAi {
+		return
+	}
 
 	// 预处理一下发送的消息，用正则去掉@机器人的内容
 	re := regexp.MustCompile(`@([^ | ]+)`)

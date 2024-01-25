@@ -113,7 +113,8 @@ function getGroupUsers(groupId, groupName) {
         const groupUsers = response.data
         // 循环渲染数据
         groupUsers.forEach((groupUser, i) => {
-            const { wxid, nickname, isMember, isAdmin, joinTime, lastActiveTime, leaveTime, skipChatRank } = groupUser;
+            console.log(groupUser)
+            const { wxid, nickname, isMember, isAdmin, joinTime, lastActive, leaveTime, skipChatRank } = groupUser;
 
             let row = tbody.insertRow(i);
             // Insert data into cells
@@ -122,7 +123,7 @@ function getGroupUsers(groupId, groupName) {
             row.insertCell(2).innerHTML = `<div class="badge badge-${isMember ? 'info' : 'error'} gap-2">${isMember ? '是' : '否'}</div>`;
             row.insertCell(3).innerHTML = `<div class="badge badge-${isAdmin ? 'info' : 'error'} gap-2">${isAdmin ? '是' : '否'}</div>`;
             row.insertCell(4).innerHTML = joinTime;
-            row.insertCell(5).innerHTML = lastActiveTime;
+            row.insertCell(5).innerHTML = lastActive;
             row.insertCell(6).innerHTML = leaveTime;
             row.insertCell(7).innerHTML = `<input type="checkbox" class="toggle toggle-error" ${skipChatRank ? 'checked' : ''} onclick="changeUserGroupRankSkipStatus('${groupId}', '${wxid}')" />`;
         });

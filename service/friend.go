@@ -4,6 +4,7 @@ import (
 	"go-wechat/client"
 	"go-wechat/entity"
 	"go-wechat/vo"
+	"log"
 	"strings"
 )
 
@@ -16,10 +17,11 @@ func GetAllFriend() (friends, groups []vo.FriendItem, err error) {
 	var records []vo.FriendItem
 	err = client.MySQL.
 		Table("t_friend AS tf").
-		Joins("LEFT JOIN t_message AS tm ON tf.wxid = tm.from_user").
-		Select("tf.*", "MAX(tm.create_at) AS last_active_time").
-		Group("tf.wxid").
-		Order("last_active_time DESC").
+		//Joins("LEFT JOIN t_message AS tm ON tf.wxid = tm.from_user").
+		//Select("tf.*", "MAX(tm.create_at) AS last_active").
+		Select("tf.*").
+		//Group("tf.wxid").
+		Order("tf.last_active DESC").
 		Find(&records).Error
 	if err != nil {
 		return
@@ -59,4 +61,28 @@ func CheckIsEnableCommand(userId string) (flag bool) {
 	var coo int64
 	client.MySQL.Model(&entity.Friend{}).Where("enable_command = 1").Where("wxid = ?", userId).Count(&coo)
 	return coo > 0
+}
+
+// updateLastActive
+// @description: 更新最后活跃时间
+// @param msg
+func updateLastActive(msg entity.Message) {
+	var err error
+	// 如果是群，更新群成员最后活跃时间
+	if strings.HasSuffix(msg.FromUser, "@chatroom") {
+		err = client.MySQL.Model(&entity.GroupUser{}).
+			Where("group_id = ?", msg.FromUser).
+			Where("wxid = ?", msg.GroupUser).
+			Update("last_active", msg.CreateTime).Error
+		if err != nil {
+			log.Printf("更新群成员最后活跃时间失败, 错误信息: %v", err)
+		}
+	}
+	// 更新群或者好友活跃时间
+	err = client.MySQL.Model(&entity.Friend{}).
+		Where("wxid = ?", msg.FromUser).
+		Update("last_active", msg.CreateTime).Error
+	if err != nil {
+		log.Printf("更新群或者好友活跃时间失败, 错误信息: %v", err)
+	}
 }

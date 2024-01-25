@@ -47,10 +47,10 @@
                         <td>{{ .CustomAccount }}</td>
                         <td>{{ .Nickname }}</td>
                         <td>
-                            {{ if eq .LastActiveTime.IsNil true }}
+                            {{ if eq .LastActive.IsNil true }}
                             无数据
                             {{ else }}
-                            {{ .LastActiveTime }}
+                            {{ .LastActive }}
                             {{ end }}
                         </td>
                         <td>
@@ -110,10 +110,10 @@
                         <td>{{ .Wxid }}</td>
                         <td>{{ .Nickname }}</td>
                         <td>
-                            {{ if eq .LastActiveTime.IsNil true }}
+                            {{ if eq .LastActive.IsNil true }}
                             无数据
                             {{ else }}
-                            {{ .LastActiveTime }}
+                            {{ .LastActive }}
                             {{ end }}
                         </td>
                         <td>

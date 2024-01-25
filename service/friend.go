@@ -73,7 +73,7 @@ func updateLastActive(msg entity.Message) {
 		err = client.MySQL.Model(&entity.GroupUser{}).
 			Where("group_id = ?", msg.FromUser).
 			Where("wxid = ?", msg.GroupUser).
-			Update("last_active", msg.CreateTime).Error
+			Update("last_active", msg.CreateAt).Error
 		if err != nil {
 			log.Printf("更新群成员最后活跃时间失败, 错误信息: %v", err)
 		}
@@ -81,7 +81,7 @@ func updateLastActive(msg entity.Message) {
 	// 更新群或者好友活跃时间
 	err = client.MySQL.Model(&entity.Friend{}).
 		Where("wxid = ?", msg.FromUser).
-		Update("last_active", msg.CreateTime).Error
+		Update("last_active", msg.CreateAt).Error
 	if err != nil {
 		log.Printf("更新群或者好友活跃时间失败, 错误信息: %v", err)
 	}

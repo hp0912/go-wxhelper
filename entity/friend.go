@@ -1,24 +1,23 @@
 package entity
 
 import (
-	"go-wechat/common/types"
 	"time"
 )
 
 // Friend
 // @description: 好友列表
 type Friend struct {
-	Wxid           string         `json:"wxid"`                                                     // 微信原始Id
-	CustomAccount  string         `json:"customAccount"`                                            // 微信号
-	Nickname       string         `json:"nickname"`                                                 // 昵称
-	Pinyin         string         `json:"pinyin"`                                                   // 昵称拼音大写首字母
-	PinyinAll      string         `json:"pinyinAll"`                                                // 昵称全拼
-	LastActive     types.DateTime `json:"lastActive"`                                               // 最后活跃时间
-	EnableAi       bool           `json:"enableAI" gorm:"type:tinyint(1) default 0 not null"`       // 是否使用AI
-	AiModel        string         `json:"aiModel"`                                                  // AI模型
-	EnableChatRank bool           `json:"enableChatRank" gorm:"type:tinyint(1) default 0 not null"` // 是否使用聊天排行
-	EnableWelcome  bool           `json:"enableWelcome" gorm:"type:tinyint(1) default 0 not null"`  // 是否启用迎新
-	IsOk           bool           `json:"isOk" gorm:"type:tinyint(1) default 0 not null"`           // 是否正常
+	Wxid           string    `json:"wxid"`                                                     // 微信原始Id
+	CustomAccount  string    `json:"customAccount"`                                            // 微信号
+	Nickname       string    `json:"nickname"`                                                 // 昵称
+	Pinyin         string    `json:"pinyin"`                                                   // 昵称拼音大写首字母
+	PinyinAll      string    `json:"pinyinAll"`                                                // 昵称全拼
+	LastActive     time.Time `json:"lastActive"`                                               // 最后活跃时间
+	EnableAi       bool      `json:"enableAI" gorm:"type:tinyint(1) default 0 not null"`       // 是否使用AI
+	AiModel        string    `json:"aiModel"`                                                  // AI模型
+	EnableChatRank bool      `json:"enableChatRank" gorm:"type:tinyint(1) default 0 not null"` // 是否使用聊天排行
+	EnableWelcome  bool      `json:"enableWelcome" gorm:"type:tinyint(1) default 0 not null"`  // 是否启用迎新
+	IsOk           bool      `json:"isOk" gorm:"type:tinyint(1) default 0 not null"`           // 是否正常
 }
 
 func (Friend) TableName() string {

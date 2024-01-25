@@ -32,4 +32,10 @@ func SaveMessage(msg entity.Message) {
 		log.Printf("消息入库失败, 错误信息: %v", err)
 	}
 	log.Printf("消息入库成功，消息Id: %d", msg.MsgId)
+
+	// 更新最后活跃时间
+	// 只处理收到的消息
+	if msg.MsgId > 1 {
+		go updateLastActive(msg)
+	}
 }

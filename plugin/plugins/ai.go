@@ -123,6 +123,12 @@ func AI(m *plugin.MessageContext) {
 		return
 	}
 
+	// 返回消息为空
+	if resp.Choices[0].Message.Content == "" {
+		utils.SendMessage(m.FromUser, m.GroupUser, "AI似乎抽风了，没有告诉我你需要的回答~", 0)
+		return
+	}
+
 	// 保存一下AI 返回的消息，消息 Id 使用传入 Id 的负数
 	var replyMessage entity.Message
 	replyMessage.MsgId = -m.MsgId

@@ -66,6 +66,7 @@ func Sync() {
 				PinyinAll:     friend.PinyinAll,
 				Wxid:          friend.Wxid,
 				IsOk:          true,
+				LastActive:    time.Now().Local(),
 			}).Error
 			if err != nil {
 				log.Printf("新增好友失败: %s", err.Error())
@@ -149,14 +150,15 @@ func syncGroupUsers(tx *gorm.DB, gid string) {
 			if count == 0 {
 				// 新增
 				err = tx.Create(&entity.GroupUser{
-					GroupId:   gid,
-					Account:   cp.Account,
-					HeadImage: cp.HeadImage,
-					Nickname:  cp.Nickname,
-					Wxid:      cp.Wxid,
-					IsMember:  true,
-					IsAdmin:   wxid == baseResp.Data.Admin,
-					JoinTime:  time.Now().Local(),
+					GroupId:    gid,
+					Account:    cp.Account,
+					HeadImage:  cp.HeadImage,
+					Nickname:   cp.Nickname,
+					Wxid:       cp.Wxid,
+					IsMember:   true,
+					IsAdmin:    wxid == baseResp.Data.Admin,
+					JoinTime:   time.Now().Local(),
+					LastActive: time.Now().Local(),
 				}).Error
 				if err != nil {
 					log.Printf("新增群成员失败: %s", err.Error())

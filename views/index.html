@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>水群助手</title>
 
-<!--    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.14/dist/full.min.css" rel="stylesheet" type="text/css" />-->
     <link href="assets/css/daisyui-4.4.14-full.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/index.css" rel="stylesheet" type="text/css" />
 
@@ -71,6 +70,16 @@
                                 <div class="swap-on">✔️已启用</div>
                                 <div class="swap-off">❌已禁用</div>
                             </label>
+                            {{ if .EnableAi }}
+                            <br />
+                            <select class="select select-success select-xs w-1/2 max-w-xs" onchange="aiModelChange(event, {{.Wxid}})">
+                                <option value="" {{ if eq .AiModel ""}}selected{{ end }}>默认(gpt-3.5-turbo-0613)</option>
+                                {{$useModel := .AiModel}}
+                                {{ range $.aiModels }}
+                                <option value="{{.Model}}" {{ if eq $useModel .Model}}selected{{ end }}>{{.Name}}({{.Model}})</option>
+                                {{ end }}
+                            </select>
+                            {{ end }}
                         </td>
                         <td>
                             <label class="swap swap-flip {{ checkSwap .EnableCommand }}">
@@ -135,6 +144,16 @@
                                 <div class="swap-on">✔️已启用</div>
                                 <div class="swap-off">❌已禁用</div>
                             </label>
+                            {{ if .EnableAi }}
+                            <br />
+                            <select class="select select-success select-xs w-1/2 max-w-xs" onchange="aiModelChange(event, {{.Wxid}})">
+                                <option value="" {{ if eq .AiModel ""}}selected{{ end }}>默认(gpt-3.5-turbo-0613)</option>
+                                {{$useModel := .AiModel}}
+                                {{ range $.aiModels }}
+                                <option value="{{.Model}}" {{ if eq $useModel .Model}}selected{{ end }}>{{.Name}}({{.Model}})</option>
+                                {{ end }}
+                            </select>
+                            {{ end }}
                         </td>
                         <td>
                             <!-- EnableChatRank -->

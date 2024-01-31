@@ -16,6 +16,13 @@ type changeStatusParam struct {
 	UserId string `json:"userId"`
 }
 
+// changeUseAiModelParam
+// @description: 修改使用的AI模型用的参数集
+type changeUseAiModelParam struct {
+	WxId  string `json:"wxid" binding:"required"`  // 群Id或微信Id
+	Model string `json:"model" binding:"required"` // 模型代码
+}
+
 // ChangeEnableAiStatus
 // @description: 修改是否开启AI
 // @param ctx
@@ -32,6 +39,27 @@ func ChangeEnableAiStatus(ctx *gin.Context) {
 		Update("`enable_ai`", gorm.Expr(" !`enable_ai`")).Error
 	if err != nil {
 		log.Printf("修改是否开启AI失败：%s", err)
+		ctx.String(http.StatusInternalServerError, "操作失败: %s", err)
+		return
+	}
+
+	ctx.String(http.StatusOK, "操作成功")
+}
+
+// ChangeUseAiModel
+// @description: 修改使用的AI模型
+// @param ctx
+func ChangeUseAiModel(ctx *gin.Context) {
+	var p changeUseAiModelParam
+	if err := ctx.ShouldBind(&p); err != nil {
+		ctx.String(http.StatusBadRequest, "参数错误")
+		return
+	}
+	err := client.MySQL.Model(&entity.Friend{}).
+		Where("wxid = ?", p.WxId).
+		Update("`ai_model`", p.Model).Error
+	if err != nil {
+		log.Printf("修改【%s】的AI模型失败：%s", p.WxId, err)
 		ctx.String(http.StatusInternalServerError, "操作失败: %s", err)
 		return
 	}

@@ -135,3 +135,24 @@ function getGroupUsers(groupId, groupName) {
         groupNameTag.innerHTML = groupName
     })
 }
+
+// AI模型变动
+function aiModelChange(event, wxid) {
+    // 取出变动后的值
+    const modelStr = event.target.value;
+    console.log("AI模型变动: ", wxid, modelStr)
+    axios({
+        method: 'post',
+        url: '/api/ai/model',
+        data: {
+            wxid: wxid,
+            model: modelStr
+        }
+    }).then(function (response) {
+        console.log(`返回结果: ${JSON.stringify(response)}`);
+        alert(`${response.data}`)
+    }).catch(function (error) {
+        console.log(`错误信息: ${error}`);
+        alert("修改失败")
+    })
+}

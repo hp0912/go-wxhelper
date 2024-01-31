@@ -23,6 +23,7 @@ func Index(ctx *gin.Context) {
 	result["friends"] = friends
 	result["groups"] = groups
 	result["vnc"] = config.Conf.Wechat.VncUrl
+	result["aiModels"] = config.Conf.Ai.Models
 	// 渲染页面
 	ctx.HTML(http.StatusOK, "index.html", result)
 }

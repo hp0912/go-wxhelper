@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-wechat/config"
 	"go-wechat/initialization"
+	"go-wechat/mq"
 	"go-wechat/router"
 	"go-wechat/tasks"
 	"go-wechat/tcpserver"
@@ -20,6 +21,7 @@ func init() {
 	initialization.InitWechatRobotInfo() // 初始化机器人信息
 	initialization.Plugin()              // 注册插件
 	tasks.InitTasks()                    // 初始化定时任务
+	mq.Init()                            // 初始化MQ
 }
 
 func main() {

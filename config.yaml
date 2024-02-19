@@ -14,11 +14,13 @@ wechat:
 
 # 数据库
 mysql:
+  drive: mysql # 使用的数据库驱动，支持 mysql、postgres
   host: 10.0.0.31
   port: 3307
   user: wechat
   password: wechat123
   db: wechat
+  schema: public # postgres 专用
 
 task:
   enable: false
@@ -32,6 +34,16 @@ task:
         week: '30 9 * * 1' # 每周一9:30
         month: '30 9 1 * *' # 每月1号9:30
         year: '0 9 1 1 *' # 每年1月1号9:30
+
+# MQ配置
+mq:
+  # RabbitMQ配置
+  rabbitmq:
+    host: 10.0.0.247
+    port: 5672
+    user: wechat
+    password: wechat123
+    vhost: wechat
 
 # AI回复
 ai:

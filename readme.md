@@ -48,7 +48,7 @@ version: '3.9'
 
 services:
   wechat:
-    image: lxh01/wxhelper-docker:3.9.5.81-v11-novnc
+    image: lxh01/wxhelper-docker:3.9.5.81-v11-novnc # 如果不用noVNC网页，就删掉后面的-novnc
     container_name: gw-wechat
     restart: unless-stopped
     environment:

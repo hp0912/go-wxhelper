@@ -102,3 +102,7 @@ services:
 docker-compose up -d # 老版本
 docker compose up -d # 新版本
 ```
+
+## 注意事项
+1. 宿主机必须是`debian`系，因为`wine`的玄学`BUG`，其他系统可能会出现各种问题
+2. 登录微信可以用`vnc viewer`连接`5900`端口或者访问`noVNC`端口的`vnc_lite.html`页面进行扫码登录

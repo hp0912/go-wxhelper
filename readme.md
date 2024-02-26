@@ -48,7 +48,7 @@ version: '3.9'
 
 services:
   wechat:
-    image: lxh01/wxhelper-docker:3.9.5.81-v11
+    image: lxh01/wxhelper-docker:3.9.5.81-v11-novnc
     container_name: gw-wechat
     restart: unless-stopped
     environment:
@@ -56,8 +56,9 @@ services:
     volumes:
       - ./data/wechat:/home/app/.wine/drive_c/users/app/Documents/WeChat\ Files
     ports:
-      - "19087:8080"
-      - "19088:19088"
+      - "19086:5900" # vnc端口
+      - "19087:8080" # noVNC端口
+      - "19088:19088" # 微信HOOK端口
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:19088/api/checkLogin"]
       interval: 60s

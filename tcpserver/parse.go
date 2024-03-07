@@ -23,11 +23,6 @@ func parse(remoteAddr net.Addr, msg []byte) {
 	// 记录原始数据
 	m.Raw = string(msg)
 
-	// 如果不是自己的消息，直接返回
-	if m.ToUser == current.GetRobotInfo().WxId {
-		return
-	}
-
 	// 提取出群成员信息
 	// Sys类型的消息正文不包含微信 Id，所以不需要处理
 	if m.IsGroup() && m.Type != types.MsgTypeSys {

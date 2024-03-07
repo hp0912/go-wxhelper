@@ -18,7 +18,7 @@ type rankUser struct {
 // @return err
 func getRankData(groupId, date string) (rank []rankUser, err error) {
 	tx := client.MySQL.Table("t_message AS tm").
-		Joins("LEFT JOIN t_group_user AS tgu ON tgu.wxid = tm.group_user AND tm.from_user = tgu.group_id AND tgu.skip_chat_rank = 0").
+		Joins("LEFT JOIN t_group_user AS tgu ON tgu.wxid = tm.group_user AND tm.from_user = tgu.group_id AND tgu.skip_chat_rank = 0 AND is_member = 1").
 		Select("tm.group_user", "tgu.nickname", "count( 1 ) AS `count`").
 		Where("tm.from_user = ?", groupId).
 		Where("tm.type < 10000").

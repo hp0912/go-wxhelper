@@ -88,7 +88,13 @@ func (m Message) IsRevokeMsg() bool {
 // @receiver m
 // @return bool
 func (m Message) IsNewUserJoin() bool {
-	sysFlag := m.Type == types.MsgTypeSys && strings.Contains(m.Content, "\"邀请\"") && strings.Contains(m.Content, "\"加入了群聊")
+	if m.Type != types.MsgTypeSys {
+		return false
+	}
+
+	isInvitation := strings.Contains(m.Content, "\"邀请\"") && strings.Contains(m.Content, "\"加入了群聊")
+	isScanQrCode := strings.Contains(m.Content, "通过扫描") && strings.Contains(m.Content, "加入群聊")
+	sysFlag := isInvitation || isScanQrCode
 	if sysFlag {
 		return true
 	}
@@ -97,7 +103,7 @@ func (m Message) IsNewUserJoin() bool {
 	if err := xml.Unmarshal([]byte(m.Content), &d); err != nil {
 		return false
 	}
-	return m.Type == types.MsgTypeSys && d.Type == "delchatroommember"
+	return d.Type == "delchatroommember"
 }
 
 // IsAt

@@ -2,7 +2,9 @@ package watergroup
 
 import (
 	"fmt"
+	"go-wechat/client"
 	"go-wechat/config"
+	"go-wechat/entity"
 	"go-wechat/service"
 	"go-wechat/utils"
 	"log"
@@ -56,6 +58,20 @@ func dealYesterday(gid string) {
 		log.Printf("昨日群[%s]无对话记录", gid)
 		return
 	}
+
+	// 查询群成员总数
+	var groupUsers int64
+	err = client.MySQL.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Count(&groupUsers).Error
+	if err != nil {
+		log.Printf("查询群成员总数失败, 错误信息: %v", err)
+	}
+	// 计算活跃度
+	showActivity := err != nil && groupUsers > 0
+	activity := "0.00"
+	if groupUsers > 0 {
+		activity = fmt.Sprintf("%.2f", (float64(len(records))/float64(groupUsers))*100)
+	}
+
 	// 计算消息总数
 	var msgCount int64
 	for _, v := range records {
@@ -64,6 +80,9 @@ func dealYesterday(gid string) {
 	// 组装消息总数推送信息
 	notifyMsgs = append(notifyMsgs, " ")
 	notifyMsgs = append(notifyMsgs, fmt.Sprintf("🗣️ 昨日本群 %d 位朋友共产生 %d 条发言", len(records), msgCount))
+	if showActivity {
+		notifyMsgs = append(notifyMsgs, fmt.Sprintf("🎭 活跃度: %s%", activity))
+	}
 	notifyMsgs = append(notifyMsgs, "\n🏵 活跃用户排行榜 🏵")
 
 	notifyMsgs = append(notifyMsgs, " ")

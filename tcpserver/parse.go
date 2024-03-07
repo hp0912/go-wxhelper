@@ -24,7 +24,7 @@ func parse(remoteAddr net.Addr, msg []byte) {
 	m.Raw = string(msg)
 
 	// 如果不是自己的消息，直接返回
-	if m.FromUser == current.GetRobotInfo().WxId {
+	if m.ToUser == current.GetRobotInfo().WxId {
 		return
 	}
 

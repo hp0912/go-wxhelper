@@ -59,7 +59,10 @@ func dealWeek(gid string) {
 
 	// 查询群成员总数
 	var groupUsers int64
-	err = client.MySQL.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Count(&groupUsers).Error
+	err = client.MySQL.Model(&entity.GroupUser{}).
+		Where("group_id = ?", gid).
+		Where("is_member IS TRUE").
+		Count(&groupUsers).Error
 	if err != nil {
 		log.Printf("查询群成员总数失败, 错误信息: %v", err)
 	}

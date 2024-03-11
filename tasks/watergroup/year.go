@@ -59,12 +59,15 @@ func dealYear(gid string) {
 
 	// 查询群成员总数
 	var groupUsers int64
-	err = client.MySQL.Model(&entity.GroupUser{}).Where("group_id = ?", gid).Count(&groupUsers).Error
+	err = client.MySQL.Model(&entity.GroupUser{}).
+		Where("group_id = ?", gid).
+		Where("is_member IS TRUE").
+		Count(&groupUsers).Error
 	if err != nil {
 		log.Printf("查询群成员总数失败, 错误信息: %v", err)
 	}
 	// 计算活跃度
-	showActivity := err != nil && groupUsers > 0
+	showActivity := err == nil && groupUsers > 0
 	activity := "0.00"
 	if groupUsers > 0 {
 		activity = fmt.Sprintf("%.2f", (float64(len(records))/float64(groupUsers))*100)

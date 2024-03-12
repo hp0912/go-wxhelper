@@ -84,7 +84,7 @@ func dealYesterday(gid string) {
 	notifyMsgs = append(notifyMsgs, " ")
 	notifyMsgs = append(notifyMsgs, fmt.Sprintf("🗣️ 昨日本群 %d 位朋友共产生 %d 条发言", len(records), msgCount))
 	if showActivity {
-		notifyMsgs = append(notifyMsgs, fmt.Sprintf("🎭 活跃度: %s%", activity))
+		notifyMsgs = append(notifyMsgs, fmt.Sprintf("🎭 活跃度: %s%%", activity))
 	}
 	notifyMsgs = append(notifyMsgs, "\n🏵 活跃用户排行榜 🏵")
 

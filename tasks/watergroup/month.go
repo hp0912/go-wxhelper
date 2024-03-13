@@ -74,13 +74,15 @@ func dealMonth(gid string) {
 		activity = fmt.Sprintf("%.2f", (float64(len(records))/float64(groupUsers))*100)
 	}
 
-	// 计算消息总数、中位数
-	var msgCount int64
-	var medianCount int64
+	// 计算消息总数、中位数、前十位消息总数
+	var msgCount, medianCount, topTenCount int64
 	for idx, v := range records {
 		msgCount += v.Count
 		if idx == (len(records)/2)-1 {
 			medianCount = v.Count
+		}
+		if len(records) > 10 && idx < 10 {
+			topTenCount += v.Count
 		}
 	}
 	// 计算活跃用户人均消息条数
@@ -90,7 +92,12 @@ func dealMonth(gid string) {
 	notifyMsgs = append(notifyMsgs, " ")
 	notifyMsgs = append(notifyMsgs, fmt.Sprintf("🗣️ %s本群 %d 位朋友共产生 %d 条发言", monthStr, len(records), msgCount))
 	if showActivity {
-		notifyMsgs = append(notifyMsgs, fmt.Sprintf("🎭 活跃度: %s%%，人均消息条数: %d，中位数: %d", activity, avgMsgCount, medianCount))
+		m := fmt.Sprintf("🎭 活跃度: %s%%，人均消息条数: %d，中位数: %d", activity, avgMsgCount, medianCount)
+		// 计算前十占比
+		if topTenCount > 0 {
+			m += fmt.Sprintf("，前十名占比: %.2f%%", float64(topTenCount)/float64(msgCount)*100)
+		}
+		notifyMsgs = append(notifyMsgs, m)
 	}
 	notifyMsgs = append(notifyMsgs, "\n🏵 活跃用户排行榜 🏵")
 

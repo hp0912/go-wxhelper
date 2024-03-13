@@ -80,7 +80,7 @@ func dealYesterday(gid string) {
 	var medianCount int64
 	for idx, v := range records {
 		msgCount += v.Count
-		if idx == len(records)/2 {
+		if idx == (len(records)/2)-1 {
 			medianCount = v.Count
 		}
 	}

@@ -73,11 +73,18 @@ func dealYear(gid string) {
 		activity = fmt.Sprintf("%.2f", (float64(len(records))/float64(groupUsers))*100)
 	}
 
-	// 计算消息总数
+	// 计算消息总数、中位数
 	var msgCount int64
-	for _, v := range records {
+	var medianCount int64
+	for idx, v := range records {
 		msgCount += v.Count
+		if idx == len(records)/2 {
+			medianCount = v.Count
+		}
 	}
+	// 计算活跃用户人均消息条数
+	avgMsgCount := int(float64(msgCount) / float64(len(records)))
+
 	// 组装消息总数推送信息
 	notifyMsgs = append(notifyMsgs, " ")
 	notifyMsgs = append(notifyMsgs, "亲爱的群友们，新年已经悄悄来临，让我们一起迎接这充满希望和美好的时刻。在这个特殊的日子里，我要向你们致以最真挚的祝福。")
@@ -90,7 +97,7 @@ func dealYear(gid string) {
 	notifyMsgs = append(notifyMsgs, " ")
 	notifyMsgs = append(notifyMsgs, fmt.Sprintf("🗣️ 去年本群 %d 位朋友共产生 %d 条发言", len(records), msgCount))
 	if showActivity {
-		notifyMsgs = append(notifyMsgs, fmt.Sprintf("🎭 活跃度: %s%%", activity))
+		notifyMsgs = append(notifyMsgs, fmt.Sprintf("🎭 活跃度: %s%%，人均消息条数: %d，中位数: %d", activity, avgMsgCount, medianCount))
 	}
 	notifyMsgs = append(notifyMsgs, "\n🏵 活跃用户排行榜 🏵")
 

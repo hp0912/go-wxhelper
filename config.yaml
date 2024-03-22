@@ -37,6 +37,8 @@ task:
 
 # MQ配置
 mq:
+  # 是否启用
+  enable: false
   # RabbitMQ配置
   rabbitmq:
     host: 10.0.0.247

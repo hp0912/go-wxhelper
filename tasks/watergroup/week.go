@@ -67,22 +67,36 @@ func dealWeek(gid string) {
 		log.Printf("查询群成员总数失败, 错误信息: %v", err)
 	}
 	// 计算活跃度
-	showActivity := err != nil && groupUsers > 0
+	showActivity := err == nil && groupUsers > 0
 	activity := "0.00"
 	if groupUsers > 0 {
 		activity = fmt.Sprintf("%.2f", (float64(len(records))/float64(groupUsers))*100)
 	}
 
-	// 计算消息总数
-	var msgCount int64
-	for _, v := range records {
+	// 计算消息总数、中位数、前十位消息总数
+	var msgCount, medianCount, topTenCount int64
+	for idx, v := range records {
 		msgCount += v.Count
+		if idx == (len(records)/2)-1 {
+			medianCount = v.Count
+		}
+		if len(records) > 10 && idx < 10 {
+			topTenCount += v.Count
+		}
 	}
+	// 计算活跃用户人均消息条数
+	avgMsgCount := int(float64(msgCount) / float64(len(records)))
+
 	// 组装消息总数推送信息
 	notifyMsgs = append(notifyMsgs, " ")
 	notifyMsgs = append(notifyMsgs, fmt.Sprintf("🗣️ 上周本群 %d 位朋友共产生 %d 条发言", len(records), msgCount))
 	if showActivity {
-		notifyMsgs = append(notifyMsgs, fmt.Sprintf("🎭 活跃度: %s%", activity))
+		m := fmt.Sprintf("🎭 活跃度: %s%%，人均消息条数: %d，中位数: %d", activity, avgMsgCount, medianCount)
+		// 计算前十占比
+		if topTenCount > 0 {
+			m += fmt.Sprintf("，前十名占比: %.2f%%", float64(topTenCount)/float64(msgCount)*100)
+		}
+		notifyMsgs = append(notifyMsgs, m)
 	}
 	notifyMsgs = append(notifyMsgs, "\n🏵 活跃用户排行榜 🏵")
 

@@ -16,6 +16,10 @@ const exchangeName = "wechat-message"
 // Init
 // @description: 初始化MQ
 func Init() {
+	if !config.Conf.Mq.Enable {
+		log.Println("未启用MQ")
+		return
+	}
 	// 读取MQ连接配置
 	mqUrl := config.Conf.Mq.RabbitMQ.GetURL()
 	if mqUrl == "" {

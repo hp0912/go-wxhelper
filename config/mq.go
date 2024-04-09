@@ -5,6 +5,7 @@ import "fmt"
 // mq
 // @description: MQ配置
 type mq struct {
+	Enable   bool     `json:"enable" yaml:"enable"`     // 是否启用
 	RabbitMQ rabbitMq `json:"rabbitmq" yaml:"rabbitmq"` // RabbitMQ配置
 }
 

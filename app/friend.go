@@ -90,6 +90,29 @@ func ChangeEnableGroupRankStatus(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "操作成功")
 }
 
+// ChangeEnableSummaryStatus
+// @description: 修改是否开启聊天记录总结
+// @param ctx
+func ChangeEnableSummaryStatus(ctx *gin.Context) {
+	var p changeStatusParam
+	if err := ctx.ShouldBindJSON(&p); err != nil {
+		ctx.String(http.StatusBadRequest, "参数错误")
+		return
+	}
+	log.Printf("待修改的群Id：%s", p.WxId)
+
+	err := client.MySQL.Model(&entity.Friend{}).
+		Where("wxid = ?", p.WxId).
+		Update("`enable_summary`", gorm.Expr(" !`enable_summary`")).Error
+	if err != nil {
+		log.Printf("修改开启聊天记录总结失败：%s", err)
+		ctx.String(http.StatusInternalServerError, "操作失败: %s", err)
+		return
+	}
+
+	ctx.String(http.StatusOK, "操作成功")
+}
+
 // ChangeEnableWelcomeStatus
 // @description: 修改是否开启迎新
 // @param ctx

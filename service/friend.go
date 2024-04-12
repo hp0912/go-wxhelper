@@ -53,6 +53,15 @@ func GetAllEnableChatRank() (records []entity.Friend, err error) {
 	return
 }
 
+// GetAllEnableSummary
+// @description: 取出所有启用了总结的群组
+// @return records
+// @return err
+func GetAllEnableSummary() (records []entity.Friend, err error) {
+	err = client.MySQL.Where("enable_summary = ?", 1).Where("wxid LIKE '%@chatroom'").Find(&records).Error
+	return
+}
+
 // CheckIsEnableCommand
 // @description: 检查用户是否启用了指令
 // @param userId

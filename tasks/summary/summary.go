@@ -1,0 +1,81 @@
+package summary
+
+import (
+	"context"
+	"fmt"
+	"github.com/sashabaranov/go-openai"
+	"go-wechat/config"
+	"go-wechat/service"
+	"go-wechat/utils"
+	"go-wechat/vo"
+	"log"
+	"strings"
+)
+
+// AiSummary
+// @description: AI总结群聊记录
+func AiSummary() {
+	groups, err := service.GetAllEnableSummary()
+	if err != nil {
+		log.Printf("获取启用了聊天排行榜的群组失败, 错误信息: %v", err)
+		return
+	}
+
+	for _, group := range groups {
+		// 获取对话记录
+		var records []vo.TextMessageItem
+		if records, err = service.GetTextMessagesById(group.Wxid); err != nil {
+			log.Printf("获取群[%s]对话记录失败, 错误信息: %v", group.Wxid, err)
+			continue
+		}
+		//if len(records) < 100 {
+		//	log.Printf("群[%s]对话记录不足100条，跳过总结", group.Wxid)
+		//	continue
+		//}
+		// 组装对话记录为字符串
+		var content []string
+		for _, record := range records {
+			content = append(content, fmt.Sprintf("%s: %s\n-----end-----", record.Nickname, record.Message))
+		}
+
+		msg := fmt.Sprintf("请帮我总结一下一下的群聊内容的梗概(内容尽可能详细一些)。\n"+
+			"注意，他们可能是多个话题，请仔细甄别。\n"+
+			"每一行代表一个人的发言，每一行的的格式为： \n{nickname}: {content}\n-----end-----"+
+			"\n\n聊天记录如下: \n%s", strings.Join(content, "\n"))
+
+		// AI总结
+		messages := []openai.ChatCompletionMessage{
+			{
+				Role:    openai.ChatMessageRoleUser,
+				Content: msg,
+			},
+		}
+
+		// 默认使用AI回复
+		conf := openai.DefaultConfig(config.Conf.Ai.ApiKey)
+		if config.Conf.Ai.BaseUrl != "" {
+			conf.BaseURL = fmt.Sprintf("%s/v1", config.Conf.Ai.BaseUrl)
+		}
+		ai := openai.NewClientWithConfig(conf)
+		var resp openai.ChatCompletionResponse
+		resp, err = ai.CreateChatCompletion(
+			context.Background(),
+			openai.ChatCompletionRequest{
+				Model:    config.Conf.Ai.SummaryModel,
+				Messages: messages,
+			},
+		)
+
+		if err != nil {
+			log.Printf("群聊记录总结失败: %v", err.Error())
+			continue
+		}
+
+		// 返回消息为空
+		if resp.Choices[0].Message.Content == "" {
+			continue
+		}
+		replyMsg := fmt.Sprintf("#昨日消息总结\n\n%s", resp.Choices[0].Message.Content)
+		utils.SendMessage(group.Wxid, "", replyMsg, 0)
+	}
+}

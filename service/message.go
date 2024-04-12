@@ -3,6 +3,7 @@ package service
 import (
 	"go-wechat/client"
 	"go-wechat/entity"
+	"go-wechat/vo"
 	"log"
 	"os"
 	"strconv"
@@ -38,4 +39,23 @@ func SaveMessage(msg entity.Message) {
 	if msg.MsgId > 1 {
 		go updateLastActive(msg)
 	}
+}
+
+// GetTextMessagesById
+// @description: 根据群id或者用户Id获取消息
+// @param id
+// @return records
+// @return err
+func GetTextMessagesById(id string) (records []vo.TextMessageItem, err error) {
+	tx := client.MySQL.
+		Table("`t_message` AS tm").
+		Joins("LEFT JOIN t_group_user AS tgu ON tm.group_user = tgu.wxid AND tgu.group_id = tm.from_user").
+		Select("tgu.nickname", "IF( tm.type = 49, EXTRACTVALUE ( tm.content, \"/msg/appmsg/title\" ), tm.content ) AS message").
+		Where("tm.`from_user` = ?", id).
+		Where(`(tm.type = 1 OR ( tm.type = 49 AND EXTRACTVALUE ( tm.content, "/msg/appmsg/type" ) = '57' ))`).
+		Where("DATE ( tm.create_at ) = DATE ( CURDATE() - INTERVAL 1 DAY )").
+		Order("tm.create_at ASC")
+
+	err = tx.Find(&records).Error
+	return
 }

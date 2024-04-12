@@ -18,6 +18,7 @@ type FriendItem struct {
 	EnableChatRank bool           // 是否使用聊天排行
 	EnableWelcome  bool           // 是否使用迎新
 	EnableCommand  bool           // 是否启用指令
+	EnableSummary  bool           // 是否启用总结
 	IsOk           bool           // 是否还在通讯库(群聊是要还在群里也算)
 }
 

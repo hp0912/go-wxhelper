@@ -108,6 +108,7 @@
                         <th>是否在通讯录</th>
                         <th>是否启用AI</th>
                         <th>是否启用水群排行榜</th>
+                        <th>是否启用聊天记录总结</th>
                         <th>是否启用迎新</th>
                         <th>是否启用指令</th>
                         <th>操作</th>
@@ -159,6 +160,15 @@
                             <!-- EnableChatRank -->
                             <label class="swap swap-flip {{ checkSwap .EnableChatRank }}">
                                 <input type="checkbox" onclick="changeGroupRankEnableStatus({{.Wxid}})"/>
+
+                                <div class="swap-on">✔️已启用</div>
+                                <div class="swap-off">❌已禁用</div>
+                            </label>
+                        </td>
+                        <td>
+                            <!-- EnableSummary -->
+                            <label class="swap swap-flip {{ checkSwap .EnableSummary }}">
+                                <input type="checkbox" onclick="changeSummaryEnableStatus({{.Wxid}})"/>
 
                                 <div class="swap-on">✔️已启用</div>
                                 <div class="swap-off">❌已禁用</div>

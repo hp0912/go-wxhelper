@@ -42,6 +42,8 @@ func Command(m *plugin.MessageContext) {
 		command.LeiGodCmd(m.FromUser, msgArray[1], msgArray[2:]...)
 	case "/肯德基", "/kfc":
 		command.KfcCrazyThursdayCmd(m.FromUser)
+	case "/ai":
+		command.AiCmd(m.FromUser, m.GroupUser, msgArray[1])
 	default:
 		utils.SendMessage(m.FromUser, m.GroupUser, "指令错误", 0)
 	}

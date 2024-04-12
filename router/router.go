@@ -28,4 +28,5 @@ func Init(g *gin.Engine) {
 	api.PUT("/grouprank/status", app.ChangeEnableGroupRankStatus) // 修改是否开启水群排行榜状态
 	api.PUT("/grouprank/skip", app.ChangeSkipGroupRankStatus)     // 修改是否跳过水群排行榜状态
 	api.GET("/group/users", app.GetGroupUsers)                    // 获取群成员列表
+	api.PUT("/summary/status", app.ChangeEnableSummaryStatus)     // 修改是否开启群聊总结状态
 }

@@ -70,9 +70,6 @@ services:
     image: mysql:8
     container_name: gw-db
     restart: unless-stopped
-    depends_on:
-      wechat:
-        condition: service_healthy
     environment:
       - MYSQL_ROOT_PASSWORD=wechat
       - MYSQL_USER=wechat
@@ -88,6 +85,7 @@ services:
     restart: unless-stopped
     depends_on:
       - mysql
+      - wechat
     volumes:
       # 配置文件请参阅项目根目录的config.yaml文件
       - ./config/config.yaml:/app/config.yaml

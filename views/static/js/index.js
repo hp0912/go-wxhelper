@@ -12,6 +12,7 @@ function changeAiEnableStatus(wxId) {
         }
     }).then(function (response) {
         console.log(`返回结果: ${JSON.stringify(response)}`);
+        alert(`${response.data}`)
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
@@ -29,6 +30,25 @@ function changeGroupRankEnableStatus(wxId) {
         }
     }).then(function (response) {
         console.log(`返回结果: ${JSON.stringify(response)}`);
+        alert(`${response.data}`)
+    }).catch(function (error) {
+        console.log(`错误信息: ${error}`);
+        alert("修改失败")
+    })
+}
+
+// 修改水群排行榜状态
+function changeSummaryEnableStatus(wxId) {
+    // console.log("修改聊天记录总结开启状态: ", wxId)
+    axios({
+        method: 'put',
+        url: '/api/summary/status',
+        data: {
+            wxId: wxId
+        }
+    }).then(function (response) {
+        console.log(`返回结果: ${JSON.stringify(response)}`);
+        alert(`${response.data}`)
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
@@ -45,6 +65,7 @@ function changeWelcomeEnableStatus(wxId) {
         }
     }).then(function (response) {
         console.log(`返回结果: ${JSON.stringify(response)}`);
+        alert(`${response.data}`)
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
@@ -61,6 +82,7 @@ function changeCommandEnableStatus(wxId) {
         }
     }).then(function (response) {
         console.log(`返回结果: ${JSON.stringify(response)}`);
+        alert(`${response.data}`)
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
@@ -79,6 +101,7 @@ function changeUserGroupRankSkipStatus(groupId, userId) {
         }
     }).then(function (response) {
         console.log(`返回结果: ${JSON.stringify(response)}`);
+        alert(`${response.data}`)
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")

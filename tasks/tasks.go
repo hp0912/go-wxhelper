@@ -4,6 +4,7 @@ import (
 	"github.com/go-co-op/gocron"
 	"go-wechat/config"
 	"go-wechat/tasks/friends"
+	"go-wechat/tasks/summary"
 	"go-wechat/tasks/watergroup"
 	"log"
 	"time"
@@ -35,6 +36,13 @@ func InitTasks() {
 		if config.Conf.Task.WaterGroup.Cron.Year != "" {
 			_, _ = s.Cron(config.Conf.Task.WaterGroup.Cron.Year).Do(watergroup.Year)
 		}
+	}
+
+	// 群聊总结
+	if config.Conf.Task.GroupSummary.Enable {
+		log.Printf("群聊总结任务已启用，执行表达式: %s", config.Conf.Task.GroupSummary.Cron)
+		_, _ = s.Cron(config.Conf.Task.GroupSummary.Cron).Do(summary.AiSummary)
+
 	}
 
 	// 更新好友列表

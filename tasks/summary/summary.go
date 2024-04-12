@@ -28,10 +28,10 @@ func AiSummary() {
 			log.Printf("获取群[%s]对话记录失败, 错误信息: %v", group.Wxid, err)
 			continue
 		}
-		//if len(records) < 100 {
-		//	log.Printf("群[%s]对话记录不足100条，跳过总结", group.Wxid)
-		//	continue
-		//}
+		if len(records) < 100 {
+			log.Printf("群[%s]对话记录不足100条，跳过总结", group.Wxid)
+			continue
+		}
 		// 组装对话记录为字符串
 		var content []string
 		for _, record := range records {

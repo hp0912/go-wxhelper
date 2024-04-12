@@ -23,6 +23,13 @@ option: 指令选项，可选值:
 
 #2. 肯德基疯狂星期四文案
 /kfc、/肯德基
+
+#3. AI助手
+/ai option
+option: 指令选项，可选值:
+  启用: '启用'、'打开'、'enable'
+  停用: '停用'、'禁用'、'关闭'、'disable'
+
 `
 	utils.SendMessage(m.FromUser, m.GroupUser, str, 0)
 

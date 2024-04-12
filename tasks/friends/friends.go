@@ -8,6 +8,7 @@ import (
 	"go-wechat/config"
 	"go-wechat/entity"
 	"go-wechat/model"
+	"go-wechat/utils"
 	"gorm.io/gorm"
 	"log"
 	"slices"
@@ -72,6 +73,8 @@ func Sync() {
 				log.Printf("新增好友失败: %s", err.Error())
 				continue
 			}
+			// 发送一条新消息
+			utils.SendMessage(friend.Wxid, "", "大家好，我是一个AI机器人，可以直接@我询问你想问的问题。该功能默认未启用，请群主艾特我并发送 /ai enable 指令启用", 0)
 		} else {
 			pm := map[string]any{
 				"nickname":       friend.Nickname,

@@ -3,7 +3,7 @@ wechat:
   # 微信HOOK接口地址
   host: 10.0.0.73:19088
   # 微信容器映射出来的vnc页面地址，没有就不填
-#  vncUrl: http://192.168.1.175:19087/vnc_lite.html
+  #  vncUrl: http://192.168.1.175:19087/vnc_lite.html
   # 是否在启动的时候自动设置hook服务的回调
   autoSetCallback: false
   # 回调IP，如果是Docker运行，本参数必填(填auto表示自动，不适用于 docker 环境)，如果Docker修改了映射，格式为 ip:port
@@ -23,17 +23,20 @@ mysql:
   schema: public # postgres 专用
 
 task:
-  enable: false
+  enable: true
   syncFriends:
-      enable: false
-      cron: '*/5 * * * *' # 五分钟一次
+    enable: false
+    cron: '*/5 * * * *' # 五分钟一次
+  groupSummary:
+    enable: true
+    cron: '30 0 * * *' # 每天0:30
   waterGroup:
-      enable: true
-      cron:
-        yesterday: '30 9 * * *' # 每天9:30
-        week: '30 9 * * 1' # 每周一9:30
-        month: '30 9 1 * *' # 每月1号9:30
-        year: '0 9 1 1 *' # 每年1月1号9:30
+    enable: false
+    cron:
+      yesterday: '30 9 * * *' # 每天9:30
+      week: '30 9 * * 1' # 每周一9:30
+      month: '30 9 1 * *' # 每月1号9:30
+      year: '0 9 1 1 *' # 每年1月1号9:30
 
 # MQ配置
 mq:
@@ -53,6 +56,8 @@ ai:
   enable: false
   # 模型，不填默认gpt-3.5-turbo-0613
   model: gpt-3.5-turbo-0613
+  # 群聊总结模型
+  summaryModel: gpt-4-0613
   # OpenAI Api key
   apiKey: sk-xxxx
   # 接口代理域名，不填默认ChatGPT官方地址

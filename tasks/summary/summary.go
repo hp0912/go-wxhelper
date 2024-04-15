@@ -38,7 +38,7 @@ func AiSummary() {
 			content = append(content, fmt.Sprintf("%s: %s\n-----end-----", record.Nickname, record.Message))
 		}
 
-		msg := fmt.Sprintf("请帮我总结一下一下的群聊内容的梗概(内容尽可能详细一些)。\n"+
+		msg := fmt.Sprintf("请帮我总结一下一下的群聊内容的梗概，生成的梗概尽可能详细，并且最好带上名字。\n"+
 			"注意，他们可能是多个话题，请仔细甄别。\n"+
 			"每一行代表一个人的发言，每一行的的格式为： \n{nickname}: {content}\n-----end-----"+
 			"\n\n聊天记录如下: \n%s", strings.Join(content, "\n"))

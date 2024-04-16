@@ -15,6 +15,7 @@ type Friend struct {
 	LastActive     time.Time `json:"lastActive"`                                               // 最后活跃时间
 	EnableAi       bool      `json:"enableAI" gorm:"type:tinyint(1) default 0 not null"`       // 是否使用AI
 	AiModel        string    `json:"aiModel"`                                                  // AI模型
+	Prompt         string    `json:"prompt"`                                                   // 提示词
 	EnableChatRank bool      `json:"enableChatRank" gorm:"type:tinyint(1) default 0 not null"` // 是否使用聊天排行
 	EnableWelcome  bool      `json:"enableWelcome" gorm:"type:tinyint(1) default 0 not null"`  // 是否启用迎新
 	EnableSummary  bool      `json:"enableSummary" gorm:"type:tinyint(1) default 0 not null"`  // 是否启用总结

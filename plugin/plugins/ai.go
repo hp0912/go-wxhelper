@@ -46,13 +46,19 @@ func AI(m *plugin.MessageContext) {
 		m.Content = strings.Replace(m.Content, matches[0], "", 1)
 	}
 
+	// 处理预设角色，默认是配置文件里的，如果数据库配置不为空，则使用数据库配置
+	prompt := config.Conf.Ai.Personality
+	if friendInfo.Prompt != "" {
+		prompt = friendInfo.Prompt
+	}
+
 	// 组装消息体
 	messages := make([]openai.ChatCompletionMessage, 0)
 	if config.Conf.Ai.Personality != "" {
 		// 填充人设
 		messages = append(messages, openai.ChatCompletionMessage{
 			Role:    openai.ChatMessageRoleSystem,
-			Content: config.Conf.Ai.Personality,
+			Content: prompt,
 		})
 	}
 

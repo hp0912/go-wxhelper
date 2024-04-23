@@ -16,6 +16,8 @@ function changeAiEnableStatus(wxId) {
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
+    }).finally(function () {
+        window.location.reload();
     })
 }
 
@@ -34,6 +36,8 @@ function changeGroupRankEnableStatus(wxId) {
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
+    }).finally(function () {
+        window.location.reload();
     })
 }
 
@@ -52,6 +56,8 @@ function changeSummaryEnableStatus(wxId) {
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
+    }).finally(function () {
+        window.location.reload();
     })
 }
 
@@ -69,6 +75,8 @@ function changeWelcomeEnableStatus(wxId) {
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
+    }).finally(function () {
+        window.location.reload();
     })
 }
 
@@ -86,6 +94,8 @@ function changeCommandEnableStatus(wxId) {
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
+    }).finally(function () {
+        window.location.reload();
     })
 }
 
@@ -105,6 +115,8 @@ function changeUserGroupRankSkipStatus(groupId, userId) {
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
+    }).finally(function () {
+        window.location.reload();
     })
 }
 
@@ -177,5 +189,7 @@ function aiModelChange(event, wxid) {
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);
         alert("修改失败")
+    }).finally(function () {
+        window.location.reload();
     })
 }

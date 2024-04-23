@@ -40,11 +40,23 @@ func main() {
 
 	// 自定义模板引擎函数
 	app.SetFuncMap(template.FuncMap{
-		"checkSwap": func(flag bool) string {
-			if flag {
-				return "swap-active"
+		"codeToChinese": func(code string) string {
+			switch code {
+			case "friend":
+				return "好友列表"
+			case "group":
+				return "群组列表"
+			case "index":
+				return "首页"
+			default:
+				return "其他页面"
 			}
-			return ""
+		},
+		"boolToChinese": func(flag bool) string {
+			if flag {
+				return "是"
+			}
+			return "否"
 		},
 	})
 
@@ -58,7 +70,7 @@ func main() {
 			return
 		}
 		// 404直接跳转到首页
-		ctx.Redirect(302, "/index.html")
+		ctx.Redirect(302, "/404.html")
 	})
 	app.NoMethod(func(ctx *gin.Context) {
 		ctx.String(http.StatusMethodNotAllowed, "不支持的请求方式")

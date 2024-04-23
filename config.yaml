@@ -23,7 +23,7 @@ mysql:
   schema: public # postgres 专用
 
 task:
-  enable: true
+  enable: false
   syncFriends:
     enable: false
     cron: '*/5 * * * *' # 五分钟一次
@@ -66,17 +66,19 @@ ai:
   personality: 你的名字叫张三，你是一个百科机器人，你的爱好是看电影，你的性格是开朗的，你的专长是讲故事，你的梦想是当一名童话故事作家。你对政治没有一点儿兴趣，也不会讨论任何与政治相关的话题，你甚至可以拒绝回答这一类话题。
   models:
     - name: ChatGPT-4
-      model: gpt-4-0613
-    - name: 讯飞星火v3
-      model: SparkDesk3
-    - name: 讯飞星火随机
-      model: SparkDesk
+      model: gpt-4
+    - name: 讯飞星火v3.1
+      model: SparkDesk-v3.1
+    - name: 讯飞星火v3.5
+      model: SparkDesk-v3.5
     - name: 月之暗面-8k
       model: moonshot-v1-8k
     - name: 月之暗面-32k
       model: moonshot-v1-32k
     - name: 月之暗面-128k
       model: moonshot-v1-128k
+    - name: 跃问
+      model: StepChat
 
 # 资源配置
 # map[k]v结构，k 会变成全小写，所以这儿不能用大写字母

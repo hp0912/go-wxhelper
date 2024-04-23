@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <title>好友列表</title>
+
+  <link href="assets/css/daisyui-4.4.14-full.min.css" rel="stylesheet" type="text/css"/>
+  <link href="assets/css/index.css" rel="stylesheet" type="text/css"/>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.5.0/axios.min.js"></script>
+
+  <script src="assets/js/index.js"></script>
+</head>
+
+<body class="h-full">
+<div class="min-h-full">
+  {{ template "head.html" "friend" }}
+
+  <main class="-mt-32">
+    <div class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+      <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6 text-2xl">
+        <table class="min-w-full divide-y divide-gray-300">
+          <thead class="bg-gray-50">
+          <tr>
+            <th scope="col"
+                class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+              微信Id
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              微信号
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">昵称
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              最后活跃时间
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              是否在通讯录
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              是否启用AI
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              是否启用指令
+            </th>
+          </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+          {{ range .friends }}
+          <tr class="even:bg-gray-50">
+            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+              {{ .Wxid }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{
+              .CustomAccount }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{
+              .Nickname }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {{ if eq .LastActive.IsNil true }}
+              无数据
+              {{ else }}
+              {{ .LastActive }}
+              {{ end }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {{ if eq .IsOk true }}
+              <span
+                class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">是</span>
+              {{ else }}
+              <span
+                class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">否</span>
+              {{ end }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {{ template "ai" . }}
+              <!-- 使用的模型 -->
+              {{ if eq .EnableAi true }}
+              <select id="location" name="location"
+                      class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-green-600 sm:text-sm sm:leading-6"
+                      onchange="aiModelChange(event, {{.Wxid}})">
+                <option value="" {{ if eq .AiModel
+                "" }}selected{{ end }}>默认(gpt-3.5-turbo-0613)
+                </option>
+
+                {{$useModel := .AiModel}}
+                {{ range $.aiModels }}
+                <option value="{{.Model}}" {{ if eq $useModel .Model}}selected{{ end }}>
+                  {{.Name}}({{.Model}})
+                </option>
+                {{ end }}
+              </select>
+              {{ end }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {{ template "command" . }}
+            </td>
+          </tr>
+          {{ end }}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  {{ template "footer.html" }}
+</div>
+</body>
+
+</html>

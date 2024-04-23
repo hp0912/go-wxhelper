@@ -1,247 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-100">
+
 <head>
-    <meta charset="UTF-8">
-    <title>水群助手</title>
+  <meta charset="UTF-8">
+  <title>水群助手</title>
 
-    <link href="assets/css/daisyui-4.4.14-full.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/css/index.css" rel="stylesheet" type="text/css" />
+  <link href="assets/css/daisyui-4.4.14-full.min.css" rel="stylesheet" type="text/css"/>
+  <link href="assets/css/index.css" rel="stylesheet" type="text/css"/>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.5.0/axios.min.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.5.0/axios.min.js"></script>
 
-    <script src="assets/js/index.js"></script>
+  <script src="assets/js/index.js"></script>
 </head>
-<body>
-    <div class="p-5 space-y-5">
-        <!-- 如果msg不等于success，显示alert -->
-        {{ if ne .msg "success" }}
-        <div role="alert" class="alert alert-error">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span>{{ .msg }}</span>
-        </div>
-        {{ end }}
 
-        <div role="tablist" class="tabs tabs-bordered">
-            <input type="radio" name="friend_tab" role="tab" class="tab" aria-label="好友列表" checked />
-            <div role="tabpanel" class="tab-content p-6">
-                <!-- 循环好友列表 -->
-                <table class="table table-zebra">
-                    <!-- head -->
-                    <thead>
-                    <tr>
-                        <th>微信Id</th>
-                        <th>微信号</th>
-                        <th>昵称</th>
-                        <th>最后活跃时间</th>
-                        <th>是否在通讯录</th>
-                        <th>是否启用AI</th>
-                        <th>是否启用指令</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{ range .friends }}
-                    <tr>
-                        <td>{{ .Wxid }}</td>
-                        <td>{{ .CustomAccount }}</td>
-                        <td>{{ .Nickname }}</td>
-                        <td>
-                            {{ if eq .LastActive.IsNil true }}
-                            无数据
-                            {{ else }}
-                            {{ .LastActive }}
-                            {{ end }}
-                        </td>
-                        <td>
-                            {{ if eq .IsOk true }}
-                            <div class="badge badge-info gap-2">
-                                是
-                            </div>
-                            {{ else }}
-                            <div class="badge badge-error gap-2">
-                                否
-                            </div>
-                            {{ end }}
-                        </td>
-                        <td>
-                            <label class="swap swap-flip {{ checkSwap .EnableAi }}">
-                                <input type="checkbox" onclick="changeAiEnableStatus({{.Wxid}})"/>
+<body class="h-full">
+<div class="min-h-full">
+  {{ template "head.html" "index"}}
 
-                                <div class="swap-on">✔️已启用</div>
-                                <div class="swap-off">❌已禁用</div>
-                            </label>
-                            {{ if .EnableAi }}
-                            <br />
-                            <select class="select select-success select-xs w-1/2 max-w-xs" onchange="aiModelChange(event, {{.Wxid}})">
-                                <option value="" {{ if eq .AiModel ""}}selected{{ end }}>默认(gpt-3.5-turbo-0613)</option>
-                                {{$useModel := .AiModel}}
-                                {{ range $.aiModels }}
-                                <option value="{{.Model}}" {{ if eq $useModel .Model}}selected{{ end }}>{{.Name}}({{.Model}})</option>
-                                {{ end }}
-                            </select>
-                            {{ end }}
-                        </td>
-                        <td>
-                            <label class="swap swap-flip {{ checkSwap .EnableCommand }}">
-                                <input type="checkbox" onclick="changeCommandEnableStatus({{.Wxid}})"/>
-
-                                <div class="swap-on">✔️已启用</div>
-                                <div class="swap-off">❌已禁用</div>
-                            </label>
-                        </td>
-                    </tr>
-                    {{ end }}
-                    </tbody>
-                </table>
-            </div>
-
-            <input type="radio" name="friend_tab" role="tab" class="tab" aria-label="群列表" />
-            <div role="tabpanel" class="tab-content p-6">
-                <!-- 循环群列表 -->
-                <table class="table table-zebra">
-                    <!-- head -->
-                    <thead>
-                    <tr>
-                        <th>群Id</th>
-                        <th>昵称</th>
-                        <th>最后活跃时间</th>
-                        <th>是否在通讯录</th>
-                        <th>是否启用AI</th>
-                        <th>是否启用水群排行榜</th>
-                        <th>是否启用聊天记录总结</th>
-                        <th>是否启用迎新</th>
-                        <th>是否启用指令</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{ range .groups }}
-                    <tr>
-                        <td>{{ .Wxid }}</td>
-                        <td>{{ .Nickname }}</td>
-                        <td>
-                            {{ if eq .LastActive.IsNil true }}
-                            无数据
-                            {{ else }}
-                            {{ .LastActive }}
-                            {{ end }}
-                        </td>
-                        <td>
-                            {{ if eq .IsOk true }}
-                            <div class="badge badge-info gap-2">
-                                是
-                            </div>
-                            {{ else }}
-                            <div class="badge badge-error gap-2">
-                                否
-                            </div>
-                            {{ end }}
-                        </td>
-                        <td>
-                            <!-- EnableAi -->
-                            <label class="swap swap-flip {{ checkSwap .EnableAi }}">
-                                <input type="checkbox" onclick="changeAiEnableStatus({{.Wxid}})"/>
-
-                                <div class="swap-on">✔️已启用</div>
-                                <div class="swap-off">❌已禁用</div>
-                            </label>
-                            {{ if .EnableAi }}
-                            <br />
-                            <select class="select select-success select-xs w-1/2 max-w-xs" onchange="aiModelChange(event, {{.Wxid}})">
-                                <option value="" {{ if eq .AiModel ""}}selected{{ end }}>默认(gpt-3.5-turbo-0613)</option>
-                                {{$useModel := .AiModel}}
-                                {{ range $.aiModels }}
-                                <option value="{{.Model}}" {{ if eq $useModel .Model}}selected{{ end }}>{{.Name}}({{.Model}})</option>
-                                {{ end }}
-                            </select>
-                            {{ end }}
-                        </td>
-                        <td>
-                            <!-- EnableChatRank -->
-                            <label class="swap swap-flip {{ checkSwap .EnableChatRank }}">
-                                <input type="checkbox" onclick="changeGroupRankEnableStatus({{.Wxid}})"/>
-
-                                <div class="swap-on">✔️已启用</div>
-                                <div class="swap-off">❌已禁用</div>
-                            </label>
-                        </td>
-                        <td>
-                            <!-- EnableSummary -->
-                            <label class="swap swap-flip {{ checkSwap .EnableSummary }}">
-                                <input type="checkbox" onclick="changeSummaryEnableStatus({{.Wxid}})"/>
-
-                                <div class="swap-on">✔️已启用</div>
-                                <div class="swap-off">❌已禁用</div>
-                            </label>
-                        </td>
-                        <td>
-                            <label class="swap swap-flip {{ checkSwap .EnableWelcome }}">
-                                <input type="checkbox" onclick="changeWelcomeEnableStatus({{.Wxid}})"/>
-
-                                <div class="swap-on">✔️已启用</div>
-                                <div class="swap-off">❌已禁用</div>
-                            </label>
-                        </td>
-                        <td>
-                            <label class="swap swap-flip {{ checkSwap .EnableCommand }}">
-                                <input type="checkbox" onclick="changeCommandEnableStatus({{.Wxid}})"/>
-
-                                <div class="swap-on">✔️已启用</div>
-                                <div class="swap-off">❌已禁用</div>
-                            </label>
-                        </td>
-                        <td>
-                            <button class="btn btn-link" onclick="getGroupUsers({{.Wxid}}, {{.Nickname}})">查看群成员</button>
-                        </td>
-                    </tr>
-                    {{ end }}
-                    </tbody>
-                </table>
-            </div>
-
-            {{ if ne .vnc "" }}
-            <input type="radio" name="friend_tab" role="tab" class="tab" aria-label="运行状态"/>
-            <div role="tabpanel" class="tab-content p-6">
-                <div style="height: 747px;width: 1280px;overflow: hidden !important;">
-                    <iframe src="{{ .vnc }}" frameborder="0" style="width: 100%;height: 100%;pointer-events: none;"></iframe>
-                </div>
-            </div>
-            {{ end }}
-        </div>
-
-
+  <main class="-mt-32">
+    <div class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+      <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6 text-2xl">
+        <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+            <dt class="truncate text-sm font-medium text-gray-500">好友数量</dt>
+            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ .friendCount }}</dd>
+          </div>
+          <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+            <dt class="truncate text-sm font-medium text-gray-500">群组数量</dt>
+            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ .groupCount }}</dd>
+          </div>
+          <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+            <dt class="truncate text-sm font-medium text-gray-500">是否配置VNC</dt>
+            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ boolToChinese .isVnc }}</dd>
+          </div>
+        </dl>
+      </div>
     </div>
+  </main>
 
-    <dialog id="groupUserModal" class="modal">
-        <div class="modal-box w-11/12 max-w-7xl">
-<!--            <form method="dialog">-->
-<!--                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>-->
-<!--            </form>-->
-            <h3 class="font-bold text-lg" id="groupUserModalName">我是群名称</h3>
-            <!-- 加载动画 -->
+  {{ template "footer.html" }}
+</div>
 
-
-            <div class="divider divider-warning">成员列表</div>
-            <!-- 好友列表 -->
-            <table class="table table-zebra">
-                <!-- head -->
-                <thead>
-                <tr>
-                    <th>微信Id</th>
-                    <th>昵称</th>
-                    <th>是否群成员</th>
-                    <th>是否群主</th>
-                    <th>加群时间</th>
-                    <th>最后活跃时间</th>
-                    <th>退群时间</th>
-                    <th>是否跳过水群排行榜</th>
-                </tr>
-                </thead>
-                <tbody id="groupUsers"></tbody>
-            </table>
-
-
-        </div>
-    </dialog>
 </body>
-</html>

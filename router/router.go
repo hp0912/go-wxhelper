@@ -14,10 +14,11 @@ func Init(g *gin.Engine) {
 		ctx.Redirect(302, "/index.html")
 	})
 
-	g.GET("/index.html", app.Index) // 首页
-	g.GET("/test.html", func(ctx *gin.Context) {
-		ctx.HTML(200, "test.html", nil)
-	})
+	g.GET("/index.html", app.Index)   // 首页
+	g.GET("/friend.html", app.Friend) // 好友列表
+	g.GET("/group.html", app.Group)   // 群组列表
+
+	g.GET("/404.html", app.PageNotFound) // 群组列表
 
 	// 接口
 	api := g.Group("/api")

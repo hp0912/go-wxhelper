@@ -20,8 +20,28 @@ func Index(ctx *gin.Context) {
 	if err != nil {
 		result["msg"] = fmt.Sprintf("数据获取失败: %s", err.Error())
 	}
-	result["friendCount"] = len(friends)
-	result["groupCount"] = len(groups)
+	var in, notIn int
+	for _, d := range friends {
+		if d.IsOk {
+			in++
+		} else {
+			notIn++
+		}
+	}
+	result["friendCount"] = in
+	result["friendWithoutCount"] = notIn
+
+	var gin, gnotIn int
+	for _, d := range groups {
+		if d.IsOk {
+			gin++
+		} else {
+			gnotIn++
+		}
+	}
+	result["groupCount"] = gin
+	result["groupWithoutCount"] = gnotIn
+
 	result["vnc"] = config.Conf.Wechat.VncUrl
 	result["isVnc"] = config.Conf.Wechat.VncUrl != ""
 	result["aiModels"] = config.Conf.Ai.Models

@@ -24,11 +24,13 @@
         <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
           <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
             <dt class="truncate text-sm font-medium text-gray-500">好友数量</dt>
-            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ .friendCount }}</dd>
+            <dd class="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{{ .friendCount }}/{{ .friendWithoutCount }}</dd>
+            <dd class="mt-1 text-xs font-semibold tracking-tight text-red-300">通讯录/已删除</dd>
           </div>
           <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
             <dt class="truncate text-sm font-medium text-gray-500">群组数量</dt>
-            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ .groupCount }}</dd>
+            <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ .groupCount }}/{{ .groupWithoutCount }}</dd>
+            <dd class="mt-1 text-xs font-semibold tracking-tight text-red-300">在群聊/已退出</dd>
           </div>
           <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
             <dt class="truncate text-sm font-medium text-gray-500">是否配置VNC</dt>

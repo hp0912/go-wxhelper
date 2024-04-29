@@ -42,7 +42,7 @@ func AiSummary() {
 注意，他们可能是多个话题，请仔细甄别。
 每一行代表一个人的发言，每一行的的格式为： {"{nickname}": "{content}"}--end--
 
-聊天记录如下: 
+聊天记录如下:
 %s
 `
 
@@ -81,6 +81,7 @@ func AiSummary() {
 			continue
 		}
 		replyMsg := fmt.Sprintf("#昨日消息总结\n又是一天过去了，让我们一起来看看昨儿群友们都聊了什么有趣的话题吧~\n\n%s", resp.Choices[0].Message.Content)
+		//log.Printf("群[%s]对话记录总结成功，总结内容: %s", group.Wxid, replyMsg)
 		utils.SendMessage(group.Wxid, "", replyMsg, 0)
 	}
 }

@@ -47,12 +47,31 @@ func SaveMessage(msg entity.Message) {
 // @return records
 // @return err
 func GetTextMessagesById(id string) (records []vo.TextMessageItem, err error) {
+	// APP消息类型
+	appMsgList := []string{"57", "4", "5", "6"}
+	// 这个查询子句抽出来写，方便后续扩展
+	selectStr := `CASE
+		WHEN tm.type = 49 THEN
+	CASE
+			WHEN EXTRACTVALUE ( tm.content, "/msg/appmsg/type" ) = '57' THEN
+			EXTRACTVALUE ( tm.content, "/msg/appmsg/title" )
+			WHEN EXTRACTVALUE ( tm.content, "/msg/appmsg/type" ) = '5' THEN
+			CONCAT("网页分享消息，标题: ", EXTRACTVALUE (tm.content, "/msg/appmsg/title"), "，描述：", EXTRACTVALUE (tm.content, "/msg/appmsg/des"))
+			WHEN EXTRACTVALUE ( tm.content, "/msg/appmsg/type" ) = '4' THEN
+			CONCAT("网页分享消息，标题: ", EXTRACTVALUE (tm.content, "/msg/appmsg/title"), "，描述：", EXTRACTVALUE (tm.content, "/msg/appmsg/des"))
+			WHEN EXTRACTVALUE ( tm.content, "/msg/appmsg/type" ) = '6' THEN
+			CONCAT("文件消息，文件名: ", EXTRACTVALUE (tm.content, "/msg/appmsg/title"))
+
+			ELSE EXTRACTVALUE ( tm.content, "/msg/appmsg/des" )
+		END ELSE tm.content
+	END`
+
 	tx := client.MySQL.
 		Table("`t_message` AS tm").
 		Joins("LEFT JOIN t_group_user AS tgu ON tm.group_user = tgu.wxid AND tgu.group_id = tm.from_user").
-		Select("tgu.nickname", "IF( tm.type = 49, EXTRACTVALUE ( tm.content, \"/msg/appmsg/title\" ), tm.content ) AS message").
+		Select("tgu.nickname", selectStr+" AS message").
 		Where("tm.`from_user` = ?", id).
-		Where(`(tm.type = 1 OR ( tm.type = 49 AND EXTRACTVALUE ( tm.content, "/msg/appmsg/type" ) = '57' ))`).
+		Where(`(tm.type = 1 OR ( tm.type = 49 AND EXTRACTVALUE ( tm.content, "/msg/appmsg/type" ) IN (?) ))`, appMsgList).
 		Where("DATE ( tm.create_at ) = DATE ( CURDATE() - INTERVAL 1 DAY )").
 		Order("tm.create_at ASC")
 

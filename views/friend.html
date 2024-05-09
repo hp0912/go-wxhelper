@@ -28,11 +28,7 @@
               <img src="assets/img/status-{{ if eq .IsOk true }}ok{{else}}fail{{end}}.png" alt="Tuple" class="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10">
               <div class="flex-1">
                 <div class="text-sm font-medium leading-6 text-gray-900">{{ .Nickname }}</div>
-                {{ if eq .IsOk true }}
-                <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">正常</span>
-                {{ else }}
-                <span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">已删除</span>
-                {{ end }}
+                {{ template "flagTag" .IsOk }}
               </div>
             </div>
             <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">

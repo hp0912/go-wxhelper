@@ -155,12 +155,13 @@ function getGroupUsers(groupId, groupName) {
             // Insert data into cells
             row.insertCell(0).innerHTML = wxid;
             row.insertCell(1).innerHTML = nickname;
-            row.insertCell(2).innerHTML = `<div class="badge badge-${isMember ? 'info' : 'error'} gap-2">${isMember ? '是' : '否'}</div>`;
-            row.insertCell(3).innerHTML = `<div class="badge badge-${isAdmin ? 'info' : 'error'} gap-2">${isAdmin ? '是' : '否'}</div>`;
+            row.insertCell(2).innerHTML = `<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${isMember ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-red-50 text-red-700 ring-red-600/20'}">${isMember ? '是' : '否'}</span>`;
+            row.insertCell(3).innerHTML = `<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${isAdmin ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-red-50 text-red-700 ring-red-600/20'}">${isAdmin ? '是' : '否'}</span>`;
             row.insertCell(4).innerHTML = joinTime;
             row.insertCell(5).innerHTML = lastActive;
             row.insertCell(6).innerHTML = leaveTime;
-            row.insertCell(7).innerHTML = `<input type="checkbox" class="toggle toggle-error" ${skipChatRank ? 'checked' : ''} onclick="changeUserGroupRankSkipStatus('${groupId}', '${wxid}')" />`;
+            // row.insertCell(7).innerHTML = `<input type="checkbox" class="toggle toggle-error" ${skipChatRank ? 'checked' : ''} onclick="changeUserGroupRankSkipStatus('${groupId}', '${wxid}')" />`;
+            row.insertCell(7).innerHTML = `<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${skipChatRank ? 'bg-green-50 text-green-700 ring-green-600/20' : 'bg-red-50 text-red-700 ring-red-600/20'}">${skipChatRank ? '是' : '否'}</span>`;
         });
     }).catch(function (error) {
         console.log(`错误信息: ${error}`);

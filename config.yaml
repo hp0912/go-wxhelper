@@ -87,6 +87,10 @@ resource:
   welcome-new:
     type: emotion
     path: 58e4150be2bba8f7b71974b10391f9e9
+  # 给新好友或者群的自我介绍，不配置就不发送
+  introduce:
+    type: text
+    path: "大家好，我是一个AI机器人，可以直接@我询问你想问的问题。"
   # 水群排行榜词云，只能是图片，末尾的`\%s`也是必须的
   wordcloud:
     type: image

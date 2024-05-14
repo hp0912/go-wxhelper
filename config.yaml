@@ -1,3 +1,20 @@
+system:
+  # 添加新好友或群之后通知给指定的人
+  newFriendNotify:
+    enable: true
+    toUser:
+      - "wxid_xxx"
+  # 默认AI等配置
+  defaultRule:
+    # 默认是否开启AI
+    ai: true
+    # 默认是否开启水群排行榜
+    chatRank: true
+    # 默认是否开启聊天记录总结
+    summary: true
+    # 默认是否开启新成员加群欢迎
+    welcome: true
+
 # 微信HOOK配置
 wechat:
   # 微信HOOK接口地址

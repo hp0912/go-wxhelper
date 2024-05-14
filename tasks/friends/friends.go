@@ -41,6 +41,9 @@ func Sync() {
 
 	nowIds := []string{}
 
+	// 新增的成员，用于通知给指定的人
+	var newItmes = make(map[string]string)
+
 	for _, friend := range base.Data {
 		if strings.Contains(friend.Wxid, "gh_") || strings.Contains(friend.Wxid, "@openim") {
 			continue
@@ -61,18 +64,23 @@ func Sync() {
 		if count == 0 {
 			// 新增
 			err = tx.Create(&entity.Friend{
-				CustomAccount: friend.CustomAccount,
-				Nickname:      friend.Nickname,
-				Pinyin:        friend.Pinyin,
-				PinyinAll:     friend.PinyinAll,
-				Wxid:          friend.Wxid,
-				IsOk:          true,
-				LastActive:    time.Now().Local(),
+				CustomAccount:  friend.CustomAccount,
+				Nickname:       friend.Nickname,
+				Pinyin:         friend.Pinyin,
+				PinyinAll:      friend.PinyinAll,
+				Wxid:           friend.Wxid,
+				IsOk:           true,
+				EnableAi:       config.Conf.System.DefaultRule.Ai,
+				EnableChatRank: config.Conf.System.DefaultRule.ChatRank,
+				EnableSummary:  config.Conf.System.DefaultRule.Summary,
+				EnableWelcome:  config.Conf.System.DefaultRule.Welcome,
+				LastActive:     time.Now().Local(),
 			}).Error
 			if err != nil {
 				log.Printf("新增好友失败: %s", err.Error())
 				continue
 			}
+			newItmes[friend.Wxid] = friend.Nickname
 			if conf, ok := config.Conf.Resource["introduce"]; ok {
 				// 发送一条新消息
 				switch conf.Type {
@@ -104,6 +112,21 @@ func Sync() {
 		// 群成员，同步一下成员信息
 		if strings.Contains(friend.Wxid, "@chatroom") {
 			syncGroupUsers(tx, friend.Wxid)
+		}
+	}
+
+	// 通知有新成员
+	if len(newItmes) > 0 && config.Conf.System.NewFriendNotify.Enable {
+		// 组装成一句话
+		msg := []string{"#新好友通知\n"}
+		for wxId, nickname := range newItmes {
+			msg = append(msg, "微信Id: "+wxId+" -> 昵称: "+nickname)
+		}
+		for _, user := range config.Conf.System.NewFriendNotify.ToUser {
+			if user != "" {
+				// 发送一条新消息
+				utils.SendMessage(user, "", strings.Join(msg, "\n"), 0)
+			}
 		}
 	}
 

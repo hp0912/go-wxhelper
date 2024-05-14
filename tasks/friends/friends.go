@@ -73,8 +73,20 @@ func Sync() {
 				log.Printf("新增好友失败: %s", err.Error())
 				continue
 			}
-			// 发送一条新消息
-			utils.SendMessage(friend.Wxid, "", "大家好，我是一个AI机器人，可以直接@我询问你想问的问题。该功能默认未启用，请群主艾特我并发送 /ai enable 指令启用", 0)
+			if conf, ok := config.Conf.Resource["introduce"]; ok {
+				// 发送一条新消息
+				switch conf.Type {
+				case "text":
+					// 文字类型
+					utils.SendMessage(friend.Wxid, "", conf.Path, 0)
+				case "image":
+					// 图片类型
+					utils.SendImage(friend.Wxid, conf.Path, 0)
+				case "emotion":
+					// 表情类型
+					utils.SendEmotion(friend.Wxid, conf.Path, 0)
+				}
+			}
 		} else {
 			pm := map[string]any{
 				"nickname":       friend.Nickname,

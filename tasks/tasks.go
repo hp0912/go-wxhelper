@@ -58,7 +58,7 @@ func InitTasks() {
 	}
 
 	// 每天0点检查一次处理清理群成员
-	_, _ = s.Cron("12 0 * * *").Do(cleargroupuser.ClearGroupUser)
+	_, _ = s.Cron("0 0 * * *").Do(cleargroupuser.ClearGroupUser)
 
 	// 开启定时任务
 	s.StartAsync()

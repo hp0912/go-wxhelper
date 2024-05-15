@@ -121,3 +121,34 @@ func SendEmotion(toId, emotionHash string, retryCount int) {
 	}
 	log.Printf("发送表情包消息结果: %s", resp.String())
 }
+
+// DeleteGroupMember
+// @description: 删除群成员
+// @param chatRoomId 群Id
+// @param memberIds 成员id,用','分隔
+func DeleteGroupMember(chatRoomId, memberIds string, retryCount int) {
+	if retryCount > 5 {
+		log.Printf("重试五次失败，停止发送")
+		return
+	}
+
+	// 组装参数
+	param := map[string]any{
+		"chatRoomId": chatRoomId, // 群Id
+		"memberIds":  memberIds,  // 成员id
+	}
+	pbs, _ := json.Marshal(param)
+
+	res := resty.New()
+	resp, err := res.R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(string(pbs)).
+		Post(config.Conf.Wechat.GetURL("/api/delMemberFromChatRoom"))
+	if err != nil {
+		log.Printf("删除群成员失败: %s", err.Error())
+		// 休眠五秒后重新发送
+		time.Sleep(5 * time.Second)
+		SendImage(chatRoomId, memberIds, retryCount+1)
+	}
+	log.Printf("删除群成员结果: %s", resp.String())
+}

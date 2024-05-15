@@ -75,6 +75,7 @@ func Sync() {
 				EnableSummary:  config.Conf.System.DefaultRule.Summary,
 				EnableWelcome:  config.Conf.System.DefaultRule.Welcome,
 				EnableNews:     config.Conf.System.DefaultRule.News,
+				ClearMember:    0,
 				LastActive:     time.Now().Local(),
 			}).Error
 			if err != nil {

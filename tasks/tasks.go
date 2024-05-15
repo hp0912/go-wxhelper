@@ -3,6 +3,7 @@ package tasks
 import (
 	"github.com/go-co-op/gocron"
 	"go-wechat/config"
+	"go-wechat/tasks/cleargroupuser"
 	"go-wechat/tasks/friends"
 	"go-wechat/tasks/news"
 	"go-wechat/tasks/summary"
@@ -55,6 +56,9 @@ func InitTasks() {
 	if config.Conf.Task.News.Enable {
 		_, _ = s.Cron(config.Conf.Task.News.Cron).Do(news.DailyNews)
 	}
+
+	// 每天0点检查一次处理清理群成员
+	_, _ = s.Cron("0 0 * * *").Do(cleargroupuser.ClearGroupUser)
 
 	// 开启定时任务
 	s.StartAsync()

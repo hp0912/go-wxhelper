@@ -74,6 +74,7 @@ func Sync() {
 				EnableChatRank: config.Conf.System.DefaultRule.ChatRank,
 				EnableSummary:  config.Conf.System.DefaultRule.Summary,
 				EnableWelcome:  config.Conf.System.DefaultRule.Welcome,
+				EnableNews:     config.Conf.System.DefaultRule.News,
 				LastActive:     time.Now().Local(),
 			}).Error
 			if err != nil {

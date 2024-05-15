@@ -4,6 +4,7 @@ import (
 	"github.com/go-co-op/gocron"
 	"go-wechat/config"
 	"go-wechat/tasks/friends"
+	"go-wechat/tasks/news"
 	"go-wechat/tasks/summary"
 	"go-wechat/tasks/watergroup"
 	"log"
@@ -42,13 +43,17 @@ func InitTasks() {
 	if config.Conf.Task.GroupSummary.Enable {
 		log.Printf("群聊总结任务已启用，执行表达式: %s", config.Conf.Task.GroupSummary.Cron)
 		_, _ = s.Cron(config.Conf.Task.GroupSummary.Cron).Do(summary.AiSummary)
-
 	}
 
 	// 更新好友列表
 	if config.Conf.Task.SyncFriends.Enable {
 		log.Printf("更新好友列表任务已启用，执行表达式: %s", config.Conf.Task.SyncFriends.Cron)
 		_, _ = s.Cron(config.Conf.Task.SyncFriends.Cron).Do(friends.Sync)
+	}
+
+	// 每日早报
+	if config.Conf.Task.News.Enable {
+		_, _ = s.Cron(config.Conf.Task.News.Cron).Do(news.DailyNews)
 	}
 
 	// 开启定时任务

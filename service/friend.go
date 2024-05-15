@@ -49,7 +49,10 @@ func GetAllEnableAI() (records []entity.Friend, err error) {
 // @return records
 // @return err
 func GetAllEnableChatRank() (records []entity.Friend, err error) {
-	err = client.MySQL.Where("enable_chat_rank = ?", 1).Where("wxid LIKE '%@chatroom'").Find(&records).Error
+	err = client.MySQL.Where("enable_chat_rank = ?", 1).
+		Where("is_ok IS TRUE").
+		Where("wxid LIKE '%@chatroom'").
+		Find(&records).Error
 	return
 }
 
@@ -58,7 +61,19 @@ func GetAllEnableChatRank() (records []entity.Friend, err error) {
 // @return records
 // @return err
 func GetAllEnableSummary() (records []entity.Friend, err error) {
-	err = client.MySQL.Where("enable_summary = ?", 1).Where("wxid LIKE '%@chatroom'").Find(&records).Error
+	err = client.MySQL.Where("enable_summary = ?", 1).
+		Where("is_ok IS TRUE").
+		Where("wxid LIKE '%@chatroom'").
+		Find(&records).Error
+	return
+}
+
+// GetAllEnableNews
+// @description: 取出所有启用了新闻的好友或群组
+// @return records
+// @return err
+func GetAllEnableNews() (records []entity.Friend, err error) {
+	err = client.MySQL.Where("enable_news = ?", 1).Where("is_ok IS TRUE").Find(&records).Error
 	return
 }
 

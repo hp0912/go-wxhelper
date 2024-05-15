@@ -18,4 +18,5 @@ type defaultRule struct {
 	ChatRank bool `json:"chatRank" yaml:"chatRank"` // 是否启用聊天排行榜
 	Summary  bool `json:"summary" yaml:"summary"`   // 是否启用聊天总结
 	Welcome  bool `json:"welcome" yaml:"welcome"`   // 是否启用欢迎新成员
+	News     bool `json:"news" yaml:"news"`         // 是否启用每日早报
 }

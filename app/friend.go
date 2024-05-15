@@ -182,3 +182,26 @@ func ChangeSkipGroupRankStatus(ctx *gin.Context) {
 
 	ctx.String(http.StatusOK, "操作成功")
 }
+
+// ChangeEnableNewsStatus
+// @description: 修改是否开启新闻
+// @param ctx
+func ChangeEnableNewsStatus(ctx *gin.Context) {
+	var p changeStatusParam
+	if err := ctx.ShouldBindJSON(&p); err != nil {
+		ctx.String(http.StatusBadRequest, "参数错误")
+		return
+	}
+	log.Printf("待修改的Id：%s", p.WxId)
+
+	err := client.MySQL.Model(&entity.Friend{}).
+		Where("wxid = ?", p.WxId).
+		Update("`enable_news`", gorm.Expr(" !`enable_news`")).Error
+	if err != nil {
+		log.Printf("修改早报启用状态失败：%s", err)
+		ctx.String(http.StatusInternalServerError, "操作失败: %s", err)
+		return
+	}
+
+	ctx.String(http.StatusOK, "操作成功")
+}

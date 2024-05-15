@@ -79,6 +79,13 @@
               {{ end }}
 
               <div class="flex justify-between gap-x-4 py-3">
+                <dt class="text-gray-500">早报</dt>
+                <dd class="flex items-start gap-x-2">
+                  {{ template "news" . }}
+                </dd>
+              </div>
+
+              <div class="flex justify-between gap-x-4 py-3">
                 <dt class="text-gray-500">指令</dt>
                 <dd class="flex items-start gap-x-2">
                   {{ template "command" . }}

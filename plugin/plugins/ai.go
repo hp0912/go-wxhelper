@@ -54,7 +54,7 @@ func AI(m *plugin.MessageContext) {
 
 	// 组装消息体
 	messages := make([]openai.ChatCompletionMessage, 0)
-	if config.Conf.Ai.Personality != "" {
+	if prompt != "" {
 		// 填充人设
 		messages = append(messages, openai.ChatCompletionMessage{
 			Role:    openai.ChatMessageRoleSystem,

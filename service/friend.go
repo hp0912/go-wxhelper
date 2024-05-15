@@ -82,7 +82,7 @@ func GetAllEnableNews() (records []entity.Friend, err error) {
 // @return records
 // @return err
 func GetAllEnableClearGroup() (records []entity.Friend, err error) {
-	err = client.MySQL.Where("clear_members != 0").Where("is_ok IS TRUE").Find(&records).Error
+	err = client.MySQL.Where("clear_member > 0").Where("is_ok IS TRUE").Find(&records).Error
 	return
 }
 

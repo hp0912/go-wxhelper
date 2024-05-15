@@ -4,6 +4,7 @@ package config
 // @description: 定时任务
 type task struct {
 	Enable       bool        `json:"enable" yaml:"enable"`             // 是否启用
+	News         syncFriends `json:"news" yaml:"news"`                 // 每日早报
 	SyncFriends  syncFriends `json:"syncFriends" yaml:"syncFriends"`   // 同步好友
 	WaterGroup   waterGroup  `json:"waterGroup" yaml:"waterGroup"`     // 水群排行榜
 	GroupSummary syncFriends `json:"groupSummary" yaml:"groupSummary"` // 群聊总结

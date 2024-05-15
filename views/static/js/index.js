@@ -80,6 +80,25 @@ function changeWelcomeEnableStatus(wxId) {
     })
 }
 
+// 修改用户新闻开启状态
+function changeUserNewsStatus(wxId) {
+  axios({
+    method: 'put',
+    url: '/api/news/status',
+    data: {
+      wxId: wxId
+    }
+  }).then(function (response) {
+    console.log(`返回结果: ${JSON.stringify(response)}`);
+    alert(`${response.data}`)
+  }).catch(function (error) {
+    console.log(`错误信息: ${error}`);
+    alert("修改失败")
+  }).finally(function () {
+    window.location.reload();
+  })
+}
+
 // 修改指令权限启用状态
 function changeCommandEnableStatus(wxId) {
     axios({

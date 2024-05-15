@@ -19,6 +19,7 @@ type Friend struct {
 	EnableChatRank bool      `json:"enableChatRank" gorm:"type:tinyint(1) default 0 not null"` // 是否使用聊天排行
 	EnableWelcome  bool      `json:"enableWelcome" gorm:"type:tinyint(1) default 0 not null"`  // 是否启用迎新
 	EnableSummary  bool      `json:"enableSummary" gorm:"type:tinyint(1) default 0 not null"`  // 是否启用总结
+	EnableNews     bool      `json:"enableNews" gorm:"type:tinyint(1) default 0 not null"`     // 是否启用新闻
 	IsOk           bool      `json:"isOk" gorm:"type:tinyint(1) default 0 not null"`           // 是否正常
 }
 

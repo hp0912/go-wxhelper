@@ -33,19 +33,22 @@
               是否在通讯录
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-              是否启用AI
+              AI
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-              是否启用水群排行榜
+              排行榜
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-              是否启用聊天记录总结
+              总结
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-              是否启用迎新
+              迎新
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-              是否启用指令
+              早报
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              指令
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
               操作
@@ -97,6 +100,9 @@
             </td>
             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
               {{ template "welcome" . }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {{ template "news" . }}
             </td>
             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
               {{ template "command" . }}

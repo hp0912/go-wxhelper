@@ -14,6 +14,8 @@ system:
     summary: true
     # 默认是否开启新成员加群欢迎
     welcome: true
+    # 每日早报
+    news: true
 
 # 微信HOOK配置
 wechat:
@@ -40,12 +42,15 @@ mysql:
   schema: public # postgres 专用
 
 task:
-  enable: false
+  enable: true
+  news:
+    enable: true
+    cron: '14 11 * * *' # 每天0:30
   syncFriends:
     enable: false
     cron: '*/5 * * * *' # 五分钟一次
   groupSummary:
-    enable: true
+    enable: false
     cron: '30 0 * * *' # 每天0:30
   waterGroup:
     enable: false

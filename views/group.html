@@ -51,6 +51,9 @@
               指令
             </th>
             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              末位淘汰(天)
+            </th>
+            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
               操作
             </th>
           </tr>
@@ -106,6 +109,9 @@
             </td>
             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
               {{ template "command" . }}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {{ .ClearMember }}
             </td>
             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
               <button class="btn btn-link" onclick="getGroupUsers({{.Wxid}}, {{.Nickname}})">成员</button>

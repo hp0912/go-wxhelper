@@ -122,12 +122,12 @@ func Sync() {
 		// 组装成一句话
 		msg := []string{"#新好友通知\n"}
 		for wxId, nickname := range newItmes {
-			msg = append(msg, "微信Id: "+wxId+" -> 昵称: "+nickname)
+			msg = append(msg, "微信Id: "+wxId+"\n昵称: "+nickname)
 		}
 		for _, user := range config.Conf.System.NewFriendNotify.ToUser {
 			if user != "" {
 				// 发送一条新消息
-				utils.SendMessage(user, "", strings.Join(msg, "\n"), 0)
+				utils.SendMessage(user, "", strings.Join(msg, "\n-------\n"), 0)
 			}
 		}
 	}

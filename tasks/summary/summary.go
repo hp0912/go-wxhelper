@@ -42,11 +42,12 @@ func AiSummary() {
 注意，他们可能是多个话题，请仔细甄别。
 每一行代表一个人的发言，每一行的的格式为： {"{nickname}": "{content}"}--end--
 
+群名称: %s
 聊天记录如下:
 %s
 `
 
-		msg := fmt.Sprintf(msgTmp, strings.Join(content, "\n"))
+		msg := fmt.Sprintf(msgTmp, group.Nickname, strings.Join(content, "\n"))
 
 		// AI总结
 		messages := []openai.ChatCompletionMessage{

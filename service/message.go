@@ -73,6 +73,8 @@ func GetTextMessagesById(id string) (records []vo.TextMessageItem, err error) {
 		Where("tm.`from_user` = ?", id).
 		Where(`(tm.type = 1 OR ( tm.type = 49 AND EXTRACTVALUE ( tm.content, "/msg/appmsg/type" ) IN (?) ))`, appMsgList).
 		Where("DATE ( tm.create_at ) = DATE ( CURDATE() - INTERVAL 1 DAY )").
+		Where("tm.content NOT LIKE '#昨日水群排行榜%'").
+		Where("tm.content NOT LIKE '#昨日消息总结%'").
 		Order("tm.create_at ASC")
 
 	err = tx.Find(&records).Error

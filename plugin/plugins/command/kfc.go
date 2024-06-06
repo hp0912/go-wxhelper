@@ -4,6 +4,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"go-wechat/utils"
 	"log"
+	"net/http"
 )
 
 // KfcCrazyThursdayCmd
@@ -33,8 +34,9 @@ func kfcApi1() string {
 	res := resty.New()
 	resp, err := res.R().
 		Post("https://api.jixs.cc/api/wenan-fkxqs/index.php")
-	if err != nil {
-		log.Panicf("KFC接口1文案获取失败: %s", err.Error())
+	if err != nil || resp.StatusCode() != http.StatusOK {
+		log.Printf("KFC接口1文案获取失败: %v", err)
+		return ""
 	}
 	log.Printf("KFC接口1文案获取结果: %s", resp.String())
 	return resp.String()
@@ -58,8 +60,9 @@ func kfcApi2() string {
 	resp, err := res.R().
 		SetResult(&resData).
 		Post("https://api.jixs.cc/api/wenan-fkxqs/index.php")
-	if err != nil {
-		log.Panicf("KFC接口2文案获取失败: %s", err.Error())
+	if err != nil || resp.StatusCode() != http.StatusOK {
+		log.Printf("KFC接口2文案获取失败: %v", err)
+		return ""
 	}
 	log.Printf("KFC接口2文案获取结果: %s", resp.String())
 	if resData.Data.Msg != "" {
@@ -84,8 +87,9 @@ func kfcApi3() string {
 	resp, err := res.R().
 		SetResult(&resData).
 		Post("https://api.pearktrue.cn/api/kfc")
-	if err != nil {
-		log.Panicf("KFC接口3文案获取失败: %s", err.Error())
+	if err != nil || resp.StatusCode() != http.StatusOK {
+		log.Printf("KFC接口3文案获取失败: %v", err)
+		return ""
 	}
 	log.Printf("KFC接口3文案获取结果: %s", resp.String())
 	if resData.Text != "" {

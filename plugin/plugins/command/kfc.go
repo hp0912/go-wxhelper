@@ -1,10 +1,11 @@
 package command
 
 import (
-	"github.com/go-resty/resty/v2"
 	"go-wechat/utils"
 	"log"
 	"net/http"
+
+	"github.com/go-resty/resty/v2"
 )
 
 // KfcCrazyThursdayCmd
@@ -12,12 +13,12 @@ import (
 // @param userId string 发信人
 func KfcCrazyThursdayCmd(userId string) {
 	// 随机选一个接口调用
-	str := kfcApi1()
+	str := kfcApi3()
 	if str == "" {
 		str = kfcApi2()
 	}
 	if str == "" {
-		str = kfcApi3()
+		str = kfcApi1()
 	}
 	if str == "" {
 		str = "文案获取失败"

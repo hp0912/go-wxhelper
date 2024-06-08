@@ -44,6 +44,12 @@ func Command(m *plugin.MessageContext) {
 		command.KfcCrazyThursdayCmd(m.FromUser)
 	case "/ai":
 		command.AiCmd(m.FromUser, m.GroupUser, msgArray[1])
+	case "/舔狗日记":
+		command.DogLickingDiary(m.FromUser)
+	case "/毒鸡汤":
+		command.DogLickingDiary(m.FromUser)
+	case "/昨日热词":
+		command.WordCloud(m.FromUser)
 	default:
 		utils.SendMessage(m.FromUser, m.GroupUser, "指令错误", 0)
 	}

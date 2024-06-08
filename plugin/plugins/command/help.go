@@ -30,6 +30,14 @@ option: 指令选项，可选值:
   启用: '启用'、'打开'、'enable'
   停用: '停用'、'禁用'、'关闭'、'disable'
 
+#4. 舔狗日记
+/舔狗日记
+
+#5. 毒鸡汤
+/毒鸡汤
+
+#6. 昨日热词
+/昨日热词
 `
 	utils.SendMessage(m.FromUser, m.GroupUser, str, 0)
 

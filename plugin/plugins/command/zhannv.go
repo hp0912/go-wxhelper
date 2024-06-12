@@ -9,9 +9,9 @@ import (
 )
 
 // ZhaNan
-// @description: 渣男语录
+// @description: 渣女语录
 // @param userId string 发信人
-func ZhaNan(userId string) {
+func ZhaNv(userId string) {
 	type result struct {
 		Code int    `json:"code"`
 		Msg  string `json:"msg"`
@@ -25,10 +25,10 @@ func ZhaNan(userId string) {
 	res := resty.New()
 	resp, err := res.R().
 		SetResult(&resData).
-		Get("https://api.beiyu.vip/api/sea")
+		Get("https://api.beiyu.vip/api/tea")
 	if err != nil || resp.StatusCode() != http.StatusOK {
-		log.Printf("获取渣男语录失败: %v", err)
-		msg = "获取渣男语录失败"
+		log.Printf("获取渣女语录失败: %v", err)
+		msg = "获取渣女语录失败"
 	} else if resData.Text != "" {
 		msg = resData.Text
 	} else {

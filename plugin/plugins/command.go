@@ -48,8 +48,10 @@ func Command(m *plugin.MessageContext) {
 		command.DogLickingDiary(m.FromUser)
 	case "/毒鸡汤":
 		command.DogLickingDiary(m.FromUser)
-	case "/渣男语录", "/渣女语录":
+	case "/渣男语录":
 		command.ZhaNan(m.FromUser)
+	case "/渣女语录":
+		command.ZhaNv(m.FromUser)
 	case "/昨日热词":
 		command.WordCloud(m.FromUser)
 	default:

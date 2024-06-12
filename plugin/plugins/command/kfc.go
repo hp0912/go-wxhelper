@@ -87,7 +87,7 @@ func kfcApi3() string {
 	res := resty.New()
 	resp, err := res.R().
 		SetResult(&resData).
-		Post("https://api.pearktrue.cn/api/kfc")
+		Post("https://api.beiyu.vip/api/kfc")
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		log.Printf("KFC接口3文案获取失败: %v", err)
 		return ""

@@ -16,7 +16,7 @@ func DogLickingDiary(userId string) {
 
 	res := resty.New()
 	resp, err := res.R().
-		Get("https://api.pearktrue.cn/api/jdyl/tiangou.php")
+		Get("https://api.beiyu.vip/api/dog?format=text")
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		log.Printf("获取舔狗日记失败: %v", err)
 		msg = "获取舔狗日记失败"

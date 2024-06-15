@@ -8,3 +8,5 @@ log
 dist
 *.log
 blacklist.txt
+private-docker-compose.yaml
+private-config.yaml

@@ -19,7 +19,7 @@ import (
 // @param userId string 发信人
 func Xskc(userId string) {
 	type result struct {
-		Code   int    `json:"code"`
+		Code   string `json:"code"`
 		Imgurl string `json:"imgurl"`
 	}
 

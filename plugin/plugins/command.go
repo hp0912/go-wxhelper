@@ -48,7 +48,7 @@ func Command(m *plugin.MessageContext) {
 		command.DogLickingDiary(m.FromUser)
 	case "/毒鸡汤":
 		command.DogLickingDiary(m.FromUser)
-	case "/渣男语录":
+	case "/暖男语录":
 		command.ZhaNan(m.FromUser)
 	case "/渣女语录":
 		command.ZhaNv(m.FromUser)

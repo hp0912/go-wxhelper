@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"go-wechat/config"
 	"go-wechat/initialization"
 	"go-wechat/mq"
@@ -14,6 +13,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func init() {
@@ -48,6 +49,8 @@ func main() {
 				return "群组列表"
 			case "index":
 				return "首页"
+			case "assistant":
+				return "AI角色"
 			default:
 				return "其他页面"
 			}

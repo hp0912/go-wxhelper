@@ -3,13 +3,14 @@ package summary
 import (
 	"context"
 	"fmt"
-	"github.com/sashabaranov/go-openai"
 	"go-wechat/config"
 	"go-wechat/service"
 	"go-wechat/utils"
 	"go-wechat/vo"
 	"log"
 	"strings"
+
+	"github.com/sashabaranov/go-openai"
 )
 
 // AiSummary

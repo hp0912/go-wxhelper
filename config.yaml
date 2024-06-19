@@ -45,20 +45,20 @@ task:
   enable: true
   news:
     enable: true
-    cron: '14 11 * * *' # 每天0:30
+    cron: "14 11 * * *" # 每天0:30
   syncFriends:
     enable: false
-    cron: '*/5 * * * *' # 五分钟一次
+    cron: "*/5 * * * *" # 五分钟一次
   groupSummary:
     enable: false
-    cron: '30 0 * * *' # 每天0:30
+    cron: "30 0 * * *" # 每天0:30
   waterGroup:
     enable: false
     cron:
-      yesterday: '30 9 * * *' # 每天9:30
-      week: '30 9 * * 1' # 每周一9:30
-      month: '30 9 1 * *' # 每月1号9:30
-      year: '0 9 1 1 *' # 每年1月1号9:30
+      yesterday: "30 9 * * *" # 每天9:30
+      week: "30 9 * * 1" # 每周一9:30
+      month: "30 9 1 * *" # 每月1号9:30
+      year: "0 9 1 1 *" # 每年1月1号9:30
 
 # MQ配置
 mq:
@@ -101,6 +101,10 @@ ai:
       model: moonshot-v1-128k
     - name: 跃问
       model: StepChat
+    - name: 豆包Lite-4k
+      model: Doubao-lite-4k
+    - name: 豆包Pro-4k
+      model: Doubao-pro-4k
 
 # 资源配置
 # map[k]v结构，k 会变成全小写，所以这儿不能用大写字母

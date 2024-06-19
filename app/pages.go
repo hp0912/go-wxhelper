@@ -2,10 +2,11 @@ package app
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"go-wechat/config"
 	"go-wechat/service"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Index
@@ -66,6 +67,7 @@ func Friend(ctx *gin.Context) {
 	result["friends"] = friends
 	result["vnc"] = config.Conf.Wechat.VncUrl
 	result["aiModels"] = config.Conf.Ai.Models
+	result["assistant"], _ = service.GetAllAiAssistant()
 	// 渲染页面
 	ctx.HTML(http.StatusOK, "friend.html", result)
 }
@@ -85,9 +87,25 @@ func Group(ctx *gin.Context) {
 	result["groups"] = groups
 	result["vnc"] = config.Conf.Wechat.VncUrl
 	result["aiModels"] = config.Conf.Ai.Models
+	result["assistant"], _ = service.GetAllAiAssistant()
 
 	// 渲染页面
 	ctx.HTML(http.StatusOK, "group.html", result)
+}
+
+// Assistant
+// @description: AI角色
+// @param ctx
+func Assistant(ctx *gin.Context) {
+	var result = gin.H{
+		"msg": "success",
+	}
+
+	result["aiModels"] = config.Conf.Ai.Models
+	result["assistant"], _ = service.GetAllAiAssistant()
+
+	// 渲染页面
+	ctx.HTML(http.StatusOK, "assistant.html", result)
 }
 
 // PageNotFound

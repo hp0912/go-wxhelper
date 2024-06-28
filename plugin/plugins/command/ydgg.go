@@ -14,13 +14,14 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-// Xskc
-// @description: 秀色可餐，随机美女图片
+// Ydgg
+// @description: 御弟哥哥 随机帅哥图
 // @param userId string 发信人
-func Xskc(userId string) {
+func Ydgg(userId string) {
 	type result struct {
-		Code   string `json:"code"`
-		Imgurl string `json:"imgurl"`
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+		Url  string `json:"url"`
 	}
 
 	var resData result
@@ -34,22 +35,22 @@ func Xskc(userId string) {
 	res := resty.New()
 	resp, err := res.R().
 		SetResult(&resData).
-		Get("https://api.suyanw.cn/api/sjmv.php?return=json")
+		Get("https://api.52vmy.cn/api/img/tu/boy")
 	if err != nil || resp.StatusCode() != http.StatusOK {
-		log.Printf("获取随机美女图片失败: %v", err)
+		log.Printf("获取随机帅哥图片失败: %v", err)
 		return
 	}
-	if resData.Imgurl == "" {
-		log.Printf("获取随机美女图片失败: 图片地址为空")
+	if resData.Url == "" {
+		log.Printf("获取随机帅哥图片失败: 图片地址为空")
 		return
 	}
 
-	urlPathArr := strings.Split(resData.Imgurl, "/")
+	urlPathArr := strings.Split(resData.Url, "/")
 	filename := fmt.Sprintf("%d_%s", time.Now().Nanosecond(), urlPathArr[len(urlPathArr)-1])
 
-	response, err := http.Get(strings.Replace(resData.Imgurl, "/large/", "/middle/", 1))
+	response, err := http.Get(resData.Url)
 	if err != nil || response.StatusCode != http.StatusOK {
-		log.Println("下载美女图片失败，状态码不为 200")
+		log.Println("下载帅哥图片失败，状态码不为 200")
 		return
 	}
 	reader := response.Body
@@ -61,17 +62,17 @@ func Xskc(userId string) {
 	}()
 
 	if err != nil {
-		log.Printf("打开美女图片文件(%s)失败: %v", filePath, err)
+		log.Printf("打开帅哥图片文件(%s)失败: %v", filePath, err)
 		return
 	}
 	_, err = io.Copy(file, reader)
 	if err != nil {
-		log.Printf("保存美女图片文件(%s)失败: %v", filePath, err)
+		log.Printf("保存帅哥图片文件(%s)失败: %v", filePath, err)
 		return
 	}
 
 	// 发送图片
 	wxPath := fmt.Sprintf(conf.Path, filename)
-	log.Printf("群ID: %s  词云路径: %s~", userId, wxPath)
+	log.Printf("发送对象ID: %s  图片路径: %s~", userId, wxPath)
 	utils.SendImage(userId, wxPath, 0)
 }

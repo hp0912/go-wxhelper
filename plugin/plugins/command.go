@@ -54,8 +54,10 @@ func Command(m *plugin.MessageContext) {
 		command.ZhaNv(m.FromUser)
 	case "/昨日热词":
 		command.WordCloud(m.FromUser)
-	case "/秀色可餐":
-		command.Xskc(m.FromUser)
+	case "/神仙姐姐":
+		command.Sxjj(m.FromUser)
+	case "/御弟哥哥":
+		command.Ydgg(m.FromUser)
 	default:
 		utils.SendMessage(m.FromUser, m.GroupUser, "指令错误", 0)
 	}

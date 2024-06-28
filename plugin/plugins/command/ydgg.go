@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -45,9 +44,7 @@ func Ydgg(userId string) {
 		return
 	}
 
-	urlPathArr := strings.Split(resData.Url, "/")
-	filename := fmt.Sprintf("%d_%s", time.Now().Nanosecond(), urlPathArr[len(urlPathArr)-1])
-
+	filename := fmt.Sprintf("%d.jpg", time.Now().Nanosecond())
 	response, err := http.Get(resData.Url)
 	if err != nil || response.StatusCode != http.StatusOK {
 		log.Println("下载帅哥图片失败，状态码不为 200")

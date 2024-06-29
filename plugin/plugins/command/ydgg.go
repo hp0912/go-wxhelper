@@ -17,14 +17,6 @@ import (
 // @description: 御弟哥哥 随机帅哥图
 // @param userId string 发信人
 func Ydgg(userId string) {
-	type result struct {
-		Code int    `json:"code"`
-		Msg  string `json:"msg"`
-		Url  string `json:"url"`
-	}
-
-	var resData result
-
 	conf, ok := config.Conf.Resource["temp"]
 	if !ok {
 		log.Printf("获取临时目录失败~")
@@ -33,19 +25,19 @@ func Ydgg(userId string) {
 
 	res := resty.New()
 	resp, err := res.R().
-		SetResult(&resData).
-		Get("https://api.52vmy.cn/api/img/tu/boy")
+		Get("https://api.suyanw.cn/api/boy.php?type=text")
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		log.Printf("获取随机帅哥图片失败: %v", err)
 		return
 	}
-	if resData.Url == "" {
+	imgurl := resp.String()
+	if imgurl == "" {
 		log.Printf("获取随机帅哥图片失败: 图片地址为空")
 		return
 	}
 
 	filename := fmt.Sprintf("%d.jpg", time.Now().Nanosecond())
-	response, err := http.Get(resData.Url)
+	response, err := http.Get(imgurl)
 	if err != nil || response.StatusCode != http.StatusOK {
 		log.Println("下载帅哥图片失败，状态码不为 200")
 		return

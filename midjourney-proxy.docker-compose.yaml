@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  midjourney-proxy:
+    image: novicezk/midjourney-proxy:2.6.3
+    container_name: midjourney-proxy
+    restart: unless-stopped
+    environment:
+      - mj.discord.guild-id=1256267060791742494
+      - mj.discord.channel-id=1256267061236076556
+      - mj.discord.user-token=MTIwOTcwNDAwMzkyNDE0MDA3Mw.GwX2xz.ctTYH6656g6VkgTuHHTAFykMHmv7jDw0ea9li4
+    ports:
+      - "8080:8080"

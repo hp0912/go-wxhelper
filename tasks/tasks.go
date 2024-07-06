@@ -1,15 +1,17 @@
 package tasks
 
 import (
-	"github.com/go-co-op/gocron"
 	"go-wechat/config"
 	"go-wechat/tasks/cleargroupuser"
 	"go-wechat/tasks/friends"
+	"go-wechat/tasks/goodMorning"
 	"go-wechat/tasks/news"
 	"go-wechat/tasks/summary"
 	"go-wechat/tasks/watergroup"
 	"log"
 	"time"
+
+	"github.com/go-co-op/gocron"
 )
 
 // InitTasks
@@ -55,6 +57,11 @@ func InitTasks() {
 	// 每日早报
 	if config.Conf.Task.News.Enable {
 		_, _ = s.Cron(config.Conf.Task.News.Cron).Do(news.DailyNews)
+	}
+
+	// 早安书
+	if config.Conf.Task.GoodMorning.Enable {
+		_, _ = s.Cron(config.Conf.Task.GoodMorning.Cron).Do(goodMorning.GoodMorning)
 	}
 
 	// 每天0点检查一次处理清理群成员

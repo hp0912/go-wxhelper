@@ -18,4 +18,5 @@ EXPOSE 8080
 WORKDIR /app
 COPY --from=builder /builder/wxhelper ./wxhelper
 COPY --from=builder /builder/views ./views
+COPY --from=builder /builder/assets ./assets
 CMD ./wxhelper

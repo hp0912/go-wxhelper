@@ -77,6 +77,15 @@ func GetAllEnableNews() (records []entity.Friend, err error) {
 	return
 }
 
+// GetAllEnableGoodMorning
+// @description: 取出所有启用了早安书的好友或群组
+// @return records
+// @return err
+func GetAllEnableGoodMorning() (records []entity.Friend, err error) {
+	err = client.MySQL.Where("enable_good_morning = ?", 1).Where("is_ok IS TRUE").Find(&records).Error
+	return
+}
+
 // GetAllEnableClearGroup
 // @description: 获取所有需要清理成员的群组
 // @return records

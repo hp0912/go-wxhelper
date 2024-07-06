@@ -27,7 +27,7 @@ func getGroupSummary(groupId string) (groupSummary, error) {
 
 	// 当前群总人数
 	userTotalCount := []groupSummary{}
-	tx := client.MySQL.Table("group_user").Select("count( 1 ) AS `user_total_count`").Where("group_id = ?", groupId).Where("is_member = 1")
+	tx := client.MySQL.Table("t_group_user").Select("count( 1 ) AS `user_total_count`").Where("group_id = ?", groupId).Where("is_member = 1")
 	err := tx.Find(&userTotalCount).Error
 	if err != nil {
 		return summary, err
@@ -35,7 +35,7 @@ func getGroupSummary(groupId string) (groupSummary, error) {
 
 	// 昨天入群人数
 	userJoinCount := []groupSummary{}
-	tx = client.MySQL.Table("group_user").Select("count( 1 ) AS `user_join_count`").Where("group_id = ?", groupId).Where("DATEDIFF(join_time, NOW()) = -1")
+	tx = client.MySQL.Table("t_group_user").Select("count( 1 ) AS `user_join_count`").Where("group_id = ?", groupId).Where("DATEDIFF(join_time, NOW()) = -1")
 	err = tx.Find(&userJoinCount).Error
 	if err != nil {
 		return summary, err
@@ -43,7 +43,7 @@ func getGroupSummary(groupId string) (groupSummary, error) {
 
 	// 昨天离群人数
 	userLeaveCount := []groupSummary{}
-	tx = client.MySQL.Table("group_user").Select("count( 1 ) AS `user_leave_count`").Where("group_id = ?", groupId).Where("DATEDIFF(leave_time, NOW()) = -1")
+	tx = client.MySQL.Table("t_group_user").Select("count( 1 ) AS `user_leave_count`").Where("group_id = ?", groupId).Where("DATEDIFF(leave_time, NOW()) = -1")
 	err = tx.Find(&userLeaveCount).Error
 	if err != nil {
 		return summary, err

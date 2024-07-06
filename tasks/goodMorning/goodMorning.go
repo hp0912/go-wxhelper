@@ -14,7 +14,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -25,25 +24,16 @@ import (
 // GoodMorning
 // @description: 早安书
 func GoodMorning() {
-	// 获取当前文件的绝对路径
-	absPath, err := filepath.Abs(os.Args[0])
-	if err != nil {
-		log.Printf("无法获取当前文件路径: %v", err)
-		return
-	}
-
 	conf, ok := config.Conf.Resource["temp"]
 	if !ok {
 		log.Printf("获取临时目录失败~")
 		return
 	}
 
-	// 获取项目根目录路径
-	projectRoot := filepath.Dir(filepath.Dir(filepath.Dir(absPath)))
 	// 拼接背景图片的路径
-	bgFilePath := filepath.Join(projectRoot, "assets", "background2.png")
+	bgFilePath := "/app/assets/background2.png"
 	// 拼接字体路径
-	fontFilePath := filepath.Join(projectRoot, "assets", "simkai.ttf")
+	fontFilePath := "/app/assets/simkai.ttf"
 
 	// 获取当前时间
 	now := time.Now()

@@ -6,6 +6,8 @@ import (
 	"go-wechat/vo"
 	"log"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 // GetAllFriend
@@ -36,11 +38,30 @@ func GetAllFriend() (friends, groups []vo.FriendItem, err error) {
 	return
 }
 
+// GetFriendInfoById
+// @description: 通过wxId获取好友信息
+// @param wxId
+// @return ent
+// @return err
+func GetFriendInfoById(wxId string) (ent entity.Friend, err error) {
+	err = client.MySQL.Where("wxid = ?", wxId).First(&ent).Error
+	return
+}
+
 // GetAllEnableAI
 // @description: 取出所有启用了AI的好友或群组
 // @return []entity.Friend
 func GetAllEnableAI() (records []entity.Friend, err error) {
 	err = client.MySQL.Where("enable_ai = ?", 1).Find(&records).Error
+	return
+}
+
+// GetAllEnableGoodMorning
+// @description: 取出所有启用了早安书的好友或群组
+// @return records
+// @return err
+func GetAllEnableGoodMorning() (records []entity.Friend, err error) {
+	err = client.MySQL.Where("enable_good_morning = ?", 1).Where("is_ok IS TRUE").Find(&records).Error
 	return
 }
 
@@ -74,15 +95,6 @@ func GetAllEnableSummary() (records []entity.Friend, err error) {
 // @return err
 func GetAllEnableNews() (records []entity.Friend, err error) {
 	err = client.MySQL.Where("enable_news = ?", 1).Where("is_ok IS TRUE").Find(&records).Error
-	return
-}
-
-// GetAllEnableGoodMorning
-// @description: 取出所有启用了早安书的好友或群组
-// @return records
-// @return err
-func GetAllEnableGoodMorning() (records []entity.Friend, err error) {
-	err = client.MySQL.Where("enable_good_morning = ?", 1).Where("is_ok IS TRUE").Find(&records).Error
 	return
 }
 
@@ -126,5 +138,18 @@ func updateLastActive(msg entity.Message) {
 		Update("last_active", msg.CreateAt).Error
 	if err != nil {
 		log.Printf("更新群或者好友活跃时间失败, 错误信息: %v", err)
+	}
+}
+
+// UpdateUsedAiTokens
+// @description: 更新已使用的AI次数
+// @param wxId 微信好友或者群聊Id
+// @param tokens 新增的tokens额度
+func UpdateUsedAiTokens(wxId string, tokens int) {
+	err := client.MySQL.Model(&entity.Friend{}).
+		Where("wxid = ?", wxId).
+		Update("`used_tokens`", gorm.Expr(" `used_tokens` + ?", tokens)).Error
+	if err != nil {
+		log.Printf("更新AI使用次数失败, 错误信息: %v", err)
 	}
 }

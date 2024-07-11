@@ -41,6 +41,4 @@ func parse(msg []byte) {
 	if p := current.GetRobotMessageHandler(); p != nil {
 		p(&m)
 	}
-
-	return
 }

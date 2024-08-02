@@ -1,15 +1,20 @@
-version: '3.9'
+version: "3.9"
 
 services:
   wechat:
-    image: lxh01/wxhelper-docker:3.9.5.81-v11
+    image: registry.cn-shenzhen.aliyuncs.com/houhou/wxhelper-docker:3.9.5.81-v11
     container_name: gw-wechat
     restart: unless-stopped
     environment:
       - WINEDEBUG=fixme-all
     volumes:
       - ./data/wechat:/home/app/.wine/drive_c/users/app/Documents/WeChat\ Files
+      # 词云图片映射目录
+      - ./wordcloud-images:/home/app/.wine/drive_c/users/app/Pictures
+      # 临时文件夹映射目录
+      - ./temp:/home/app/.wine/drive_c/users/app/Downloads
     ports:
+      - "19086:5900" # vnc端口
       - "19087:8080"
       - "19088:19088"
     healthcheck:
@@ -18,22 +23,24 @@ services:
       timeout: 10s
       retries: 5
 
-
   mysql:
     image: mysql:8
     container_name: gw-db
     restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=wechat
-      - MYSQL_USER=wechat
-      - MYSQL_PASSWORD=wechat
+      - MYSQL_ROOT_PASSWORD=自己的密码
+      - MYSQL_USER=自己的用户
+      - MYSQL_PASSWORD=自己的密码
       - MYSQL_DATABASE=wechat
     volumes:
       - ./data/db:/var/lib/mysql
-
+      # 数据库自定义配置，非必须
+      # - ./my.cnf:/etc/my.cnf
+    ports:
+      - "3306:3306"
 
   wxhelper:
-    image: gitee.ltd/lxh/go-wxhelper:latest
+    image: registry.cn-shenzhen.aliyuncs.com/houhou/go-wxhelper:202407.22.1
     container_name: gw-service
     restart: unless-stopped
     depends_on:
@@ -42,5 +49,19 @@ services:
     volumes:
       # 配置文件请参阅项目根目录的config.yaml文件
       - ./config/config.yaml:/app/config.yaml
+      # 临时文件目录映射
+      - ./temp:/app/temp
     ports:
       - "19099:19099"
+      - "8080:8080"
+  wordcloud:
+    image: registry.cn-shenzhen.aliyuncs.com/houhou/ciyun:latest
+    container_name: gw-wordcloud
+    restart: unless-stopped
+    environment:
+      - MYSQL_USER=自己的用户
+      - MYSQL_PASSWORD=自己的密码
+      - TEMP_PATH=/app/temp
+    volumes:
+      - ./wordcloud-images:/app/wordcloud
+      - ./temp:/app/temp

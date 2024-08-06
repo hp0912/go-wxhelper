@@ -58,6 +58,8 @@ func Command(m *plugin.MessageContext) {
 		command.Sxjj(m.FromUser)
 	case "/御弟哥哥":
 		command.Ydgg(m.FromUser)
+	case "/昨日群聊总结":
+		command.GroupSummary(m.FromUser)
 	default:
 		utils.SendMessage(m.FromUser, m.GroupUser, "指令错误", 0)
 	}

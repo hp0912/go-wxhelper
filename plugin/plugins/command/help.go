@@ -52,6 +52,9 @@ option: 指令选项，可选值:
 
 #9. 御弟哥哥
 示例: /御弟哥哥
+
+#10. 昨日群聊总结
+示例: /昨日群聊总结
 `
 	utils.SendMessage(m.FromUser, m.GroupUser, str, 0)
 

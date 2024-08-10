@@ -89,7 +89,11 @@ func GroupSummary(group entity.Friend, isCron bool, condition string) {
 	if resp.Choices[0].Message.Content == "" {
 		return
 	}
-	replyMsg := fmt.Sprintf("#昨日消息总结\n又是一天过去了，让我们一起来看看昨儿群友们都聊了什么有趣的话题吧~\n\n%s", resp.Choices[0].Message.Content)
+	tips := "#昨日消息总结\n又是一天过去了，让我们一起来看看昨儿群友们都聊了什么有趣的话题吧~"
+	if !isCron {
+		tips = "#消息总结\n一会儿不看群，你们就群聊消息999+，让我们一起来看看群友们都聊了什么有趣的话题吧~"
+	}
+	replyMsg := fmt.Sprintf("%s\n\n%s", tips, resp.Choices[0].Message.Content)
 	// log.Printf("群[%s]对话记录总结成功，总结内容: %s", group.Wxid, replyMsg)
 	utils.SendMessage(group.Wxid, "", replyMsg, 0)
 }

@@ -41,7 +41,7 @@ func GroupSummaryHandler(fromUser, groupUser string, args []string) {
 					utils.SendMessage(fromUser, groupUser, "指令错误，群聊总结只能统计最近多少分钟，最近多少小时，或者昨日的记录", 0)
 				}
 			} else {
-				utils.SendMessage(fromUser, groupUser, "指令错误，下面是一个正确的例子：/群聊总结 近1小时", 0)
+				utils.SendMessage(fromUser, groupUser, "指令错误，下面是一个正确的例子：/群聊总结 近1小时，其中指令和统计时间之间有个空格", 0)
 			}
 		}
 	} else {

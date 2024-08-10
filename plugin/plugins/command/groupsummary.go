@@ -7,10 +7,14 @@ import (
 	"log"
 )
 
-// GroupSummary
-// @description: 群聊总结
-// @param userId string 发信人
-func GroupSummary(groupId string) {
+/*
+GroupSummary
+@description: 群聊总结
+@param userId string 发信人
+@param isDefault bool 是否是默认行为，即统计昨日群聊
+@param condition string 额外查询条件
+*/
+func GroupSummary(groupId string, isDefault bool, condition string) {
 	var msg string
 
 	group, err := service.GetFriendInfoById(groupId)
@@ -20,5 +24,5 @@ func GroupSummary(groupId string) {
 		return
 	}
 
-	summary.GroupSummary(group)
+	summary.GroupSummary(group, isDefault, condition)
 }

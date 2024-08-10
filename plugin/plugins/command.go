@@ -1,12 +1,53 @@
 package plugins
 
 import (
+	"fmt"
 	"go-wechat/plugin"
 	"go-wechat/plugin/plugins/command"
 	"go-wechat/utils"
 	"regexp"
+	"strconv"
 	"strings"
 )
+
+func GroupSummaryHandler(fromUser, groupUser string, args []string) {
+	if len(args) == 2 {
+		condition := args[1]
+		switch condition {
+		case "昨日":
+			command.GroupSummary(fromUser, true, "")
+		default:
+			re := regexp.MustCompile(`\d+`)
+			match := re.FindString(condition)
+			if match != "" {
+				num, err := strconv.Atoi(match)
+				if err != nil {
+					utils.SendMessage(fromUser, groupUser, fmt.Sprintf("指令错误: %s", err.Error()), 0)
+					return
+				}
+				if strings.HasSuffix(condition, "时") {
+					if num > 24 {
+						utils.SendMessage(fromUser, groupUser, "指令错误，统计最近多少小时的消息时，小时不能大于 24，您可以使用尝试：/群聊总结 昨日", 0)
+						return
+					}
+					command.GroupSummary(fromUser, false, fmt.Sprintf("%s HOUR", match))
+				} else if strings.HasSuffix(condition, "分") {
+					if num > 60 {
+						utils.SendMessage(fromUser, groupUser, "指令错误，统计最近多少分钟的消息时，分钟不能大于 60，您可以使用尝试：/群聊总结 近1小时", 0)
+						return
+					}
+					command.GroupSummary(fromUser, false, fmt.Sprintf("%s MINUTE", match))
+				} else {
+					utils.SendMessage(fromUser, groupUser, "指令错误，群聊总结只能统计最近多少分钟，最近多少小时，或者昨日的记录", 0)
+				}
+			} else {
+				utils.SendMessage(fromUser, groupUser, "指令错误，下面是一个正确的例子：/群聊总结 近1小时", 0)
+			}
+		}
+	} else {
+		command.GroupSummary(fromUser, true, "")
+	}
+}
 
 // Command
 // @description: 自定义指令
@@ -58,8 +99,8 @@ func Command(m *plugin.MessageContext) {
 		command.Sxjj(m.FromUser)
 	case "/御弟哥哥":
 		command.Ydgg(m.FromUser)
-	case "/昨日群聊总结":
-		command.GroupSummary(m.FromUser)
+	case "/群聊总结":
+		GroupSummaryHandler(m.FromUser, m.GroupUser, msgArray)
 	default:
 		utils.SendMessage(m.FromUser, m.GroupUser, "指令错误", 0)
 	}

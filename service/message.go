@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"go-wechat/client"
 	"go-wechat/entity"
 	"go-wechat/vo"
@@ -41,12 +42,17 @@ func SaveMessage(msg entity.Message) {
 	}
 }
 
+type GetMessageOption struct {
+	IsCron    bool
+	Condition string
+}
+
 // GetTextMessagesById
 // @description: 根据群id或者用户Id获取消息
 // @param id
 // @return records
 // @return err
-func GetTextMessagesById(id string) (records []vo.TextMessageItem, err error) {
+func GetTextMessagesById(id string, option GetMessageOption) (records []vo.TextMessageItem, err error) {
 	// APP消息类型
 	appMsgList := []string{"57", "4", "5", "6"}
 	// 这个查询子句抽出来写，方便后续扩展
@@ -72,10 +78,14 @@ func GetTextMessagesById(id string) (records []vo.TextMessageItem, err error) {
 		Select("tgu.nickname", selectStr+" AS message").
 		Where("tm.`from_user` = ?", id).
 		Where(`(tm.type = 1 OR ( tm.type = 49 AND EXTRACTVALUE ( tm.content, "/msg/appmsg/type" ) IN (?) ))`, appMsgList).
-		Where("DATE ( tm.create_at ) = DATE ( CURDATE() - INTERVAL 1 DAY )").
 		Where("tm.content NOT LIKE '#昨日水群排行榜%'").
-		Where("tm.content NOT LIKE '#昨日消息总结%'").
-		Order("tm.create_at ASC")
+		Where("tm.content NOT LIKE '#昨日消息总结%'")
+
+	if option.IsCron {
+		tx.Where("DATE ( tm.create_at ) = DATE ( CURDATE() - INTERVAL 1 DAY )").Order("tm.create_at ASC")
+	} else {
+		tx.Where(fmt.Sprintf("tm.create_at >= NOW() - INTERVAL %s", option.Condition)).Order("tm.create_at ASC")
+	}
 
 	err = tx.Find(&records).Error
 	return

@@ -15,18 +15,31 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
-func GroupSummary(group entity.Friend) {
+// GroupSummary
+// @param group entity.Friend 群信息
+// @param isCron bool 是否由定时任务触发
+// @param condition string 额外查询条件
+// @description: AI总结，单个群聊记录
+func GroupSummary(group entity.Friend, isCron bool, condition string) {
 	var err error
 	// 获取对话记录
 	var records []vo.TextMessageItem
-	if records, err = service.GetTextMessagesById(group.Wxid); err != nil {
+	if records, err = service.GetTextMessagesById(group.Wxid, service.GetMessageOption{IsCron: isCron, Condition: condition}); err != nil {
 		log.Printf("获取群[%s]对话记录失败, 错误信息: %v", group.Wxid, err)
 		return
 	}
-	if len(records) < 100 {
-		log.Printf("群[%s]对话记录不足100条，跳过总结", group.Wxid)
-		return
+	if isCron {
+		if len(records) < 100 {
+			log.Printf("群[%s]对话记录不足100条，跳过总结", group.Wxid)
+			return
+		}
+	} else {
+		if len(records) < 10 {
+			log.Printf("群[%s]对话记录不足10条，跳过总结", group.Wxid)
+			return
+		}
 	}
+
 	// 组装对话记录为字符串
 	var content []string
 	for _, record := range records {
@@ -91,7 +104,7 @@ func AiSummary() {
 	}
 
 	for _, group := range groups {
-		GroupSummary(group)
+		GroupSummary(group, true, "")
 		// 休眠一秒，防止频繁发送
 		time.Sleep(time.Second)
 	}

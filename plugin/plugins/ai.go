@@ -20,6 +20,9 @@ import (
 	"github.com/sashabaranov/go-openai"
 )
 
+// 拉取最近消息条数
+const fetchMessageCount = 20
+
 // AI
 // @description: AI消息
 // @param m
@@ -177,7 +180,7 @@ func getGroupUserMessages(msgId int64, groupId, groupUserId string) (records []e
 		Where("create_at >= DATE_SUB(NOW(),INTERVAL 30 MINUTE)").
 		Where(subQuery).
 		Order("create_at desc").
-		Limit(4).Find(&records)
+		Limit(fetchMessageCount).Find(&records)
 	return
 }
 
@@ -193,6 +196,6 @@ func getUserPrivateMessages(userId string) (records []entity.Message) {
 		Where("create_at >= DATE_SUB(NOW(),INTERVAL 30 MINUTE)").
 		Where(subQuery).
 		Order("create_at desc").
-		Limit(4).Find(&records)
+		Limit(fetchMessageCount).Find(&records)
 	return
 }

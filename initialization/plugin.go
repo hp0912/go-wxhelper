@@ -27,7 +27,7 @@ func Plugin() {
 	// 通知邀请入群消息到配置用户
 	dispatcher.RegisterHandler(func(m *model.Message) bool {
 		flag, _ := m.IsInvitationJoinGroup()
-		return flag
+		return flag && !m.IsGroup()
 	}, plugins.NotifyInvitationJoinGroup)
 	// 被移除群聊通知到配置用户
 	dispatcher.RegisterHandler(func(m *model.Message) bool {
@@ -35,7 +35,7 @@ func Plugin() {
 	}, plugins.NotifyRemoveFromChatroom)
 	// 响应好友添加成功消息
 	dispatcher.RegisterHandler(func(m *model.Message) bool {
-		return m.Type == types.MsgTypeSys
+		return m.IsNewFriendAdd() || m.IsJoinToGroup() || m.IsOldFriendBack()
 	}, plugins.ReplyNewFriend)
 
 	// 私聊指令消息

@@ -16,7 +16,7 @@ func PoisonousChickenSoup(userId string) {
 
 	res := resty.New()
 	resp, err := res.R().
-		Get("https://api.beiyu.vip/api/djt?format=text")
+		Get("https://api.pearktrue.cn/api/dujitang")
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		log.Printf("获取毒鸡汤失败: %v", err)
 		msg = "获取毒鸡汤失败"

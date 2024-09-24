@@ -25,7 +25,7 @@ func ZhaNan(userId string) {
 	res := resty.New()
 	resp, err := res.R().
 		SetResult(&resData).
-		Get("https://api.beiyu.vip/api/sea")
+		Get("https://api.pearktrue.cn/api/random/zhanan")
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		log.Printf("获取渣男语录失败: %v", err)
 		msg = "获取渣男语录失败"

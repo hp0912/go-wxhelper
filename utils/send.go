@@ -86,6 +86,38 @@ func SendImage(toId, imgPath string, retryCount int) {
 	log.Printf("发送图片消息结果: %s", resp.String())
 }
 
+// SendFile
+// @description: 发送文件
+// @param toId string 群或者好友Id
+// @param filePath string 文件路径
+// @param retryCount int 重试次数
+func SendFile(toId, filePath string, retryCount int) {
+	if retryCount > 5 {
+		log.Printf("重试五次失败，停止发送")
+		return
+	}
+
+	// 组装参数
+	param := map[string]any{
+		"wxid":     toId,     // 群或好友Id
+		"filePath": filePath, // 文件地址
+	}
+	pbs, _ := json.Marshal(param)
+
+	res := resty.New()
+	resp, err := res.R().
+		SetHeader("Content-Type", "application/json;chartset=utf-8").
+		SetBody(string(pbs)).
+		Post(config.Conf.Wechat.GetURL("/api/sendFileMsg"))
+	if err != nil {
+		log.Printf("发送文件消息失败: %s", err.Error())
+		// 休眠五秒后重新发送
+		time.Sleep(5 * time.Second)
+		SendImage(toId, filePath, retryCount+1)
+	}
+	log.Printf("发送文件消息结果: %s", resp.String())
+}
+
 // SendEmotion
 // @description: 发送自定义表情包
 // @param toId string 群或者好友Id

@@ -36,7 +36,7 @@ func ZhaNv(userId string) {
 	res := resty.New()
 	resp, err := res.R().
 		SetResult(&resData).
-		Get("https://api.pearktrue.cn/api/greentea/")
+		Get("https://api.pearktrue.cn/api/greentea/?type=mp3")
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		log.Printf("获取渣女语录失败: %v", err)
 		return

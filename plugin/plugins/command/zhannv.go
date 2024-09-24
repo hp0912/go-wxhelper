@@ -41,8 +41,10 @@ func ZhaNv(userId string) {
 		log.Printf("获取渣女语录失败: %v", err)
 		return
 	} else if resData.Audiopath != "" {
+		log.Printf("1: %v / %s", resData, resData.Audiopath)
 		Audiopath = resData.Audiopath
 	} else {
+		log.Printf("2: %v", resData)
 		Audiopath = resp.String()
 	}
 

@@ -1,6 +1,7 @@
 package command
 
 import (
+	"encoding/json"
 	"fmt"
 	"go-wechat/config"
 	"go-wechat/utils"
@@ -35,18 +36,23 @@ func ZhaNv(userId string) {
 
 	res := resty.New()
 	resp, err := res.R().
-		SetResult(&resData).
 		Get("https://api.pearktrue.cn/api/greentea/?type=mp3")
-	if err != nil || resp.StatusCode() != http.StatusOK {
+	if err != nil {
 		log.Printf("获取渣女语录失败: %v", err)
 		return
-	} else if resData.Audiopath != "" {
-		log.Printf("1: %v / %s", resData, resData.Audiopath)
-		Audiopath = resData.Audiopath
-	} else {
-		log.Printf("2: %v", resData)
-		Audiopath = resp.String()
 	}
+	if resp.StatusCode() != http.StatusOK {
+		log.Printf("获取渣女语录失败，状态码不为 200")
+		return
+	}
+
+	err = json.Unmarshal([]byte(resp.String()), &resData)
+	if err != nil {
+		log.Printf("获取渣女语录失败: %v", err)
+		return
+	}
+
+	Audiopath = resData.Audiopath
 
 	if Audiopath == "" {
 		log.Printf("获取渣女语录失败: 地址为空")

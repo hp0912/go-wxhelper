@@ -48,7 +48,11 @@ func Sxjj(userId string) {
 	filename := fmt.Sprintf("%d_%s", time.Now().Nanosecond(), urlPathArr[len(urlPathArr)-1])
 
 	response, err := http.Get(strings.Replace(resData.Imgurl, "/large/", "/middle/", 1))
-	if err != nil || response.StatusCode != http.StatusOK {
+	if err != nil {
+		log.Printf("下载美女图片失败: %v", err)
+		return
+	}
+	if response.StatusCode != http.StatusOK {
 		log.Println("下载美女图片失败，状态码不为 200")
 		return
 	}

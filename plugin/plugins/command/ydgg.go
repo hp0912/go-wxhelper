@@ -38,7 +38,11 @@ func Ydgg(userId string) {
 
 	filename := fmt.Sprintf("%d.jpg", time.Now().Nanosecond())
 	response, err := http.Get(imgurl)
-	if err != nil || response.StatusCode != http.StatusOK {
+	if err != nil {
+		log.Printf("下载帅哥图片(%s)失败: %v", imgurl, err)
+		return
+	}
+	if response.StatusCode != http.StatusOK {
 		log.Println("下载帅哥图片失败，状态码不为 200")
 		return
 	}

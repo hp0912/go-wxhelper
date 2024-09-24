@@ -53,7 +53,11 @@ func ZhaNv(userId string) {
 
 	filename := fmt.Sprintf("%d.mp3", time.Now().Nanosecond())
 	response, err := http.Get(Audiopath)
-	if err != nil || response.StatusCode != http.StatusOK {
+	if err != nil {
+		log.Printf("下载渣女语录(%s)失败: %v", Audiopath, err)
+		return
+	}
+	if response.StatusCode != http.StatusOK {
 		log.Printf("下载渣女语录(%s)失败，状态码(%d)不为 200，%s", Audiopath, response.StatusCode, response.Status)
 		return
 	}

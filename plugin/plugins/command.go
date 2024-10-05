@@ -99,6 +99,8 @@ func Command(m *plugin.MessageContext) {
 		command.Sxjj(m.FromUser)
 	case "/御弟哥哥":
 		command.Ydgg(m.FromUser)
+	case "/绘图":
+		command.Draw(m.FromUser, strings.Join(msgArray[1:], ""))
 	case "/群聊总结":
 		GroupSummaryHandler(m.FromUser, m.GroupUser, msgArray)
 	default:

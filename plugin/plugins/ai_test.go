@@ -1,6 +1,8 @@
 package plugins
 
 import (
+	"context"
+	"fmt"
 	"go-wechat/client"
 	"go-wechat/config"
 	"go-wechat/model"
@@ -9,6 +11,7 @@ import (
 	"testing"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/sashabaranov/go-openai"
 	"github.com/spf13/viper"
 )
 
@@ -59,4 +62,28 @@ func TestAI(t *testing.T) {
 	ctx.GroupUser = "xxxx"
 
 	AI(&ctx)
+}
+
+func TestCogview(t *testing.T) {
+	messages := make([]openai.ChatCompletionMessage, 0)
+
+	// 填充用户消息
+	messages = append(messages, openai.ChatCompletionMessage{
+		Role:    "user",
+		Content: "画一只小兔子",
+	})
+
+	// 默认使用AI回复
+	conf := openai.DefaultConfig("")
+	conf.BaseURL = fmt.Sprintf("%s/v1", "")
+	ai := openai.NewClientWithConfig(conf)
+	resp, err := ai.CreateChatCompletion(
+		context.Background(),
+		openai.ChatCompletionRequest{
+			Model:    "cogview-3-plus",
+			Messages: messages,
+		},
+	)
+
+	fmt.Println(resp, err)
 }

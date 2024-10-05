@@ -1,11 +1,12 @@
 package initialization
 
 import (
-	"github.com/go-resty/resty/v2"
 	"go-wechat/common/current"
 	"go-wechat/config"
 	"go-wechat/model"
 	"log"
+
+	"github.com/go-resty/resty/v2"
 )
 
 // InitWechatRobotInfo

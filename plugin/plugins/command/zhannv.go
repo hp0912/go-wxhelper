@@ -89,6 +89,6 @@ func ZhaNv(userId string) {
 
 	// 发送文件
 	wxPath := fmt.Sprintf(conf.Path, filename)
-	log.Printf("发送对象ID: %s  图片路径: %s~", userId, wxPath)
-	utils.SendFile(userId, wxPath, 0)
+	log.Printf("发送对象ID: %s  文件路径: %s~", userId, wxPath)
+	utils.SendFile(userId, wxPath, 1)
 }

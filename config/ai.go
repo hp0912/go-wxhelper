@@ -4,6 +4,8 @@ package config
 // @description: AI配置
 type ai struct {
 	Enable       bool      `json:"enable" yaml:"enable"`             // 是否启用AI
+	DrawModel    string    `json:"drawModel" yaml:"drawModel"`       // 绘图模型
+	DrawApiKey   string    `json:"drawApiKey" yaml:"drawApiKey"`     // 绘图 API Key
 	Model        string    `json:"model" yaml:"model"`               // 模型
 	SummaryModel string    `json:"summaryModel" yaml:"summaryModel"` // 总结模型
 	ApiKey       string    `json:"apiKey" yaml:"apiKey"`             // API Key

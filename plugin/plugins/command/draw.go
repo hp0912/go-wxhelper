@@ -48,10 +48,10 @@ func Draw(userId, prompt string) {
 
 	res := resty.New()
 	resp, err := res.R().
-		SetHeader("Authorization", "Bearer 6feee38615862c8c3d46b07e5a95a8fa.KnoIpXEDpX6NKNsx").
+		SetHeader("Authorization", fmt.Sprintf("Bearer %s", config.Conf.Ai.DrawApiKey)).
 		SetHeader("Content-Type", "application/json").
 		SetBody(Cogview3PlusRequest{
-			Model:  "cogview-3-plus",
+			Model:  config.Conf.Ai.DrawModel,
 			Prompt: prompt,
 			UserID: &userId,
 		}).

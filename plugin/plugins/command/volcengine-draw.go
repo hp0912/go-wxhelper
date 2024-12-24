@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"path/filepath"
 	"time"
 
 	"go-wechat/config"
@@ -52,7 +51,7 @@ func VolDraw(toUserId, groupUserId, prompt string) {
 	conf, ok := config.Conf.Resource["temp"]
 	if !ok {
 		log.Printf("获取临时目录失败~")
-		// return
+		return
 	}
 
 	queries := make(url.Values)
@@ -115,7 +114,7 @@ func VolDraw(toUserId, groupUserId, prompt string) {
 	}
 
 	imgurl := respData.Data.ImageUrls[0]
-	filename := fmt.Sprintf("%s-%d%s", toUserId, time.Now().Nanosecond(), filepath.Ext(imgurl))
+	filename := fmt.Sprintf("%s-%d%s", toUserId, time.Now().Nanosecond(), ".jpeg")
 	response, err := http.Get(imgurl)
 	if err != nil {
 		utils.SendMessage(toUserId, groupUserId, fmt.Sprintf("下载图片(%s)失败: %v", imgurl, err), 0)

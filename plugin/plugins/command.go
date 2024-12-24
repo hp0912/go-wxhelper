@@ -100,7 +100,7 @@ func Command(m *plugin.MessageContext) {
 	case "/御弟哥哥":
 		command.Ydgg(m.FromUser)
 	case "/绘图":
-		command.Draw(m.FromUser, strings.Join(msgArray[1:], " "))
+		command.VolDraw(m.FromUser, m.GroupUser, strings.Join(msgArray[1:], " "))
 	case "/群聊总结":
 		GroupSummaryHandler(m.FromUser, m.GroupUser, msgArray)
 	default:

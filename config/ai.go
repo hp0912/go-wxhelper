@@ -5,7 +5,7 @@ package config
 type ai struct {
 	Enable              bool      `json:"enable" yaml:"enable"`                           // 是否启用AI
 	DrawModel           string    `json:"drawModel" yaml:"drawModel"`                     // 绘图模型
-	DrawReqScheduleConf string    `json:"DrawReqScheduleConf" yaml:"DrawReqScheduleConf"` // 绘图模型
+	DrawReqScheduleConf string    `json:"drawReqScheduleConf" yaml:"drawReqScheduleConf"` // 绘图模型
 	DrawApiKey          string    `json:"drawApiKey" yaml:"drawApiKey"`                   // 绘图 API Key
 	DrawApiSecret       string    `json:"drawApiSecret" yaml:"drawApiSecret"`             // 绘图 API Secret
 	Model               string    `json:"model" yaml:"model"`                             // 模型
